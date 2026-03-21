@@ -192,13 +192,19 @@ class EpaycoController extends Controller
         $validAmount = $incomingAmount === null || ($incomingAmount > 0 && abs($incomingAmount - $expectedAmount) < 0.01);
         $validCurrency = $incomingCurrency === $expectedCurrency;
         $validSignature = $this->hasValidSignature($normalized);
+        $signatureBypassedForTestMode = ! $validSignature && $this->shouldBypassSignatureValidation($normalized);
 
-        if (! $validAmount || ! $validCurrency || ! $validSignature) {
+        if (! $validAmount || ! $validCurrency || (! $validSignature && ! $signatureBypassedForTestMode)) {
             Log::warning('ePayco payload validation failed', [
                 'order_ref' => $orderRef,
                 'valid_amount' => $validAmount,
                 'valid_currency' => $validCurrency,
                 'valid_signature' => $validSignature,
+                'configured_test_mode' => config('epayco.test'),
+                'gateway_test_request' => $normalized['x_test_request'] ?? null,
+                'merchant_id' => $normalized['x_cust_id_cliente'] ?? null,
+                'ref_payco' => $normalized['x_ref_payco'] ?? $normalized['ref_payco'] ?? null,
+                'transaction_id' => $normalized['x_transaction_id'] ?? null,
             ]);
 
             $transaction->update([
@@ -211,6 +217,15 @@ class EpaycoController extends Controller
             }
 
             return $transaction->fresh('order');
+        }
+
+        if ($signatureBypassedForTestMode) {
+            Log::notice('ePayco signature validation bypassed for a test transaction.', [
+                'order_ref' => $orderRef,
+                'merchant_id' => $normalized['x_cust_id_cliente'] ?? null,
+                'ref_payco' => $normalized['x_ref_payco'] ?? $normalized['ref_payco'] ?? null,
+                'transaction_id' => $normalized['x_transaction_id'] ?? null,
+            ]);
         }
 
         $status = $stateCode !== 0
@@ -242,23 +257,23 @@ class EpaycoController extends Controller
     protected function normalizeGatewayPayload(array $payload): array
     {
         $refPayco = $payload['ref_payco'] ?? $payload['x_ref_payco'] ?? null;
-        $responseText = $payload['x_response'] ?? $payload['response'] ?? $payload['x_transaction_state'] ?? null;
+        $responseText = $payload['x_response'] ?? $payload['x_respuesta'] ?? $payload['response'] ?? $payload['x_transaction_state'] ?? null;
 
         return array_filter([
             'ref_payco' => $refPayco,
             'x_ref_payco' => $payload['x_ref_payco'] ?? $refPayco,
-            'x_cust_id_cliente' => $payload['x_cust_id_cliente'] ?? $payload['p_cust_id_cliente'] ?? null,
+            'x_cust_id_cliente' => $payload['x_cust_id_cliente'] ?? $payload['x_cliente_id_cliente'] ?? $payload['p_cust_id_cliente'] ?? null,
             'x_id_factura' => $payload['x_id_factura'] ?? $payload['x_id_invoice'] ?? $payload['invoice'] ?? null,
             'x_id_invoice' => $payload['x_id_invoice'] ?? $payload['x_id_factura'] ?? null,
             'x_extra1' => $payload['x_extra1'] ?? $payload['extra1'] ?? null,
             'x_amount' => $payload['x_amount'] ?? $payload['amount'] ?? null,
             'x_currency_code' => $payload['x_currency_code'] ?? $payload['currency'] ?? null,
-            'x_cod_transaction_state' => $payload['x_cod_transaction_state'] ?? $payload['x_cod_response'] ?? null,
-            'x_cod_response' => $payload['x_cod_response'] ?? $payload['x_cod_transaction_state'] ?? null,
+            'x_cod_transaction_state' => $payload['x_cod_transaction_state'] ?? $payload['x_cod_response'] ?? $payload['x_cod_respuesta'] ?? null,
+            'x_cod_response' => $payload['x_cod_response'] ?? $payload['x_cod_respuesta'] ?? $payload['x_cod_transaction_state'] ?? null,
             'x_transaction_id' => $payload['x_transaction_id'] ?? $payload['transaction_id'] ?? null,
             'x_response' => $responseText,
             'x_response_reason_text' => $payload['x_response_reason_text'] ?? $payload['response_reason_text'] ?? null,
-            'x_transaction_date' => $payload['x_transaction_date'] ?? $payload['date'] ?? null,
+            'x_transaction_date' => $payload['x_transaction_date'] ?? $payload['x_fecha_transaccion'] ?? $payload['date'] ?? null,
             'x_franchise' => $payload['x_franchise'] ?? $payload['franchise'] ?? null,
             'x_business' => $payload['x_business'] ?? $payload['business'] ?? null,
             'x_customer_email' => $payload['x_customer_email'] ?? $payload['email'] ?? null,
@@ -301,6 +316,26 @@ class EpaycoController extends Controller
         ]));
 
         return hash_equals(strtolower($generated), strtolower($signature));
+    }
+
+    protected function shouldBypassSignatureValidation(array $payload): bool
+    {
+        if (! config('epayco.test')) {
+            return false;
+        }
+
+        return $this->isTruthyValue($payload['x_test_request'] ?? null);
+    }
+
+    protected function isTruthyValue(mixed $value): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        $normalized = mb_strtoupper(trim((string) $value));
+
+        return in_array($normalized, ['1', 'TRUE', 'YES', 'SI'], true);
     }
 
     protected function mapGatewayStatus(int $stateCode): string
