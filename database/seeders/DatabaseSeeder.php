@@ -7,12 +7,30 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $defaultStore = Store::create([
+            'name' => 'La Tienda de Mi Abue',
+            'owner_name' => 'Administrador',
+            'email' => env('ADMIN_DEFAULT_EMAIL', 'jaruizr74@gmail.com'),
+            'phone' => '3000000000',
+            'location' => 'Bogotá, Colombia',
+            'short_description' => 'Marketplace cálido para negocios y emprendimientos que quieren vender con una identidad cercana.',
+            'description' => 'Tienda principal de referencia dentro de la aplicación. Sirve como ejemplo del perfil público que verá el cliente final en el marketplace.',
+            'logo' => 'wolmart/assets/images/la-tienda-de-mi-abue-logo.png',
+            'banner' => 'wolmart/assets/images/vendor/dokan/1.jpg',
+            'website' => env('APP_URL'),
+            'business_hours' => "Lunes a viernes: 8:00 - 18:00\nSábado: 8:00 - 13:00\nDomingo: atención digital",
+            'highlights' => ['Mercado local', 'Emprendimientos', 'Compra segura'],
+            'is_active' => true,
+            'is_featured' => true,
+        ]);
+
         $categories = collect([
             ['name' => 'Electrónica', 'image' => 'wolmart/assets/images/demos/demo1/categories/1.jpg'],
             ['name' => 'Moda', 'image' => 'wolmart/assets/images/demos/demo1/categories/2.jpg'],
@@ -37,6 +55,7 @@ class DatabaseSeeder extends Seeder
             $category = $categories->firstWhere('name', $item['category']);
             Product::create([
                 'category_id' => $category->id,
+                'store_id' => $defaultStore->id,
                 'name' => $item['name'],
                 'sku' => $item['sku'],
                 'short_description' => 'Producto demo de ecommerce construido sobre la referencia visual Wolmart.',
@@ -85,5 +104,7 @@ class DatabaseSeeder extends Seeder
                 'total' => $product->price,
             ]);
         }
+
+        $this->call(AdminUserSeeder::class);
     }
 }

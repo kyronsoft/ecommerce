@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>{{ $title ?? 'La Tienda de Mi Abue' }}</title>
-    <link rel="icon" type="image/png" href="{{ asset('wolmart/assets/images/icons/favicon.png') }}">
+    @include('partials.favicons')
     <script>
         WebFontConfig = { google: { families: ['Quicksand:400,500,600,700', 'DM Serif Display:400'] } };
         (function (d) {
@@ -27,7 +27,7 @@
         <div class="header-top">
             <div class="container">
                 <div class="header-left"><p class="welcome-msg">Ecommerce con identidad visual inspirada en la calidez de La Tienda de Mi Abue.</p></div>
-                <div class="header-right"><a href="{{ route('admin.dashboard') }}">Backoffice</a></div>
+                <div class="header-right"><a href="{{ route('admin.login') }}">Backoffice</a></div>
             </div>
         </div>
         <div class="header-middle">
@@ -78,11 +78,26 @@
                 </div>
             </div>
         </div>
+        <div class="store-mobile-tools d-md-none">
+            <div class="container">
+                <form method="GET" action="{{ route('store.shop') }}" class="store-mobile-search">
+                    <input type="text" class="form-control" name="search" value="{{ request('search') }}" placeholder="Buscar productos o tiendas">
+                    <button class="btn" type="submit" aria-label="Buscar"><i class="w-icon-search"></i></button>
+                </form>
+                <nav class="store-mobile-nav" aria-label="Navegación móvil">
+                    <a href="{{ route('store.home') }}" class="{{ request()->routeIs('store.home') ? 'is-active' : '' }}">Inicio</a>
+                    <a href="{{ route('store.shop') }}" class="{{ request()->routeIs('store.shop') ? 'is-active' : '' }}">Tienda</a>
+                    <a href="{{ route('store.stores.index') }}" class="{{ request()->routeIs('store.stores.*', 'store.store.show') ? 'is-active' : '' }}">Tiendas</a>
+                    <a href="{{ route('store.checkout.index') }}" class="{{ request()->routeIs('store.checkout.*') ? 'is-active' : '' }}">Checkout</a>
+                    <a href="{{ route('admin.login') }}">Admin</a>
+                </nav>
+            </div>
+        </div>
         <div class="header-bottom sticky-content fix-top sticky-header has-dropdown">
             <div class="container">
                 <div class="inner-wrap">
                     <div class="header-left">
-                        <nav class="main-nav"><ul class="menu active-underline"><li><a href="{{ route('store.home') }}">Inicio</a></li><li><a href="{{ route('store.shop') }}">Tienda</a></li><li><a href="{{ route('store.cart.index') }}">Carrito</a></li><li><a href="{{ route('store.checkout.index') }}">Checkout</a></li></ul></nav>
+                        <nav class="main-nav"><ul class="menu active-underline"><li><a href="{{ route('store.home') }}">Inicio</a></li><li><a href="{{ route('store.shop') }}">Tienda</a></li><li><a href="{{ route('store.stores.index') }}">Tiendas</a></li><li><a href="{{ route('store.cart.index') }}">Carrito</a></li><li><a href="{{ route('store.checkout.index') }}">Checkout</a></li></ul></nav>
                     </div>
                 </div>
             </div>
@@ -102,10 +117,11 @@
                 'links' => [
                     ['label' => 'Inicio', 'url' => route('store.home')],
                     ['label' => 'Tienda', 'url' => route('store.shop')],
+                    ['label' => 'Tiendas', 'url' => route('store.stores.index')],
                     ['label' => 'Favoritos', 'url' => route('store.wishlist.index')],
                     ['label' => 'Carrito', 'url' => route('store.cart.index')],
                     ['label' => 'Checkout', 'url' => route('store.checkout.index')],
-                    ['label' => 'Backoffice', 'url' => route('admin.dashboard')],
+                    ['label' => 'Backoffice', 'url' => route('admin.login')],
                 ],
             ],
             [
@@ -145,6 +161,7 @@
                 'links' => [
                     ['label' => 'Inicio', 'url' => route('store.home')],
                     ['label' => 'Tienda', 'url' => route('store.shop')],
+                    ['label' => 'Tiendas', 'url' => route('store.stores.index')],
                     ['label' => 'Favoritos', 'url' => route('store.wishlist.index')],
                     ['label' => 'Carrito', 'url' => route('store.cart.index')],
                     ['label' => 'Checkout', 'url' => route('store.checkout.index')],
@@ -167,7 +184,7 @@
                     ['label' => 'Destacados', 'url' => route('store.shop')],
                     ['label' => 'Compra segura', 'url' => route('store.checkout.index')],
                     ['label' => 'Regalos y favoritos', 'url' => route('store.wishlist.index')],
-                    ['label' => 'Portal administrativo', 'url' => route('admin.dashboard')],
+                    ['label' => 'Portal administrativo', 'url' => route('admin.login')],
                 ],
             ],
         ];

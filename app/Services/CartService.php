@@ -62,6 +62,25 @@ class CartService
         Session::put(self::KEY, $items->all());
     }
 
+    public function removePurchasedProducts(iterable $productIds): void
+    {
+        $ids = collect($productIds)
+            ->map(fn ($productId) => (int) $productId)
+            ->filter(fn (int $productId) => $productId > 0)
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty()) {
+            return;
+        }
+
+        $items = $this->items()
+            ->reject(fn ($item) => $ids->contains((int) ($item['product_id'] ?? 0)))
+            ->values();
+
+        Session::put(self::KEY, $items->all());
+    }
+
     public function count(): int
     {
         return (int) $this->items()->sum('quantity');

@@ -2124,3 +2124,186 @@ a:focus {
         min-width: 0;
     }
 }
+
+.store-mobile-tools {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .header-top {
+        display: none !important;
+    }
+
+    .header-middle {
+        padding: 1.2rem 0 1rem;
+        background: linear-gradient(180deg, rgba(255, 250, 246, 0.98) 0%, rgba(245, 235, 225, 0.98) 100%);
+    }
+
+    .header-middle .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.2rem;
+    }
+
+    .header-middle .header-left,
+    .header-middle .header-right {
+        margin: 0 !important;
+    }
+
+    .header-middle .header-left {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .header-middle .header-right {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        flex: 0 0 auto;
+    }
+
+    .header-middle .logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        max-width: 16rem;
+    }
+
+    .brand-logo-shell--header {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .brand-logo-image--header,
+    .header-middle .logo img {
+        width: auto;
+        max-width: 13rem;
+        max-height: 5.2rem;
+        object-fit: contain;
+    }
+
+    .header-middle .header-search,
+    .header-middle .header-call {
+        display: none !important;
+    }
+
+    .header-middle .wishlist,
+    .header-middle .cart-toggle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 4.6rem;
+        height: 4.6rem;
+        border-radius: 1.6rem;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(95, 56, 42, 0.12);
+        box-shadow: var(--brand-shadow-soft);
+    }
+
+    .header-middle .wishlist i,
+    .header-middle .cart-toggle i {
+        font-size: 2.2rem;
+        color: var(--brand-dark);
+    }
+
+    .header-middle .wishlist-label,
+    .header-middle .cart-label {
+        display: none !important;
+    }
+
+    .header-middle .header-icon-badge {
+        top: -.4rem;
+        right: -.4rem;
+    }
+
+    .header-bottom {
+        display: none !important;
+    }
+
+    .store-mobile-tools {
+        display: block;
+        padding: 0 0 1.2rem;
+        background: linear-gradient(180deg, rgba(245, 235, 225, 0.98) 0%, rgba(255, 250, 246, 0.98) 100%);
+        border-bottom: 1px solid rgba(95, 56, 42, 0.08);
+    }
+
+    .store-mobile-tools .container {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .store-mobile-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 5rem;
+        padding: 0 .5rem 0 0;
+        border-radius: 1.8rem;
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid var(--brand-border);
+        box-shadow: var(--brand-shadow-soft);
+    }
+
+    .store-mobile-search .form-control {
+        min-height: 5rem;
+        padding: 0 1.6rem;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        font-size: 1.45rem;
+    }
+
+    .store-mobile-search .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4.2rem;
+        height: 4.2rem;
+        border-radius: 1.4rem;
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-strong) 100%);
+        color: var(--brand-white);
+        box-shadow: none;
+        flex: 0 0 auto;
+    }
+
+    .store-mobile-search .btn i {
+        color: inherit;
+        font-size: 1.8rem;
+    }
+
+    .store-mobile-nav {
+        display: flex;
+        gap: .8rem;
+        overflow-x: auto;
+        padding-bottom: .2rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .store-mobile-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .store-mobile-nav a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 3.9rem;
+        padding: .8rem 1.4rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid rgba(95, 56, 42, 0.10);
+        color: var(--brand-dark);
+        font-size: 1.3rem;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: var(--brand-shadow-soft);
+    }
+
+    .store-mobile-nav a.is-active {
+        background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-primary-strong) 100%);
+        border-color: transparent;
+        color: var(--brand-white) !important;
+    }
+}

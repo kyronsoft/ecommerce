@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'admin.auth' => \App\Http\Middleware\EnsureAdminAuthenticated::class,
+            'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
             'payments/epayco/response',
             'payments/epayco/confirmation',

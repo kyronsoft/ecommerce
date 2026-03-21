@@ -103,11 +103,11 @@ class EpaycoController extends Controller
             'response_payload'
         );
 
-        if ($transaction?->status === 'approved') {
-            $this->cart->clear();
-        }
-
         $statusView = $this->resolveResponseViewData($gatewayData, $transaction);
+
+        if ($statusView['key'] === 'approved') {
+            $this->removeApprovedOrderProductsFromCart($transaction);
+        }
 
         return view('epayco.response', [
             'data' => $gatewayData !== [] ? $gatewayData : $request->all(),
@@ -359,6 +359,17 @@ class EpaycoController extends Controller
     protected function resolveResponseViewData(array $gatewayData, ?PaymentTransaction $transaction): array
     {
         $status = $transaction?->status ?? $this->mapGatewayStatusFromText((string) ($gatewayData['x_response'] ?? ''));
+        $gatewayReportedStatus = isset($gatewayData['x_cod_transaction_state']) || isset($gatewayData['x_cod_response'])
+            ? $this->mapGatewayStatus((int) ($gatewayData['x_cod_transaction_state'] ?? $gatewayData['x_cod_response'] ?? 0))
+            : $this->mapGatewayStatusFromText((string) ($gatewayData['x_response'] ?? ''));
+
+        if ($status === 'failed_validation') {
+            $status = match ($gatewayReportedStatus) {
+                'approved' => 'approved',
+                'rejected' => 'rejected',
+                default => 'failed_validation',
+            };
+        }
 
         return match ($status) {
             'approved' => [
@@ -438,5 +449,16 @@ class EpaycoController extends Controller
                 'message' => $exception->getMessage(),
             ]);
         }
+    }
+
+    protected function removeApprovedOrderProductsFromCart(?PaymentTransaction $transaction): void
+    {
+        $productIds = $transaction?->order?->items?->pluck('product_id') ?? collect();
+
+        if ($productIds->isEmpty()) {
+            return;
+        }
+
+        $this->cart->removePurchasedProducts($productIds);
     }
 }

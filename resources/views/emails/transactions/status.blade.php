@@ -49,8 +49,7 @@
         ?? $transaction->response_payload['x_transaction_date']
         ?? optional($transaction->updated_at)->format('d/m/Y H:i');
 
-    $logoPath = public_path('wolmart/assets/images/la-tienda-de-mi-abue-logo.png');
-    $logoSrc = file_exists($logoPath) ? $message->embed($logoPath) : asset('wolmart/assets/images/la-tienda-de-mi-abue-logo.png');
+    $logoSrc = 'https://latiendademiabue.atl1.cdn.digitaloceanspaces.com/images/la-tienda-de-mi-abue-logo.png';
 @endphp
 <!DOCTYPE html>
 <html lang="es">
@@ -68,16 +67,20 @@
                         <td style="padding:0;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#5f382a 0%,#d97655 100%);">
                                 <tr>
-                                    <td style="padding:28px 32px 16px 32px;">
-                                        <img src="{{ $logoSrc }}" alt="La Tienda de Mi Abue" style="display:block;max-width:220px;width:100%;height:auto;">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:0 32px 32px 32px;">
-                                        <span style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.16);color:#fff7f1;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">
-                                            {{ $palette['badge'] }}
-                                        </span>
-                                        <h1 style="margin:18px 0 12px 0;font-size:34px;line-height:1.1;color:#ffffff;font-family:Georgia,'Times New Roman',serif;">
+                                    <td style="padding:24px 32px 32px 32px;">
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td valign="top" align="left" style="padding:0 16px 14px 0;">
+                                                    <img src="{{ $logoSrc }}" alt="La Tienda de Mi Abue" style="display:block;width:148px;max-width:148px;height:auto;">
+                                                </td>
+                                                <td valign="top" align="right" style="padding:10px 0 14px 0;">
+                                                    <span style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.16);color:#fff7f1;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">
+                                                        {{ $palette['badge'] }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <h1 style="margin:4px 0 12px 0;font-size:34px;line-height:1.1;color:#ffffff;font-family:Georgia,'Times New Roman',serif;">
                                             {{ $palette['title'] }}
                                         </h1>
                                         <p style="margin:0;max-width:520px;font-size:16px;line-height:1.7;color:#fff1e7;">
