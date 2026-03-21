@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentTransactionStatusMail;
 use App\Models\PaymentTransaction;
 use App\Services\CartService;
 use App\Services\EpaycoService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EpaycoController extends Controller
 {
@@ -178,6 +180,8 @@ class EpaycoController extends Controller
             return null;
         }
 
+        $previousStatus = (string) $transaction->status;
+
         $storedPayload = array_merge($payload, $normalized);
         $incomingAmount = isset($normalized['x_amount']) ? round((float) $normalized['x_amount'], 2) : null;
         $expectedAmount = round((float) $transaction->amount, 2);
@@ -226,7 +230,13 @@ class EpaycoController extends Controller
             ]);
         }
 
-        return $transaction->fresh('order');
+        $transaction = $transaction->fresh(['order.customer', 'order.items']);
+
+        if ($transaction && in_array($status, ['approved', 'rejected'], true)) {
+            $this->sendTransactionStatusEmailIfNeeded($transaction, $previousStatus);
+        }
+
+        return $transaction?->fresh('order');
     }
 
     protected function normalizeGatewayPayload(array $payload): array
@@ -345,5 +355,53 @@ class EpaycoController extends Controller
                 'badge' => 'Pendiente',
             ],
         };
+    }
+
+    protected function sendTransactionStatusEmailIfNeeded(PaymentTransaction $transaction, string $previousStatus): void
+    {
+        $customerEmail = $transaction->order?->customer?->email;
+
+        if (! $customerEmail) {
+            Log::warning('Skipping payment status email because the order customer has no email address.', [
+                'transaction_id' => $transaction->id,
+                'order_ref' => $transaction->order_ref,
+                'status' => $transaction->status,
+            ]);
+
+            return;
+        }
+
+        $alreadyNotifiedForCurrentStatus = $transaction->customer_notified_at !== null
+            && $transaction->customer_notification_status === $transaction->status;
+
+        if ($alreadyNotifiedForCurrentStatus) {
+            return;
+        }
+
+        try {
+            Mail::to($customerEmail)->send(new PaymentTransactionStatusMail($transaction));
+
+            $transaction->forceFill([
+                'customer_notification_status' => $transaction->status,
+                'customer_notified_at' => now(),
+            ])->save();
+
+            Log::info('Payment status email sent to customer.', [
+                'transaction_id' => $transaction->id,
+                'order_ref' => $transaction->order_ref,
+                'status' => $transaction->status,
+                'previous_status' => $previousStatus,
+                'customer_email' => $customerEmail,
+            ]);
+        } catch (\Throwable $exception) {
+            Log::error('Payment status email could not be sent.', [
+                'transaction_id' => $transaction->id,
+                'order_ref' => $transaction->order_ref,
+                'status' => $transaction->status,
+                'previous_status' => $previousStatus,
+                'customer_email' => $customerEmail,
+                'message' => $exception->getMessage(),
+            ]);
+        }
     }
 }

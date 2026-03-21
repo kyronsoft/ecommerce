@@ -15,11 +15,13 @@ class PaymentTransaction extends Model
         'order_ref',
         'gateway',
         'status',
+        'customer_notification_status',
         'amount',
         'currency',
         'request_payload',
         'response_payload',
         'confirmation_payload',
+        'customer_notified_at',
     ];
 
     protected $casts = [
@@ -27,6 +29,7 @@ class PaymentTransaction extends Model
         'request_payload' => 'array',
         'response_payload' => 'array',
         'confirmation_payload' => 'array',
+        'customer_notified_at' => 'datetime',
     ];
 
     public function order(): BelongsTo
