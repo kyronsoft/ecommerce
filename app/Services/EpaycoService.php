@@ -44,7 +44,8 @@ class EpaycoService
         $baseUrl = rtrim((string) config('epayco.validation_url'), '/').'/';
 
         $response = Http::acceptJson()
-            ->timeout(15)
+            ->connectTimeout(3)
+            ->timeout(5)
             ->get($baseUrl.$reference);
 
         if (! $response->successful()) {

@@ -94,7 +94,7 @@
 
                 @if(in_array($transaction?->status, ['approved', 'rejected'], true) && $customerEmail)
                     <div class="epayco-response-alert">
-                        Tambien enviamos un correo de confirmacion a <strong>{{ $customerEmail }}</strong> con el resumen de esta transaccion y el detalle del pedido.
+                        Estamos procesando el correo de confirmacion para <strong>{{ $customerEmail }}</strong> con el resumen de esta transaccion y el detalle del pedido.
                     </div>
                 @endif
 

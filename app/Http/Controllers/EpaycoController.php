@@ -6,6 +6,7 @@ use App\Mail\PaymentTransactionStatusMail;
 use App\Models\PaymentTransaction;
 use App\Services\CartService;
 use App\Services\EpaycoService;
+use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -136,10 +137,15 @@ class EpaycoController extends Controller
 
     protected function resolveResponsePayload(Request $request): array
     {
+        $requestPayload = $this->normalizeGatewayPayload($request->all());
         $refPayco = (string) $request->input('ref_payco');
 
         if ($refPayco === '') {
-            return $this->normalizeGatewayPayload($request->all());
+            return $requestPayload;
+        }
+
+        if ($this->payloadHasEnoughTransactionData($requestPayload)) {
+            return $requestPayload;
         }
 
         try {
@@ -160,6 +166,16 @@ class EpaycoController extends Controller
         return $this->normalizeGatewayPayload(array_merge($request->all(), $payload, [
             'ref_payco' => $refPayco,
         ]));
+    }
+
+    protected function payloadHasEnoughTransactionData(array $payload): bool
+    {
+        return $this->extractOrderReference($payload) !== ''
+            && (
+                isset($payload['x_cod_transaction_state'])
+                || isset($payload['x_cod_response'])
+                || isset($payload['x_response'])
+            );
     }
 
     protected function syncTransactionFromPayload(array $payload, string $payloadField): ?PaymentTransaction
@@ -424,31 +440,53 @@ class EpaycoController extends Controller
             return;
         }
 
-        try {
-            Mail::to($customerEmail)->send(new PaymentTransactionStatusMail($transaction));
+        $this->runAfterResponse(function () use ($transaction, $customerEmail, $previousStatus): void {
+            $freshTransaction = PaymentTransaction::query()
+                ->with(['order.customer', 'order.items'])
+                ->find($transaction->id);
 
-            $transaction->forceFill([
-                'customer_notification_status' => $transaction->status,
-                'customer_notified_at' => now(),
-            ])->save();
+            if (! $freshTransaction) {
+                return;
+            }
 
-            Log::info('Payment status email sent to customer.', [
-                'transaction_id' => $transaction->id,
-                'order_ref' => $transaction->order_ref,
-                'status' => $transaction->status,
-                'previous_status' => $previousStatus,
-                'customer_email' => $customerEmail,
-            ]);
-        } catch (\Throwable $exception) {
-            Log::error('Payment status email could not be sent.', [
-                'transaction_id' => $transaction->id,
-                'order_ref' => $transaction->order_ref,
-                'status' => $transaction->status,
-                'previous_status' => $previousStatus,
-                'customer_email' => $customerEmail,
-                'message' => $exception->getMessage(),
-            ]);
-        }
+            $alreadyNotifiedForCurrentStatus = $freshTransaction->customer_notified_at !== null
+                && $freshTransaction->customer_notification_status === $freshTransaction->status;
+
+            if ($alreadyNotifiedForCurrentStatus) {
+                return;
+            }
+
+            try {
+                Mail::to($customerEmail)->send(new PaymentTransactionStatusMail($freshTransaction));
+
+                $freshTransaction->forceFill([
+                    'customer_notification_status' => $freshTransaction->status,
+                    'customer_notified_at' => now(),
+                ])->save();
+
+                Log::info('Payment status email sent to customer.', [
+                    'transaction_id' => $freshTransaction->id,
+                    'order_ref' => $freshTransaction->order_ref,
+                    'status' => $freshTransaction->status,
+                    'previous_status' => $previousStatus,
+                    'customer_email' => $customerEmail,
+                ]);
+            } catch (\Throwable $exception) {
+                Log::error('Payment status email could not be sent.', [
+                    'transaction_id' => $freshTransaction->id,
+                    'order_ref' => $freshTransaction->order_ref,
+                    'status' => $freshTransaction->status,
+                    'previous_status' => $previousStatus,
+                    'customer_email' => $customerEmail,
+                    'message' => $exception->getMessage(),
+                ]);
+            }
+        });
+    }
+
+    protected function runAfterResponse(Closure $callback): void
+    {
+        app()->terminating($callback);
     }
 
     protected function removeApprovedOrderProductsFromCart(?PaymentTransaction $transaction): void
