@@ -9,8 +9,8 @@
         body {
             margin: 0;
             font-family: "Quicksand", sans-serif;
-            color: #5f382a;
-            background: linear-gradient(180deg, #fffdfb 0%, #fff6ef 100%);
+            color: #502818;
+            background: linear-gradient(180deg, #F8F0E0 0%, #F8E8D0 100%);
         }
         .page {
             max-width: 860px;
@@ -19,10 +19,10 @@
         }
         .card {
             padding: 32px;
-            border: 1px solid rgba(217, 118, 85, 0.18);
+            border: 1px solid rgba(208, 144, 80, 0.34);
             border-radius: 28px;
-            background: rgba(255, 255, 255, 0.96);
-            box-shadow: 0 18px 42px rgba(95, 56, 42, 0.12);
+            background: rgba(248, 240, 224, 0.96);
+            box-shadow: 0 18px 42px rgba(208, 104, 64, 0.16);
         }
         h1 {
             margin: 0 0 12px;
@@ -39,7 +39,7 @@
             margin: 24px 0;
             padding: 20px 22px;
             border-radius: 22px;
-            background: #fff7f1;
+            background: #F8E8D0;
         }
         .summary-row {
             display: flex;
@@ -49,12 +49,12 @@
             font-size: 18px;
         }
         .summary-row strong {
-            color: #d97655;
+            color: #C86040;
         }
         .help {
             margin-top: 24px;
             font-size: 15px;
-            color: #8c6d5d;
+            color: #603018;
         }
         .warning {
             margin: 18px 0 0;
@@ -62,9 +62,9 @@
             border-radius: 18px;
             font-size: 16px;
             line-height: 1.55;
-            color: #7c2d12;
-            background: #fff3e6;
-            border: 1px solid rgba(217, 118, 85, 0.28);
+            color: #603018;
+            background: rgba(248, 184, 120, 0.22);
+            border: 1px solid rgba(208, 144, 80, 0.38);
         }
         .fallback-btn {
             display: inline-flex;
@@ -78,12 +78,12 @@
             border-radius: 18px;
             font-size: 18px;
             font-weight: 700;
-            color: #fff;
-            background: #744632;
+            color: #F8F0E0;
+            background: #C86040;
             cursor: pointer;
         }
         .fallback-btn:hover {
-            background: #5f382a;
+            background: #D06840;
         }
         .epayco-script {
             display: inline-block;

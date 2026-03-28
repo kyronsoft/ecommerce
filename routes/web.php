@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\StoreController as AdminStoreController;
 use App\Http\Controllers\EpaycoController;
+use App\Http\Controllers\Store\Auth\AuthenticatedSessionController as StoreAuthenticatedSessionController;
+use App\Http\Controllers\Store\Auth\RegisteredUserController;
 use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\CheckoutController;
 use App\Http\Controllers\Store\HomeController;
@@ -36,6 +38,17 @@ Route::prefix('cart')->name('store.cart.')->group(function () {
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('store.checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('store.checkout.store');
+
+Route::middleware('store.guest')->group(function () {
+    Route::get('/ingresar', [StoreAuthenticatedSessionController::class, 'create'])->name('store.login');
+    Route::post('/ingresar', [StoreAuthenticatedSessionController::class, 'store'])->name('store.login.store');
+    Route::get('/registro', [RegisteredUserController::class, 'create'])->name('store.register');
+    Route::post('/registro', [RegisteredUserController::class, 'store'])->name('store.register.store');
+});
+
+Route::middleware('store.auth')->group(function () {
+    Route::post('/salir', [StoreAuthenticatedSessionController::class, 'destroy'])->name('store.logout');
+});
 
 Route::get('/payments/epayco/checkout', [EpaycoController::class, 'checkout'])->name('epayco.checkout');
 Route::match(['get', 'post'], '/payments/epayco/response', [EpaycoController::class, 'response'])->name('epayco.response');

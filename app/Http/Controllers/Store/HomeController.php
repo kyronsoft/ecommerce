@@ -41,7 +41,10 @@ class HomeController extends Controller
 
         return view('store.shop', [
             'products' => $products,
-            'categories' => Category::query()->orderBy('name')->get(),
+            'categories' => Category::query()
+                ->withCount(['products' => fn ($query) => $query->where('is_active', true)])
+                ->orderBy('name')
+                ->get(),
             'cartCount' => $this->cart->count(),
         ]);
     }
