@@ -4,7 +4,7 @@
 <style>
     .shop-categories-page {
         padding: 2.4rem 0 6rem;
-        background: linear-gradient(180deg, #F8F0E0 0%, #F8E8D0 18%, #F8E8D0 100%);
+        background: linear-gradient(180deg, #FFFFFF 0%, #FBF1E1 18%, #FFFFFF 100%);
     }
     .shop-categories-page a {
         transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
@@ -19,10 +19,10 @@
     .shop-layout-panel,
     .shop-results-head,
     .shop-empty {
-        border: 1px solid rgba(208, 144, 80, 0.38);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         border-radius: 24px;
-        background: #F8F0E0;
-        box-shadow: 0 18px 34px rgba(208, 104, 64, 0.16);
+        background: #FFFFFF;
+        box-shadow: 0 18px 34px rgba(87, 43, 26, 0.08);
     }
     .shop-crumbs {
         display: flex;
@@ -31,24 +31,25 @@
         gap: 2rem;
         margin-bottom: 2rem;
         padding: 1.6rem 2rem;
-        background: rgba(248, 240, 224, 0.94);
+        background: rgba(255, 255, 255, 0.96);
     }
     .shop-crumbs__title {
         margin: 0;
         font-size: 2.4rem;
         font-weight: 700;
-        color: #502818;
+        color: #572B1A;
+        font-family: "Manrope", sans-serif;
     }
     .shop-crumbs__trail {
         display: flex;
         align-items: center;
         gap: 1rem;
         flex-wrap: wrap;
-        color: #603018;
+        color: #3A241C;
         font-size: 1.3rem;
     }
     .shop-crumbs__trail a {
-        color: #502818;
+        color: #572B1A;
         font-weight: 700;
     }
     .shop-hero {
@@ -62,7 +63,7 @@
         overflow: hidden;
         min-height: 29rem;
         background:
-            linear-gradient(110deg, rgba(248, 184, 120, 0.94) 0%, rgba(248, 240, 224, 0.9) 46%, rgba(208, 104, 64, 0.24) 100%),
+            linear-gradient(110deg, rgba(251, 241, 225, 0.96) 0%, rgba(255, 255, 255, 0.92) 46%, rgba(208, 95, 50, 0.16) 100%),
             url('{{ asset('wolmart/assets/images/shop/banner1.jpg') }}') center right / cover no-repeat;
     }
     .shop-hero__banner::after {
@@ -73,7 +74,7 @@
         width: 24rem;
         height: 24rem;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(208, 104, 64, 0.22) 0%, rgba(208, 104, 64, 0) 72%);
+        background: radial-gradient(circle, rgba(208, 95, 50, 0.18) 0%, rgba(208, 95, 50, 0) 72%);
     }
     .shop-hero__content {
         position: relative;
@@ -83,7 +84,7 @@
     }
     .shop-hero__eyebrow {
         margin-bottom: 0.8rem;
-        color: #603018;
+        color: #572B1A;
         font-size: 1.2rem;
         font-weight: 700;
         letter-spacing: 0.14em;
@@ -91,16 +92,17 @@
     }
     .shop-hero__title {
         margin: 0 0 1.2rem;
-        font-family: "DM Serif Display", serif;
+        font-family: "Manrope", sans-serif;
         font-size: clamp(3rem, 4vw, 4.8rem);
         line-height: 1;
-        color: #502818;
+        color: #572B1A;
     }
     .shop-hero__text {
         margin: 0 0 1.6rem;
         max-width: 42rem;
-        color: #603018;
-        font-size: 1.55rem;
+        color: #3A241C;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.9rem;
         line-height: 1.7;
     }
     .shop-hero__actions {
@@ -119,39 +121,39 @@
         font-weight: 700;
     }
     .shop-chip-btn--solid {
-        background: #C86040;
-        color: #F8F0E0;
+        background: #D05F32;
+        color: #FFFFFF;
     }
     .shop-chip-btn--solid:hover {
-        color: #F8F0E0;
-        background: #D06840;
+        color: #FFFFFF;
+        background: #AB4D29;
     }
     .shop-chip-btn--ghost {
-        border: 1px solid rgba(208, 144, 80, 0.48);
-        background: rgba(248, 240, 224, 0.82);
-        color: #502818;
+        border: 1px solid rgba(231, 212, 195, 0.95);
+        background: #FFFFFF;
+        color: #572B1A;
     }
     .shop-chip-btn--ghost:hover {
-        color: #502818;
-        border-color: #D06840;
-        background: rgba(248, 184, 120, 0.22);
+        color: #572B1A;
+        border-color: #D05F32;
+        background: #FBF1E1;
     }
     .shop-hero__stats {
         display: grid;
         gap: 1rem;
         align-content: start;
         padding: 2rem;
-        background: linear-gradient(180deg, rgba(248, 232, 208, 0.98) 0%, rgba(248, 184, 120, 0.28) 100%);
+        background: linear-gradient(180deg, rgba(251, 241, 225, 0.98) 0%, rgba(255, 255, 255, 0.9) 100%);
     }
     .shop-hero__stats-item {
         padding: 1.5rem 1.6rem;
         border-radius: 18px;
-        background: rgba(248, 240, 224, 0.96);
-        border: 1px solid rgba(208, 144, 80, 0.32);
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(231, 212, 195, 0.95);
     }
     .shop-hero__stats-label {
         margin-bottom: 0.5rem;
-        color: #603018;
+        color: #572B1A;
         font-size: 1.15rem;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -159,7 +161,7 @@
     }
     .shop-hero__stats-value {
         margin: 0;
-        color: #502818;
+        color: #572B1A;
         font-size: 2rem;
         font-weight: 700;
     }
@@ -177,7 +179,7 @@
         width: 100%;
         height: 18rem;
         object-fit: cover;
-        background: linear-gradient(135deg, #F8E8D0 0%, #F8B878 100%);
+        background: linear-gradient(135deg, #FBF1E1 0%, #FFFFFF 100%);
     }
     .shop-categories-grid__body {
         padding: 1.8rem;
@@ -186,7 +188,8 @@
         margin: 0 0 1rem;
         font-size: 1.7rem;
         font-weight: 700;
-        color: #502818;
+        color: #572B1A;
+        font-family: "Manrope", sans-serif;
     }
     .shop-categories-grid__meta-row {
         display: flex;
@@ -194,7 +197,7 @@
         justify-content: space-between;
         gap: 1rem;
         padding: 0.7rem 0;
-        color: #603018;
+        color: #3A241C;
         font-size: 1.25rem;
         border-top: 1px solid rgba(208, 144, 80, 0.28);
     }
@@ -210,8 +213,8 @@
         height: 3rem;
         padding: 0 0.9rem;
         border-radius: 999px;
-        background: #D06840;
-        color: #F8F0E0;
+        background: #D05F32;
+        color: #FFFFFF;
         font-size: 1.2rem;
         font-weight: 700;
     }
@@ -226,7 +229,7 @@
     }
     .shop-panel-title {
         margin: 0 0 1.4rem;
-        color: #502818;
+        color: #572B1A;
         font-size: 1.7rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -234,7 +237,7 @@
     }
     .shop-panel-note {
         margin: 0 0 1.4rem;
-        color: #603018;
+        color: #3A241C;
         font-size: 1.3rem;
         line-height: 1.7;
     }
@@ -248,17 +251,17 @@
         justify-content: space-between;
         gap: 1rem;
         padding: 1.2rem 1.4rem;
-        border: 1px solid rgba(208, 144, 80, 0.38);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         border-radius: 16px;
-        background: #F8F0E0;
-        color: #502818;
+        background: #FFFFFF;
+        color: #572B1A;
         font-weight: 700;
     }
     .shop-category-filter__link:hover,
     .shop-category-filter__link.is-active {
-        color: #502818;
+        color: #572B1A;
         border-color: rgba(208, 104, 64, 0.48);
-        background: linear-gradient(135deg, rgba(248, 184, 120, 0.34) 0%, #F8F0E0 100%);
+        background: linear-gradient(135deg, rgba(251, 241, 225, 0.9) 0%, #FFFFFF 100%);
         box-shadow: 0 12px 22px rgba(208, 104, 64, 0.18);
     }
     .shop-results-head {
@@ -271,13 +274,14 @@
     }
     .shop-results-head__title {
         margin: 0 0 0.4rem;
-        color: #502818;
+        color: #572B1A;
+        font-family: "Manrope", sans-serif;
         font-size: 2rem;
         font-weight: 700;
     }
     .shop-results-head__text {
         margin: 0;
-        color: #603018;
+        color: #3A241C;
         font-size: 1.35rem;
     }
     .shop-results-head__pills {
@@ -293,32 +297,30 @@
         min-height: 3.8rem;
         padding: 0 1.4rem;
         border-radius: 999px;
-        background: rgba(248, 184, 120, 0.32);
-        color: #603018;
+        background: #FBF1E1;
+        color: #572B1A;
         font-size: 1.2rem;
         font-weight: 700;
     }
     .shop-grid-results {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 2rem;
+        display: block;
     }
     .shop-grid-results__item {
-        padding: 1.4rem;
-        border: 1px solid rgba(208, 144, 80, 0.38);
-        border-radius: 22px;
-        background: #F8F0E0;
-        box-shadow: 0 16px 26px rgba(208, 104, 64, 0.16);
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
     .shop-empty {
         padding: 3rem;
-        color: #603018;
+        color: #3A241C;
         text-align: center;
     }
     .shop-pagination-wrap {
         margin-top: 2.4rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(208, 144, 80, 0.28);
+        border-top: 1px solid rgba(231, 212, 195, 0.95);
     }
     .shop-pagination-wrap nav {
         display: flex;
@@ -335,19 +337,18 @@
         min-width: 4.2rem;
         height: 4.2rem;
         border-radius: 999px;
-        border: 1px solid rgba(208, 144, 80, 0.38);
-        color: #502818;
-        background: #F8F0E0;
+        border: 1px solid rgba(231, 212, 195, 0.95);
+        color: #572B1A;
+        background: #FFFFFF;
     }
     .shop-pagination-wrap .active .page-link,
     .shop-pagination-wrap .page-item.active span {
-        border-color: #C86040;
-        background: #C86040;
-        color: #F8F0E0;
+        border-color: #D05F32;
+        background: #D05F32;
+        color: #FFFFFF;
     }
     @media (max-width: 1199px) {
-        .shop-categories-grid,
-        .shop-grid-results {
+        .shop-categories-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
         .shop-page-layout {
@@ -533,7 +534,7 @@
                 </div>
 
                 @if($products->count() > 0)
-                    <div class="shop-grid-results">
+                    <div class="shop-grid-results product-market-grid">
                         @foreach($products as $product)
                             <div class="shop-grid-results__item">
                                 @include('store.partials.product-card', ['product' => $product])

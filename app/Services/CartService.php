@@ -93,7 +93,7 @@ class CartService
 
     public function tax(): float
     {
-        return round($this->subtotal() * 0.19, 2);
+        return 0.0;
     }
 
     public function shipping(): float

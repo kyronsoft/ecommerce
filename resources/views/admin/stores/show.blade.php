@@ -5,8 +5,34 @@
 ])
 
 @php
-    $logoUrl = filled($store->logo) ? (\Illuminate\Support\Str::startsWith($store->logo, ['http://', 'https://']) ? $store->logo : asset($store->logo)) : null;
-    $bannerUrl = filled($store->banner) ? (\Illuminate\Support\Str::startsWith($store->banner, ['http://', 'https://']) ? $store->banner : asset($store->banner)) : null;
+    $resolveStoreMedia = function (?string $path, string $field) use ($store): ?string {
+        if (blank($path)) {
+            return null;
+        }
+
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        $normalizedPath = ltrim($path, '/');
+
+        if (\Illuminate\Support\Str::startsWith($normalizedPath, 'public/')) {
+            $normalizedPath = \Illuminate\Support\Str::after($normalizedPath, 'public/');
+        }
+
+        if (\Illuminate\Support\Str::startsWith($normalizedPath, 'storage/')) {
+            $normalizedPath = \Illuminate\Support\Str::after($normalizedPath, 'storage/');
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($normalizedPath)) {
+            return route('admin.stores.media', [$store, $field]);
+        }
+
+        return asset($path);
+    };
+
+    $logoUrl = $resolveStoreMedia($store->logo, 'logo');
+    $bannerUrl = $resolveStoreMedia($store->banner, 'banner');
 @endphp
 
 @section('page_actions')

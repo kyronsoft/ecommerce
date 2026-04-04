@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Support\AdminPanelScope;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,47 +14,56 @@ class CategoryController extends Controller
 {
     public function index(): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+
         return view('admin.categories.index', [
-            'categories' => Category::withCount('products')->orderBy('name')->paginate(15),
+            'categories' => AdminPanelScope::scopeCategories(Category::query(), $adminStore, $isSuperAdmin)->withCount('products')->orderBy('name')->paginate(15),
             'stats' => [
-                'total' => Category::count(),
-                'with_products' => Category::has('products')->count(),
-                'without_products' => Category::doesntHave('products')->count(),
+                'total' => AdminPanelScope::scopeCategories(Category::query(), $adminStore, $isSuperAdmin)->count(),
+                'with_products' => AdminPanelScope::scopeCategories(Category::query(), $adminStore, $isSuperAdmin)->has('products')->count(),
+                'without_products' => AdminPanelScope::scopeCategories(Category::query(), $adminStore, $isSuperAdmin)->doesntHave('products')->count(),
             ],
         ]);
     }
 
     public function create(): View
     {
+        abort_unless(request()->attributes->get('adminIsSuperAdmin'), 403);
         return view('admin.categories.form', ['category' => new Category()]);
     }
 
     public function show(Category $category): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureCategoryAccess($category, $adminStore, $isSuperAdmin);
         return view('admin.categories.show', [
-            'category' => $category->load(['products' => fn ($query) => $query->latest()->take(10)]),
+            'category' => $category->load(['products' => fn ($query) => AdminPanelScope::scopeProducts($query, $adminStore, $isSuperAdmin)->latest()->take(10)]),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
+        abort_unless($request->attributes->get('adminIsSuperAdmin'), 403);
         Category::create($this->validated($request));
         return redirect()->route('admin.categories.index')->with('status', 'Categoría creada.');
     }
 
     public function edit(Category $category): View
     {
+        abort_unless(request()->attributes->get('adminIsSuperAdmin'), 403);
         return view('admin.categories.form', compact('category'));
     }
 
     public function update(Request $request, Category $category): RedirectResponse
     {
+        abort_unless($request->attributes->get('adminIsSuperAdmin'), 403);
         $category->update($this->validated($request));
         return redirect()->route('admin.categories.index')->with('status', 'Categoría actualizada.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
+        abort_unless(request()->attributes->get('adminIsSuperAdmin'), 403);
         if ($category->products()->exists()) {
             return redirect()
                 ->route('admin.categories.index')

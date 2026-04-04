@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Support\AdminPanelScope;
 use App\Support\OrderNumber;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +22,9 @@ class OrderController extends Controller
 {
     public function index(): View
     {
-        $orders = Order::query()
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+
+        $orders = AdminPanelScope::scopeOrders(Order::query(), $adminStore, $isSuperAdmin)
             ->with(['customer', 'paymentTransactions'])
             ->withCount('items')
             ->latest()
@@ -31,16 +34,17 @@ class OrderController extends Controller
             'orders' => $orders,
             'statusLabels' => $this->statusOptions(),
             'stats' => [
-                'total' => Order::count(),
-                'pending' => Order::where('status', 'pending')->count(),
-                'paid' => Order::where('status', 'paid')->count(),
-                'sales' => (float) Order::sum('total'),
+                'total' => AdminPanelScope::scopeOrders(Order::query(), $adminStore, $isSuperAdmin)->count(),
+                'pending' => AdminPanelScope::scopeOrders(Order::query(), $adminStore, $isSuperAdmin)->where('status', 'pending')->count(),
+                'paid' => AdminPanelScope::scopeOrders(Order::query(), $adminStore, $isSuperAdmin)->where('status', 'paid')->count(),
+                'sales' => (float) AdminPanelScope::scopeOrders(Order::query(), $adminStore, $isSuperAdmin)->sum('total'),
             ],
         ]);
     }
 
     public function create(): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
         return view('admin.orders.form', $this->formData(
             new Order([
                 'customer_id' => request()->integer('customer') ?: null,
@@ -48,7 +52,9 @@ class OrderController extends Controller
                 'payment_method' => 'epayco',
                 'shipping' => 0,
                 'tax' => 0,
-            ])
+            ]),
+            $adminStore,
+            $isSuperAdmin
         ));
     }
 
@@ -65,7 +71,7 @@ class OrderController extends Controller
                 'status' => $data['status'],
                 'subtotal' => $data['subtotal'],
                 'shipping' => $data['shipping'],
-                'tax' => $data['tax'],
+                'tax' => 0,
                 'total' => $data['total'],
                 'payment_method' => $data['payment_method'],
                 'shipping_address' => $data['shipping_address'] ?: $this->customerAddress($customer),
@@ -85,6 +91,8 @@ class OrderController extends Controller
 
     public function show(Order $order): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureOrderAccess($order, $adminStore, $isSuperAdmin);
         return view('admin.orders.show', [
             'order' => $order->load(['customer', 'items.product', 'paymentTransactions']),
             'statusLabels' => $this->statusOptions(),
@@ -94,11 +102,15 @@ class OrderController extends Controller
 
     public function edit(Order $order): View
     {
-        return view('admin.orders.form', $this->formData($order->load('items')));
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureOrderAccess($order, $adminStore, $isSuperAdmin);
+        return view('admin.orders.form', $this->formData($order->load('items'), $adminStore, $isSuperAdmin));
     }
 
     public function update(Request $request, Order $order): RedirectResponse
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest($request);
+        AdminPanelScope::ensureOrderAccess($order, $adminStore, $isSuperAdmin);
         $data = $this->validated($request);
 
         DB::transaction(function () use ($data, $order) {
@@ -109,7 +121,7 @@ class OrderController extends Controller
                 'status' => $data['status'],
                 'subtotal' => $data['subtotal'],
                 'shipping' => $data['shipping'],
-                'tax' => $data['tax'],
+                'tax' => 0,
                 'total' => $data['total'],
                 'payment_method' => $data['payment_method'],
                 'shipping_address' => $data['shipping_address'] ?: $this->customerAddress($customer),
@@ -131,6 +143,8 @@ class OrderController extends Controller
 
     public function destroy(Order $order): RedirectResponse
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureOrderAccess($order, $adminStore, $isSuperAdmin);
         if ($order->paymentTransactions()->where('status', 'approved')->exists()) {
             return redirect()
                 ->route('admin.orders.show', $order)
@@ -147,12 +161,12 @@ class OrderController extends Controller
             ->with('status', 'Pedido eliminado.');
     }
 
-    protected function formData(Order $order): array
+    protected function formData(Order $order, $adminStore = null, bool $isSuperAdmin = true): array
     {
         return [
             'order' => $order,
-            'customers' => Customer::query()->orderBy('first_name')->orderBy('last_name')->get(),
-            'products' => Product::query()->with('category')->orderBy('name')->get(),
+            'customers' => AdminPanelScope::scopeCustomers(Customer::query(), $adminStore, $isSuperAdmin)->orderBy('first_name')->orderBy('last_name')->get(),
+            'products' => AdminPanelScope::scopeProducts(Product::query(), $adminStore, $isSuperAdmin)->with('category')->orderBy('name')->get(),
             'statusOptions' => $this->statusOptions(),
             'paymentMethodOptions' => $this->paymentMethodOptions(),
         ];
@@ -165,7 +179,6 @@ class OrderController extends Controller
             'status' => ['required', Rule::in(array_keys($this->statusOptions()))],
             'payment_method' => ['nullable', Rule::in(array_keys($this->paymentMethodOptions()))],
             'shipping' => ['nullable', 'numeric', 'min:0'],
-            'tax' => ['nullable', 'numeric', 'min:0'],
             'shipping_address' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
             'items' => ['required', 'array'],
@@ -208,16 +221,15 @@ class OrderController extends Controller
 
         $subtotal = round((float) $validatedItems->sum('total'), 2);
         $shipping = round((float) ($validated['shipping'] ?? 0), 2);
-        $tax = round((float) ($validated['tax'] ?? 0), 2);
 
         return [
             'customer_id' => (int) $validated['customer_id'],
             'status' => $validated['status'],
             'payment_method' => $validated['payment_method'] ?: null,
             'shipping' => $shipping,
-            'tax' => $tax,
+            'tax' => 0,
             'subtotal' => $subtotal,
-            'total' => round($subtotal + $shipping + $tax, 2),
+            'total' => round($subtotal + $shipping, 2),
             'shipping_address' => $validated['shipping_address'] ?? null,
             'notes' => $validated['notes'] ?? null,
             'items' => $validatedItems->all(),
@@ -226,6 +238,7 @@ class OrderController extends Controller
 
     protected function normalizeItems(array $items): Collection
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
         $productIds = collect($items)
             ->pluck('product_id')
             ->filter(fn ($value) => filled($value))
@@ -233,7 +246,7 @@ class OrderController extends Controller
             ->unique()
             ->values();
 
-        $products = Product::query()
+        $products = AdminPanelScope::scopeProducts(Product::query(), $adminStore, $isSuperAdmin)
             ->whereIn('id', $productIds)
             ->get()
             ->keyBy('id');

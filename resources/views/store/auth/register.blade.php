@@ -6,7 +6,7 @@
     <title>Registro de Cliente | La Tienda de Mi Abue</title>
     @include('partials.favicons')
     <script>
-        WebFontConfig = { google: { families: ['Quicksand:400,500,600,700', 'DM Serif Display:400'] } };
+        WebFontConfig = { google: { families: ['Inter:400,500,600,700', 'Manrope:500,600,700,800', 'Cormorant Garamond:400,500,600,700'] } };
         (function (d) {
             var wf = d.createElement('script'), s = d.scripts[0];
             wf.src = '{{ asset('wolmart/assets/js/webfont.js') }}';
@@ -16,25 +16,25 @@
     </script>
     <style>
         :root {
-            --brand-ink: #502818;
-            --brand-deep: #603018;
-            --brand-accent: #D06840;
-            --brand-accent-strong: #C86040;
-            --brand-surface: #F8F0E0;
-            --brand-soft: #F8E8D0;
-            --brand-line: #D09050;
-            --brand-glow: #F8B878;
+            --brand-ink: #3A241C;
+            --brand-deep: #572B1A;
+            --brand-accent: #D05F32;
+            --brand-accent-strong: #AB4D29;
+            --brand-surface: #FFFFFF;
+            --brand-soft: #FBF1E1;
+            --brand-line: #E7D4C3;
+            --brand-glow: #EBA468;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: 'Quicksand', sans-serif;
+            font-family: 'Inter', sans-serif;
             color: var(--brand-ink);
             background:
-                radial-gradient(circle at top left, rgba(248, 184, 120, 0.24), transparent 26%),
-                radial-gradient(circle at bottom right, rgba(208, 104, 64, 0.16), transparent 30%),
-                linear-gradient(180deg, #fbf4e7 0%, var(--brand-soft) 100%);
+                radial-gradient(circle at top left, rgba(235, 164, 104, 0.14), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(208, 95, 50, 0.10), transparent 30%),
+                linear-gradient(180deg, #ffffff 0%, var(--brand-soft) 100%);
         }
         a {
             color: var(--brand-accent-strong);
@@ -62,7 +62,7 @@
         }
         .auth-breadcrumb__title {
             margin: 0;
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Manrope', sans-serif;
             font-size: 3rem;
         }
         .auth-breadcrumb__trail {
@@ -85,19 +85,19 @@
         }
         .auth-card {
             width: min(100%, 72rem);
-            background: rgba(248, 240, 224, 0.96);
-            border: 1px solid rgba(208, 144, 80, 0.28);
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(231, 212, 195, 0.9);
             border-radius: 28px;
-            box-shadow: 0 24px 60px rgba(80, 40, 24, 0.12);
+            box-shadow: 0 24px 60px rgba(87, 43, 26, 0.08);
         }
         .auth-card__body {
             padding: 3.2rem;
         }
         .auth-card__frame {
             padding: 3rem;
-            border: 1px solid rgba(208, 144, 80, 0.22);
+            border: 1px solid rgba(231, 212, 195, 0.9);
             border-radius: 22px;
-            background: rgba(251, 244, 231, 0.96);
+            background: rgba(251, 241, 225, 0.56);
         }
         .auth-card__brand {
             display: flex;
@@ -110,7 +110,7 @@
             justify-content: center;
             padding: 1rem 1.4rem;
             border-radius: 20px;
-            background: rgba(248, 232, 208, 0.72);
+            background: rgba(251, 241, 225, 0.9);
         }
         .auth-card__brand .brand-logo-image {
             width: min(100%, 20rem);
@@ -122,14 +122,15 @@
         }
         .auth-header h1 {
             margin: 0 0 0.8rem;
-            font-family: 'DM Serif Display', serif;
+            font-family: 'Manrope', sans-serif;
             font-size: 3.4rem;
-            color: var(--brand-ink);
+            color: var(--brand-deep);
         }
         .auth-header p {
             margin: 0;
-            color: var(--brand-deep);
-            font-size: 1.45rem;
+            color: var(--brand-ink);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
             line-height: 1.7;
         }
         .auth-separator {
@@ -150,7 +151,7 @@
             z-index: 1;
             display: inline-block;
             padding: 0 1.2rem;
-            background: rgba(251, 244, 231, 0.96);
+            background: rgba(255, 255, 255, 0.96);
             color: var(--brand-accent-strong);
             font-size: 1.2rem;
             font-weight: 700;
@@ -165,9 +166,21 @@
             font-weight: 600;
         }
         .feedback--error {
-            background: rgba(208, 104, 64, 0.14);
-            border: 1px solid rgba(200, 96, 64, 0.26);
+            background: rgba(208, 95, 50, 0.10);
+            border: 1px solid rgba(208, 95, 50, 0.18);
             color: var(--brand-ink);
+        }
+        .feedback__title {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 1.38rem;
+        }
+        .feedback__list {
+            margin: 0;
+            padding-left: 1.8rem;
+        }
+        .feedback__list li + li {
+            margin-top: 0.4rem;
         }
         .auth-grid {
             display: grid;
@@ -192,9 +205,9 @@
             width: 100%;
             min-height: 5.2rem;
             padding: 1rem 1.5rem;
-            border: 1px solid rgba(208, 144, 80, 0.34);
+            border: 1px solid rgba(231, 212, 195, 0.9);
             border-radius: 16px;
-            background: #fffaf1;
+            background: #FFFFFF;
             color: var(--brand-ink);
             font-size: 1.45rem;
             outline: none;
@@ -202,8 +215,8 @@
         }
         .field input:focus,
         .field select:focus {
-            border-color: rgba(208, 104, 64, 0.68);
-            box-shadow: 0 0 0 4px rgba(248, 184, 120, 0.18);
+            border-color: rgba(208, 95, 50, 0.6);
+            box-shadow: 0 0 0 4px rgba(235, 164, 104, 0.18);
         }
         .auth-note {
             margin: 1.6rem 0 1.8rem;
@@ -216,12 +229,15 @@
             min-height: 5.2rem;
             border: 0;
             border-radius: 999px;
-            background: linear-gradient(135deg, var(--brand-ink) 0%, var(--brand-accent) 100%);
-            color: var(--brand-surface);
+            background: var(--brand-accent);
+            color: #FFFFFF;
             font-size: 1.5rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 18px 34px rgba(208, 104, 64, 0.2);
+            box-shadow: 0 18px 34px rgba(208, 95, 50, 0.18);
+        }
+        .auth-submit:hover {
+            background: var(--brand-accent-strong);
         }
         .auth-footer {
             margin-top: 2rem;
@@ -291,7 +307,14 @@
                             </div>
 
                             @if($errors->any())
-                                <div class="feedback feedback--error">{{ $errors->first() }}</div>
+                                <div class="feedback feedback--error">
+                                    <span class="feedback__title">No pudimos completar tu registro. Revisa lo siguiente:</span>
+                                    <ul class="feedback__list">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             @endif
 
                             <form method="POST" action="{{ route('store.register.store') }}">
@@ -346,7 +369,7 @@
                                 </div>
 
                                 <div class="auth-note">
-                                    Tus datos quedarán asociados a un perfil de cliente dentro del marketplace y seguirán separados del acceso administrativo.
+                                    Tus datos quedarán asociados a un perfil de cliente dentro del marketplace y seguirán separados del backoffice para emprendedores.
                                 </div>
 
                                 <button type="submit" class="auth-submit">Crear mi cuenta</button>

@@ -229,7 +229,6 @@
                                                     <strong style="display:block;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#603018;margin-bottom:10px;">Totales</strong>
                                                     <span style="display:block;font-size:14px;line-height:1.8;color:#603018;">Subtotal: {{ $formatMoney($order?->subtotal ?? 0) }}</span>
                                                     <span style="display:block;font-size:14px;line-height:1.8;color:#603018;">Envio: {{ $formatMoney($order?->shipping ?? 0) }}</span>
-                                                    <span style="display:block;font-size:14px;line-height:1.8;color:#603018;">Impuestos: {{ $formatMoney($order?->tax ?? 0) }}</span>
                                                     <strong style="display:block;font-size:18px;line-height:1.8;color:#C86040;">Total: {{ $formatMoney($order?->total ?? $transaction->amount) }}</strong>
                                                 </td>
                                             </tr>

@@ -12,7 +12,9 @@
 
 @section('page_actions')
     <a href="{{ route('admin.products.create', ['category' => $category->id]) }}" class="admin-btn">Crear producto</a>
-    <a href="{{ route('admin.categories.edit', $category) }}" class="admin-btn admin-btn--primary">Editar categoria</a>
+    @if($currentAdminIsSuperAdmin ?? false)
+        <a href="{{ route('admin.categories.edit', $category) }}" class="admin-btn admin-btn--primary">Editar categoria</a>
+    @endif
 @endsection
 
 @section('content')

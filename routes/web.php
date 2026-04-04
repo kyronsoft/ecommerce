@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EntrepreneurSubscriptionController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -12,14 +13,19 @@ use App\Http\Controllers\Store\Auth\AuthenticatedSessionController as StoreAuthe
 use App\Http\Controllers\Store\Auth\RegisteredUserController;
 use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\CheckoutController;
+use App\Http\Controllers\Store\EntrepreneurController;
 use App\Http\Controllers\Store\HomeController;
 use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\Store\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('store.home');
+Route::get('/quiero-ser-emprendedor', [HomeController::class, 'entrepreneur'])->name('store.entrepreneur');
+Route::get('/quiero-ser-emprendedor/{plan}', [EntrepreneurController::class, 'show'])->name('store.entrepreneur.apply');
+Route::post('/quiero-ser-emprendedor/{plan}', [EntrepreneurController::class, 'store'])->name('store.entrepreneur.apply.store');
 Route::get('/shop', [HomeController::class, 'shop'])->name('store.shop');
 Route::get('/stores', [HomeController::class, 'stores'])->name('store.stores.index');
+Route::get('/stores/{store:slug}/media/{field}', [HomeController::class, 'media'])->name('store.store.media');
 Route::get('/stores/{store:slug}', [HomeController::class, 'storeShow'])->name('store.store.show');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('store.product.show');
 
@@ -63,6 +69,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('admin.auth')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/entrepreneur-subscriptions', [EntrepreneurSubscriptionController::class, 'index'])->name('entrepreneur-subscriptions.index');
+        Route::get('/stores/{store}/media/{field}', [AdminStoreController::class, 'media'])->name('stores.media');
+        Route::get('/products/{product}/media/{field}/{index?}', [AdminProductController::class, 'media'])->name('products.media');
         Route::resource('categories', AdminCategoryController::class);
         Route::resource('products', AdminProductController::class);
         Route::resource('stores', AdminStoreController::class);

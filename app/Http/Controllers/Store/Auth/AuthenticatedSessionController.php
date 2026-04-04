@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Store\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\UserPassword;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
             ->where('is_admin', false)
             ->first();
 
-        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+        if (! $user || ! UserPassword::verifyAndUpgrade($user, $credentials['password'])) {
             throw ValidationException::withMessages([
                 'email' => 'Las credenciales del cliente no son correctas.',
             ]);

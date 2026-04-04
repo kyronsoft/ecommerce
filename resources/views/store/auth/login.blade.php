@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingresar | La Tienda de Mi Abue</title>
+    <title>Acceso Clientes | La Tienda de Mi Abue</title>
     @include('partials.favicons')
     <script>
-        WebFontConfig = { google: { families: ['Quicksand:400,500,600,700', 'DM Serif Display:400'] } };
+        WebFontConfig = { google: { families: ['Inter:400,500,600,700', 'Manrope:500,600,700,800', 'Cormorant Garamond:400,500,600,700'] } };
         (function (d) {
             var wf = d.createElement('script'), s = d.scripts[0];
             wf.src = '{{ asset('wolmart/assets/js/webfont.js') }}';
@@ -14,316 +14,290 @@
             s.parentNode.insertBefore(wf, s);
         })(document);
     </script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('wolmart/assets/vendor/fontawesome-free/css/all.min.css') }}">
     <style>
         :root {
-            --brand-ink: #502818;
-            --brand-deep: #603018;
-            --brand-accent: #D06840;
-            --brand-accent-strong: #C86040;
-            --brand-surface: #F8F0E0;
-            --brand-soft: #F8E8D0;
-            --brand-line: #D09050;
-            --brand-glow: #F8B878;
+            --auth-bg: #FFFFFF;
+            --auth-soft: #FBF1E1;
+            --auth-border: #E7D4C3;
+            --auth-text: #3A241C;
+            --auth-heading: #572B1A;
+            --auth-primary: #D05F32;
+            --auth-primary-hover: #AB4D29;
+            --auth-muted: #7B665C;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: 'Quicksand', sans-serif;
-            color: var(--brand-ink);
+            display: grid;
+            place-items: center;
+            padding: 2.4rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--auth-text);
             background:
-                radial-gradient(circle at top left, rgba(248, 184, 120, 0.24), transparent 26%),
-                radial-gradient(circle at bottom right, rgba(208, 104, 64, 0.16), transparent 30%),
-                linear-gradient(180deg, #fbf4e7 0%, var(--brand-soft) 100%);
+                radial-gradient(circle at top left, rgba(235, 164, 104, 0.12), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(208, 95, 50, 0.08), transparent 26%),
+                linear-gradient(180deg, #fffdfa 0%, var(--auth-soft) 100%);
         }
         a {
-            color: var(--brand-accent-strong);
+            color: inherit;
             text-decoration: none;
         }
-        a:hover {
-            color: var(--brand-ink);
-        }
-        .auth-breadcrumb {
-            border-top: 1px solid rgba(208, 144, 80, 0.24);
-            border-bottom: 1px solid rgba(208, 144, 80, 0.24);
-            background: rgba(248, 240, 224, 0.86);
-        }
-        .auth-container {
-            width: min(100%, 1120px);
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        .auth-breadcrumb__inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.6rem;
-            min-height: 7.4rem;
-        }
-        .auth-breadcrumb__title {
-            margin: 0;
-            font-family: 'DM Serif Display', serif;
-            font-size: 3rem;
-        }
-        .auth-breadcrumb__trail {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            color: var(--brand-deep);
-            font-size: 1.35rem;
-        }
-        .auth-breadcrumb__trail span:last-child {
-            font-weight: 700;
-            color: var(--brand-accent-strong);
-        }
-        .auth-main {
-            padding: 5.2rem 0 6.4rem;
-        }
-        .auth-card-wrap {
-            display: flex;
-            justify-content: center;
+        .auth-shell {
+            width: min(100%, 43rem);
+            padding: .8rem;
+            border: 1px solid rgba(231, 212, 195, 0.95);
+            border-radius: 2.4rem;
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 26px 60px rgba(87, 43, 26, 0.10);
         }
         .auth-card {
-            width: min(100%, 54rem);
-            background: rgba(248, 240, 224, 0.96);
-            border: 1px solid rgba(208, 144, 80, 0.28);
-            border-radius: 28px;
-            box-shadow: 0 24px 60px rgba(80, 40, 24, 0.12);
+            background: #FFFFFF;
+            border: 1px solid var(--auth-border);
+            border-radius: 1.8rem;
+            padding: 2.1rem 2rem 2.2rem;
         }
-        .auth-card__body {
-            padding: 3.2rem;
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 1.6rem;
+            border-bottom: 1px solid var(--auth-border);
         }
-        .auth-card__frame {
-            padding: 3rem;
-            border: 1px solid rgba(208, 144, 80, 0.22);
-            border-radius: 22px;
-            background: rgba(251, 244, 231, 0.96);
-        }
-        .auth-card__brand {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-        .auth-card__brand .brand-logo-shell {
+        .auth-tab {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem 1.4rem;
-            border-radius: 20px;
-            background: rgba(248, 232, 208, 0.72);
-        }
-        .auth-card__brand .brand-logo-image {
-            width: min(100%, 20rem);
-            max-height: 8rem;
-            object-fit: contain;
-        }
-        .auth-header {
-            text-align: center;
-        }
-        .auth-header h1 {
-            margin: 0 0 0.8rem;
-            font-family: 'DM Serif Display', serif;
-            font-size: 3.4rem;
-            color: var(--brand-ink);
-        }
-        .auth-header p {
-            margin: 0;
-            color: var(--brand-deep);
-            font-size: 1.45rem;
-            line-height: 1.7;
-        }
-        .auth-separator {
-            position: relative;
-            margin: 2.2rem 0;
-            text-align: center;
-        }
-        .auth-separator::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            border-top: 1px solid rgba(208, 144, 80, 0.26);
-        }
-        .auth-separator span {
-            position: relative;
-            z-index: 1;
-            display: inline-block;
-            padding: 0 1.2rem;
-            background: rgba(251, 244, 231, 0.96);
-            color: var(--brand-accent-strong);
+            padding: .75rem .75rem 1rem;
+            margin-bottom: -1px;
+            border-bottom: 3px solid transparent;
+            color: var(--auth-muted);
+            font-family: 'Manrope', sans-serif;
             font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
+            font-weight: 800;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
         }
+        .auth-tab.is-active {
+            color: var(--auth-primary);
+            border-bottom-color: var(--auth-primary);
+        }
+        .auth-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+        .auth-logo .brand-logo-shell {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: .5rem .8rem;
+            border-radius: 1.2rem;
+            background: var(--auth-soft);
+        }
+        .auth-logo .brand-logo-image {
+            width: min(100%, 7rem);
+            max-height: 3rem;
+            object-fit: contain;
+        }
+        .auth-copy {
+            margin: 0 0 1.6rem;
+            text-align: center;
+            color: var(--auth-muted);
+            font-size: 1rem;
+            line-height: 1.55;
+        }
         .feedback {
-            margin-bottom: 1.4rem;
-            padding: 1.2rem 1.4rem;
-            border-radius: 16px;
-            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            padding: .85rem 1rem;
+            border-radius: 1rem;
+            font-size: .95rem;
             font-weight: 600;
         }
         .feedback--success {
-            background: rgba(248, 184, 120, 0.24);
-            border: 1px solid rgba(208, 144, 80, 0.34);
-            color: var(--brand-ink);
+            color: #2f7d4d;
+            background: rgba(47, 125, 77, 0.10);
+            border: 1px solid rgba(47, 125, 77, 0.16);
         }
         .feedback--error {
-            background: rgba(208, 104, 64, 0.14);
-            border: 1px solid rgba(200, 96, 64, 0.26);
-            color: var(--brand-ink);
+            color: #a94848;
+            background: rgba(169, 72, 72, 0.10);
+            border: 1px solid rgba(169, 72, 72, 0.16);
         }
-        .field {
-            margin-bottom: 1.5rem;
+        .field + .field {
+            margin-top: 1.2rem;
         }
         .field label {
             display: block;
-            margin-bottom: 0.8rem;
-            font-size: 1.35rem;
+            margin-bottom: .55rem;
+            color: var(--auth-heading);
+            font-size: 1rem;
             font-weight: 700;
-            color: var(--brand-ink);
         }
         .field input {
             width: 100%;
-            min-height: 5.2rem;
-            padding: 1rem 1.5rem;
-            border: 1px solid rgba(208, 144, 80, 0.34);
-            border-radius: 16px;
-            background: #fffaf1;
-            color: var(--brand-ink);
-            font-size: 1.45rem;
+            min-height: 3.9rem;
+            padding: .85rem 1rem;
+            border: 1px solid var(--auth-border);
+            border-radius: 1.2rem;
+            background: #FFFFFF;
+            color: var(--auth-text);
+            font-size: 1.05rem;
             outline: none;
             transition: border-color .2s ease, box-shadow .2s ease;
         }
         .field input:focus {
-            border-color: rgba(208, 104, 64, 0.68);
-            box-shadow: 0 0 0 4px rgba(248, 184, 120, 0.18);
+            border-color: rgba(208, 95, 50, 0.45);
+            box-shadow: 0 0 0 4px rgba(235, 164, 104, 0.14);
         }
         .auth-meta {
             display: flex;
+            align-items: center;
             justify-content: space-between;
             gap: 1rem;
-            flex-wrap: wrap;
-            margin: 0.2rem 0 1.8rem;
-            color: var(--brand-deep);
-            font-size: 1.25rem;
+            margin: 1.2rem 0 1.6rem;
+            color: var(--auth-muted);
+            font-size: .95rem;
+        }
+        .auth-remember {
+            display: inline-flex;
+            align-items: center;
+            gap: .8rem;
+        }
+        .auth-remember input {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0;
+        }
+        .auth-meta__link {
+            color: var(--auth-primary);
+            font-weight: 700;
         }
         .auth-submit {
             width: 100%;
-            min-height: 5.2rem;
+            min-height: 4rem;
             border: 0;
             border-radius: 999px;
-            background: linear-gradient(135deg, var(--brand-ink) 0%, var(--brand-accent) 100%);
-            color: var(--brand-surface);
-            font-size: 1.5rem;
-            font-weight: 700;
+            background: var(--auth-primary);
+            color: #FFFFFF;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 18px 34px rgba(208, 104, 64, 0.2);
+        }
+        .auth-submit:hover {
+            background: var(--auth-primary-hover);
         }
         .auth-footer {
-            margin-top: 2rem;
+            margin-top: 1.6rem;
             text-align: center;
-            color: var(--brand-deep);
-            font-size: 1.35rem;
+            color: var(--auth-muted);
+            font-size: .95rem;
         }
-        .auth-footer strong {
-            color: var(--brand-accent-strong);
+        .auth-social {
+            display: flex;
+            justify-content: center;
+            gap: .8rem;
+            margin-top: 1.1rem;
         }
-        @media (max-width: 767px) {
-            .auth-container {
-                padding: 0 1.4rem;
+        .auth-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.3rem;
+            height: 3.3rem;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            font-size: 1.25rem;
+        }
+        .auth-social .facebook { color: #3b5998; }
+        .auth-social .twitter { color: #1da1f2; }
+        .auth-social .google { color: #db4437; }
+        .auth-links {
+            margin-top: 1.3rem;
+            text-align: center;
+            color: var(--auth-muted);
+            font-size: .95rem;
+        }
+        .auth-links a {
+            color: var(--auth-primary);
+            font-weight: 700;
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 1.2rem;
             }
-            .auth-breadcrumb__inner {
-                min-height: auto;
-                padding: 1.6rem 0;
-                align-items: flex-start;
+            .auth-card {
+                padding: 1.8rem 1.4rem 2rem;
+            }
+            .auth-meta {
                 flex-direction: column;
-            }
-            .auth-card__body {
-                padding: 2rem;
-            }
-            .auth-card__frame {
-                padding: 2rem 1.6rem;
-            }
-            .auth-header h1 {
-                font-size: 2.9rem;
-            }
-            .auth-main {
-                padding: 3.2rem 0 4.4rem;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <section class="auth-breadcrumb">
-        <div class="auth-container">
-            <div class="auth-breadcrumb__inner">
-                <h2 class="auth-breadcrumb__title">Ingresar</h2>
-                <div class="auth-breadcrumb__trail">
-                    <a href="{{ route('store.home') }}">Inicio</a>
-                    <span>/</span>
-                    <span>Acceso clientes</span>
+    <div class="auth-shell">
+        <section class="auth-card">
+            <div class="auth-tabs">
+                <a href="{{ route('store.login') }}" class="auth-tab is-active">Ingresar</a>
+                <a href="{{ route('store.register') }}" class="auth-tab">Registro</a>
+            </div>
+
+            <div class="auth-logo">
+                @include('partials.brand-logo', ['variant' => 'footer'])
+            </div>
+
+            <p class="auth-copy">Ingresa con tu correo y contraseña para continuar comprando con tu cuenta de cliente.</p>
+
+            @if(session('status'))
+                <div class="feedback feedback--success">{{ session('status') }}</div>
+            @endif
+
+            @if($errors->any())
+                <div class="feedback feedback--error">{{ $errors->first() }}</div>
+            @endif
+
+            <form method="POST" action="{{ route('store.login.store') }}">
+                @csrf
+                <div class="field">
+                    <label for="email">Correo electrónico *</label>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                </div>
+
+                <div class="field">
+                    <label for="password">Contraseña *</label>
+                    <input id="password" type="password" name="password" required>
+                </div>
+
+                <div class="auth-meta">
+                    <label class="auth-remember" for="remember">
+                        <input id="remember" type="checkbox" disabled>
+                        <span>Recordarme</span>
+                    </label>
+                    <span class="auth-meta__link">Acceso seguro</span>
+                </div>
+
+                <button type="submit" class="auth-submit">Ingresar</button>
+            </form>
+
+            <div class="auth-footer">
+                Accede también con redes sociales
+                <div class="auth-social">
+                    <a href="#" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="google" aria-label="Google"><i class="fab fa-google"></i></a>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <main class="auth-main">
-        <div class="auth-container">
-            <div class="auth-card-wrap">
-                <section class="auth-card">
-                    <div class="auth-card__body">
-                        <div class="auth-card__frame">
-                            <div class="auth-card__brand">
-                                @include('partials.brand-logo', ['variant' => 'footer'])
-                            </div>
-
-                            <header class="auth-header">
-                                <h1>Ingresar</h1>
-                                <p>¿Aún no tienes cuenta? <a href="{{ route('store.register') }}"><strong>Regístrate aquí</strong></a></p>
-                            </header>
-
-                            <div class="auth-separator">
-                                <span>Ingresa con tu correo</span>
-                            </div>
-
-                            @if(session('status'))
-                                <div class="feedback feedback--success">{{ session('status') }}</div>
-                            @endif
-
-                            @if($errors->any())
-                                <div class="feedback feedback--error">{{ $errors->first() }}</div>
-                            @endif
-
-                            <form method="POST" action="{{ route('store.login.store') }}">
-                                @csrf
-                                <div class="field">
-                                    <label for="email">Correo electrónico</label>
-                                    <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="correo@ejemplo.com" required autofocus>
-                                </div>
-
-                                <div class="field">
-                                    <label for="password">Contraseña</label>
-                                    <input id="password" type="password" name="password" placeholder="Ingresa tu contraseña" required>
-                                </div>
-
-                                <div class="auth-meta">
-                                    <span>Acceso exclusivo para clientes registrados.</span>
-                                    <a href="{{ route('store.home') }}">Volver a la tienda</a>
-                                </div>
-
-                                <button type="submit" class="auth-submit">Ingresar a mi cuenta</button>
-                            </form>
-
-                            <div class="auth-footer">
-                                El backoffice continúa con acceso independiente para administradores.
-                            </div>
-                        </div>
-                    </div>
-                </section>
+            <div class="auth-links">
+                <a href="{{ route('store.home') }}">Volver a la tienda</a>
+                <span> · </span>
+                <a href="{{ route('admin.login') }}">Acceso emprendedores</a>
             </div>
-        </div>
-    </main>
+        </section>
+    </div>
 </body>
 </html>

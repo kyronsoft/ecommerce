@@ -59,7 +59,7 @@
                             <td>{{ $customer->email }}</td>
                             <td>{{ $customer->phone ?: 'No registrado' }}</td>
                             <td>{{ collect([$customer->city, $customer->department])->filter()->implode(', ') ?: 'Sin ubicacion' }}</td>
-                            <td>{{ $customer->orders_count }}</td>
+                            <td>{{ $currentAdminIsSuperAdmin ?? false ? $customer->orders_count : $customer->scoped_orders_count }}</td>
                             <td>
                                 <div class="admin-actions">
                                     <a href="{{ route('admin.customers.show', $customer) }}" class="admin-link">Ver</a>

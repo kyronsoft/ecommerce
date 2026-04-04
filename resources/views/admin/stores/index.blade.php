@@ -5,7 +5,9 @@
 ])
 
 @section('page_actions')
-    <a href="{{ route('admin.stores.create') }}" class="admin-btn admin-btn--primary">Nueva tienda</a>
+    @if($currentAdminIsSuperAdmin ?? false)
+        <a href="{{ route('admin.stores.create') }}" class="admin-btn admin-btn--primary">Nueva tienda</a>
+    @endif
 @endsection
 
 @section('content')

@@ -70,7 +70,6 @@
                             <h3 class="cart-checkout-title text-uppercase">Resumen</h3>
                             <ul class="checkout-total">
                                 <li><span>Subtotal</span><span>${{ number_format($subtotal, 0, ',', '.') }}</span></li>
-                                <li><span>Impuestos</span><span>${{ number_format($tax, 0, ',', '.') }}</span></li>
                                 <li><span>Envío</span><span>${{ number_format($shipping, 0, ',', '.') }}</span></li>
                                 <li class="cart-total-row"><span>Total</span><span>${{ number_format($total, 0, ',', '.') }}</span></li>
                             </ul>

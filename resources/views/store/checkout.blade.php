@@ -173,10 +173,6 @@
                                             <td><b>${{ number_format($subtotal, 0, ',', '.') }}</b></td>
                                         </tr>
                                         <tr class="checkout-order-meta">
-                                            <td><b>Impuestos</b></td>
-                                            <td><b>${{ number_format($tax, 0, ',', '.') }}</b></td>
-                                        </tr>
-                                        <tr class="checkout-order-meta">
                                             <td><b>Envío</b></td>
                                             <td>${{ number_format($shipping, 0, ',', '.') }}</td>
                                         </tr>

@@ -5,8 +5,8 @@
     .vendor-store-page {
         padding: 2.6rem 0 7rem;
         background:
-            radial-gradient(circle at top left, rgba(217, 121, 87, 0.10), transparent 26%),
-            linear-gradient(180deg, #fffaf6 0%, #f7efe8 100%);
+            radial-gradient(circle at top left, rgba(235, 164, 104, 0.10), transparent 26%),
+            linear-gradient(180deg, #ffffff 0%, #fbf1e1 100%);
     }
 
     .vendor-store-layout {
@@ -19,10 +19,10 @@
     .vendor-store-sidebar,
     .vendor-store-panel,
     .vendor-store-hero {
-        border: 1px solid rgba(123, 74, 55, 0.12);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         border-radius: 3rem;
-        background: rgba(255, 255, 255, 0.88);
-        box-shadow: 0 2.4rem 5rem rgba(95, 54, 40, 0.09);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 2.4rem 5rem rgba(87, 43, 26, 0.08);
     }
 
     .vendor-store-sidebar {
@@ -37,8 +37,8 @@
 
     .vendor-store-widget h3 {
         margin: 0 0 1.2rem;
-        color: #5f3628;
-        font-family: 'DM Serif Display', serif;
+        color: #572B1A;
+        font-family: 'Manrope', sans-serif;
         font-size: 2.2rem;
     }
 
@@ -56,14 +56,14 @@
         justify-content: space-between;
         padding: 1rem 1.2rem;
         border-radius: 1.6rem;
-        background: #fff7f1;
-        color: #7b4a37;
+        background: #FBF1E1;
+        color: #3A241C;
         font-size: 1.35rem;
         font-weight: 700;
     }
 
     .vendor-store-categories a:hover {
-        color: #5f3628;
+        color: #572B1A;
     }
 
     .vendor-store-contact input,
@@ -71,7 +71,7 @@
         width: 100%;
         margin-bottom: 1rem;
         border-radius: 1.6rem;
-        border: 1px solid rgba(123, 74, 55, 0.14);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         background: #fff;
     }
 
@@ -86,7 +86,7 @@
         align-items: center;
         padding: 1rem;
         border-radius: 1.8rem;
-        background: #fff9f5;
+        background: #FFFFFF;
     }
 
     .vendor-store-mini-product img {
@@ -103,11 +103,11 @@
     }
 
     .vendor-store-mini-product a {
-        color: #5f3628;
+        color: #572B1A;
     }
 
     .vendor-store-mini-product strong {
-        color: #d97957;
+        color: #D05F32;
         font-size: 1.35rem;
     }
 
@@ -156,7 +156,7 @@
         border-radius: 50%;
         overflow: hidden;
         border: 5px solid #fff;
-        box-shadow: 0 1.8rem 3rem rgba(95, 54, 40, 0.16);
+        box-shadow: 0 1.8rem 3rem rgba(87, 43, 26, 0.12);
         background: #fff;
     }
 
@@ -168,8 +168,8 @@
 
     .vendor-store-hero__title {
         margin: 0;
-        color: #5f3628;
-        font-family: 'DM Serif Display', serif;
+        color: #572B1A;
+        font-family: 'Manrope', sans-serif;
         font-size: clamp(3rem, 4vw, 4.8rem);
         line-height: 1.02;
     }
@@ -178,7 +178,7 @@
         display: grid;
         gap: .8rem;
         margin-top: 1.2rem;
-        color: #7a6055;
+        color: #3A241C;
         font-size: 1.45rem;
     }
 
@@ -190,7 +190,7 @@
 
     .vendor-store-hero__meta i {
         margin-top: .25rem;
-        color: #d97957;
+        color: #D05F32;
     }
 
     .vendor-store-social {
@@ -207,8 +207,8 @@
         width: 4.2rem;
         height: 4.2rem;
         border-radius: 50%;
-        background: #fff2e8;
-        color: #7b4a37;
+        background: #FBF1E1;
+        color: #572B1A;
         font-size: 1.5rem;
     }
 
@@ -221,21 +221,21 @@
         margin: 2rem 0 1.4rem;
         padding: 2rem 2.2rem;
         border-radius: 2.6rem;
-        border: 1px solid rgba(123, 74, 55, 0.12);
-        background: rgba(255, 255, 255, 0.78);
-        box-shadow: 0 1.6rem 3rem rgba(95, 54, 40, 0.06);
+        border: 1px solid rgba(231, 212, 195, 0.95);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 1.6rem 3rem rgba(87, 43, 26, 0.06);
     }
 
     .vendor-store-toolbar h2 {
         margin: 0;
-        color: #5f3628;
-        font-family: 'DM Serif Display', serif;
+        color: #572B1A;
+        font-family: 'Manrope', sans-serif;
         font-size: 2.8rem;
     }
 
     .vendor-store-toolbar p {
         margin: .5rem 0 0;
-        color: #8a7064;
+        color: #3A241C;
         font-size: 1.4rem;
     }
 
@@ -248,9 +248,9 @@
     .vendor-store-metric {
         padding: .85rem 1.2rem;
         border-radius: 999px;
-        background: #fff6f0;
-        color: #5f3628;
-        border: 1px solid rgba(123, 74, 55, 0.10);
+        background: #FBF1E1;
+        color: #572B1A;
+        border: 1px solid rgba(231, 212, 195, 0.95);
         font-size: 1.25rem;
         font-weight: 700;
     }
@@ -423,7 +423,7 @@
                                 Esta tienda aún no tiene productos visibles.
                             </div>
                         @else
-                            <div class="row cols-2 cols-sm-2 cols-md-3 product-wrapper">
+                            <div class="product-market-grid">
                                 @foreach($products as $product)
                                     @include('store.partials.product-card', ['product' => $product])
                                 @endforeach

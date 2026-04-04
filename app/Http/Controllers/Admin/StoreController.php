@@ -4,35 +4,43 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;
+use App\Support\AdminPanelScope;
+use App\Support\StoreImageOptimizer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class StoreController extends Controller
 {
     public function index(): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+
         return view('admin.stores.index', [
-            'stores' => Store::query()
+            'stores' => AdminPanelScope::scopeStores(Store::query(), $adminStore, $isSuperAdmin)
                 ->withCount('products')
                 ->orderByDesc('is_featured')
                 ->orderBy('name')
                 ->paginate(15),
             'stats' => [
-                'total' => Store::count(),
-                'active' => Store::where('is_active', true)->count(),
-                'featured' => Store::where('is_featured', true)->count(),
-                'with_products' => Store::has('products')->count(),
+                'total' => AdminPanelScope::scopeStores(Store::query(), $adminStore, $isSuperAdmin)->count(),
+                'active' => AdminPanelScope::scopeStores(Store::query(), $adminStore, $isSuperAdmin)->where('is_active', true)->count(),
+                'featured' => AdminPanelScope::scopeStores(Store::query(), $adminStore, $isSuperAdmin)->where('is_featured', true)->count(),
+                'with_products' => AdminPanelScope::scopeStores(Store::query(), $adminStore, $isSuperAdmin)->has('products')->count(),
             ],
         ]);
     }
 
     public function create(): View
     {
+        abort_unless(request()->attributes->get('adminIsSuperAdmin'), 403);
+
         return view('admin.stores.form', [
             'store' => new Store([
                 'is_active' => true,
@@ -43,6 +51,7 @@ class StoreController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_unless($request->attributes->get('adminIsSuperAdmin'), 403);
         $data = $this->validated($request);
         $store = Store::query()->create($this->storeImages($request, $data));
 
@@ -53,18 +62,38 @@ class StoreController extends Controller
 
     public function show(Store $store): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureStoreAccess($store, $adminStore, $isSuperAdmin);
+
         return view('admin.stores.show', [
             'store' => $store->load(['products' => fn ($query) => $query->latest()->take(8)]),
         ]);
     }
 
+    public function media(Store $store, string $field): BinaryFileResponse
+    {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureStoreAccess($store, $adminStore, $isSuperAdmin);
+        abort_unless(in_array($field, ['logo', 'banner'], true), 404);
+
+        $path = $this->normalizeStoredPath((string) $store->{$field});
+
+        abort_if(blank($path) || ! Storage::disk('public')->exists($path), 404);
+
+        return response()->file(Storage::disk('public')->path($path));
+    }
+
     public function edit(Store $store): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureStoreAccess($store, $adminStore, $isSuperAdmin);
         return view('admin.stores.form', compact('store'));
     }
 
     public function update(Request $request, Store $store): RedirectResponse
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest($request);
+        AdminPanelScope::ensureStoreAccess($store, $adminStore, $isSuperAdmin);
         $data = $this->validated($request, $store);
         $store->update($this->storeImages($request, $data, $store));
 
@@ -75,6 +104,7 @@ class StoreController extends Controller
 
     public function destroy(Store $store): RedirectResponse
     {
+        abort_unless(request()->attributes->get('adminIsSuperAdmin'), 403);
         if ($store->products()->exists()) {
             return redirect()
                 ->route('admin.stores.show', $store)
@@ -108,8 +138,8 @@ class StoreController extends Controller
                 'location' => ['nullable', 'string', 'max:255'],
                 'short_description' => ['nullable', 'string', 'max:255'],
                 'description' => ['nullable', 'string'],
-                'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
-                'banner' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+                'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:6144'],
+                'banner' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:8192'],
                 'website' => ['nullable', 'url', 'max:255'],
                 'instagram_url' => ['nullable', 'url', 'max:255'],
                 'facebook_url' => ['nullable', 'url', 'max:255'],
@@ -141,19 +171,31 @@ class StoreController extends Controller
     {
         $storeSlug = Str::slug((string) ($data['slug'] ?: $store?->slug ?: $data['name']));
 
-        $data['logo'] = $this->persistImage(
-            $request->file('logo'),
-            'logo',
-            $storeSlug,
-            $store?->logo,
-        );
+        try {
+            $data['logo'] = $this->persistImage(
+                $request->file('logo'),
+                'logo',
+                $storeSlug,
+                $store?->logo,
+            );
+        } catch (\RuntimeException $exception) {
+            throw ValidationException::withMessages([
+                'logo' => 'No pudimos procesar el logo. Intenta con una imagen JPG, PNG o WEBP válida.',
+            ]);
+        }
 
-        $data['banner'] = $this->persistImage(
-            $request->file('banner'),
-            'banner',
-            $storeSlug,
-            $store?->banner,
-        );
+        try {
+            $data['banner'] = $this->persistImage(
+                $request->file('banner'),
+                'banner',
+                $storeSlug,
+                $store?->banner,
+            );
+        } catch (\RuntimeException $exception) {
+            throw ValidationException::withMessages([
+                'banner' => 'No pudimos procesar el banner. Intenta con una imagen JPG, PNG o WEBP válida.',
+            ]);
+        }
 
         return $data;
     }
@@ -165,28 +207,49 @@ class StoreController extends Controller
         }
 
         $directory = 'stores/'.$storeSlug;
-        $extension = strtolower($file->getClientOriginalExtension() ?: $file->extension() ?: 'png');
-        $filename = $storeSlug.'-'.$field.'.'.$extension;
+        $filename = $storeSlug.'-'.$field.'.webp';
 
         Storage::disk('public')->makeDirectory($directory);
         $this->deleteStoredImage($currentPath);
 
-        $relativePath = Storage::disk('public')->putFileAs($directory, $file, $filename);
+        $binary = StoreImageOptimizer::optimizeToWebp($file, $field);
+        $relativePath = $directory.'/'.$filename;
+
+        Storage::disk('public')->put($relativePath, $binary);
 
         return filled($relativePath) ? 'storage/'.$relativePath : $currentPath;
     }
 
     protected function deleteStoredImage(?string $path): void
     {
-        if (blank($path) || ! Str::startsWith($path, 'storage/')) {
+        $storagePath = $this->normalizeStoredPath($path);
+
+        if (blank($storagePath)) {
             return;
         }
-
-        $storagePath = Str::after($path, 'storage/');
 
         if (Storage::disk('public')->exists($storagePath)) {
             Storage::disk('public')->delete($storagePath);
         }
+    }
+
+    protected function normalizeStoredPath(?string $path): ?string
+    {
+        if (blank($path) || Str::startsWith((string) $path, ['http://', 'https://'])) {
+            return null;
+        }
+
+        $normalizedPath = ltrim((string) $path, '/');
+
+        if (Str::startsWith($normalizedPath, 'public/')) {
+            $normalizedPath = Str::after($normalizedPath, 'public/');
+        }
+
+        if (Str::startsWith($normalizedPath, 'storage/')) {
+            $normalizedPath = Str::after($normalizedPath, 'storage/');
+        }
+
+        return $normalizedPath;
     }
 
     protected function messages(): array
@@ -197,6 +260,7 @@ class StoreController extends Controller
             'url' => 'Ingresa una URL valida en :attribute.',
             'unique' => 'Ya existe otra tienda con ese :attribute.',
             'image' => 'El archivo cargado en :attribute debe ser una imagen valida.',
+            'uploaded' => 'No pudimos cargar el archivo de :attribute. Intenta con una imagen JPG, PNG o WEBP más liviana o vuelve a subirla.',
             'mimes' => 'La imagen de :attribute debe estar en formato: :values.',
             'max.string' => ':Attribute no debe superar :max caracteres.',
             'max.file' => 'El archivo de :attribute no debe pesar mas de :max KB.',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Support\AdminPanelScope;
 use App\Support\ColombiaDivipola;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -15,12 +16,19 @@ class CustomerController extends Controller
 {
     public function index(): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
         return view('admin.customers.index', [
-            'customers' => Customer::withCount('orders')->latest()->paginate(15),
+            'customers' => AdminPanelScope::scopeCustomers(Customer::query(), $adminStore, $isSuperAdmin)
+                ->withCount([
+                    'orders',
+                    'orders as scoped_orders_count' => fn ($query) => AdminPanelScope::scopeOrders($query, $adminStore, $isSuperAdmin),
+                ])
+                ->latest()
+                ->paginate(15),
             'stats' => [
-                'total' => Customer::count(),
-                'with_orders' => Customer::has('orders')->count(),
-                'without_orders' => Customer::doesntHave('orders')->count(),
+                'total' => AdminPanelScope::scopeCustomers(Customer::query(), $adminStore, $isSuperAdmin)->count(),
+                'with_orders' => AdminPanelScope::scopeCustomers(Customer::query(), $adminStore, $isSuperAdmin)->has('orders')->count(),
+                'without_orders' => AdminPanelScope::scopeCustomers(Customer::query(), $adminStore, $isSuperAdmin)->doesntHave('orders')->count(),
             ],
         ]);
     }
@@ -40,18 +48,24 @@ class CustomerController extends Controller
 
     public function show(Customer $customer): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureCustomerAccess($customer, $adminStore, $isSuperAdmin);
         return view('admin.customers.show', [
-            'customer' => $customer->load(['orders' => fn ($query) => $query->latest()]),
+            'customer' => $customer->load(['orders' => fn ($query) => AdminPanelScope::scopeOrders($query, $adminStore, $isSuperAdmin)->latest()]),
         ]);
     }
 
     public function edit(Customer $customer): View
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureCustomerAccess($customer, $adminStore, $isSuperAdmin);
         return view('admin.customers.form', $this->formData($customer));
     }
 
     public function update(Request $request, Customer $customer): RedirectResponse
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest($request);
+        AdminPanelScope::ensureCustomerAccess($customer, $adminStore, $isSuperAdmin);
         $data = $this->validated($request, $customer);
         $customer->update($data);
 
@@ -60,6 +74,8 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer): RedirectResponse
     {
+        [, $adminStore, $isSuperAdmin] = AdminPanelScope::fromRequest(request());
+        AdminPanelScope::ensureCustomerAccess($customer, $adminStore, $isSuperAdmin);
         if ($customer->orders()->exists()) {
             return redirect()
                 ->route('admin.customers.index')

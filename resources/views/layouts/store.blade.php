@@ -6,7 +6,7 @@
     <title>{{ $title ?? 'La Tienda de Mi Abue' }}</title>
     @include('partials.favicons')
     <script>
-        WebFontConfig = { google: { families: ['Quicksand:400,500,600,700', 'DM Serif Display:400'] } };
+        WebFontConfig = { google: { families: ['Inter:400,500,600,700', 'Manrope:500,600,700,800', 'Cormorant Garamond:400,500,600,700'] } };
         (function (d) {
             var wf = d.createElement('script'), s = d.scripts[0];
             wf.src = '{{ asset('wolmart/assets/js/webfont.js') }}';
@@ -22,27 +22,37 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('wolmart/assets/css/custom-brand.css') }}">
     <style>
         :root {
-            --store-ink: #502818;
-            --store-muted: #603018;
-            --store-line: #D09050;
-            --store-warm: #F8B878;
-            --store-warm-deep: #D06840;
-            --store-surface: #F8F0E0;
-            --store-soft: #F8E8D0;
-            --store-dark: #502818;
+            --store-ink: #3A241C;
+            --store-muted: #572B1A;
+            --store-line: #E7D4C3;
+            --store-warm: #EBA468;
+            --store-warm-deep: #D05F32;
+            --store-surface: #FFFFFF;
+            --store-soft: #FBF1E1;
+            --store-dark: #572B1A;
+            --store-button-hover: #AB4D29;
             --store-radius: 22px;
         }
         body.storefront-shell {
-            background: var(--store-soft);
+            background: var(--store-surface);
             color: var(--store-ink);
-            font-family: "Quicksand", sans-serif;
+            font-family: "Inter", sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6,
+        .store-footer__title,
+        .store-support-box__value {
+            font-family: "Manrope", sans-serif;
+        }
+        blockquote,
+        .store-topbar__message {
+            font-family: "Cormorant Garamond", serif;
         }
         .storefront-shell .page-wrapper {
             background: transparent;
         }
         .store-topbar {
-            border-bottom: 1px solid rgba(208, 144, 80, 0.35);
-            background: var(--store-surface);
+            border-bottom: 1px solid rgba(87, 43, 26, 0.12);
+            background: var(--store-soft);
             font-size: 1.3rem;
         }
         .store-topbar__inner,
@@ -56,12 +66,38 @@
         .store-topbar__inner {
             min-height: 4.4rem;
         }
+        .store-topbar__inner {
+            justify-content: space-between;
+        }
         .store-topbar__message {
+            flex: 1 1 44rem;
+            min-width: 0;
+            display: inline-flex;
+            align-items: center;
+            padding: .8rem 1.4rem;
+            border: 1px solid rgba(87, 43, 26, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 12px 24px rgba(87, 43, 26, 0.08);
             color: var(--store-muted);
+            font-size: 1.7rem;
             font-weight: 600;
+            line-height: 1.45;
+        }
+        .store-topbar__nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 2rem;
+            flex: 0 1 auto;
+            min-width: 0;
+            margin-left: auto;
         }
         .store-topbar__meta {
-            margin-left: 1rem;
+            margin-left: 0;
+            flex-wrap: nowrap;
+            gap: 1.2rem;
+            white-space: nowrap;
         }
         .store-topbar__meta form {
             margin: 0;
@@ -85,7 +121,11 @@
             display: flex;
             align-items: center;
             gap: 1.6rem;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+        }
+        .store-topbar__links {
+            gap: 1.4rem;
+            white-space: nowrap;
         }
         .store-topbar a,
         .store-header-nav a,
@@ -98,8 +138,8 @@
             color: var(--store-warm-deep);
         }
         .store-header-main {
-            background: var(--store-warm);
-            box-shadow: 0 16px 34px rgba(208, 104, 64, 0.18);
+            background: var(--store-surface);
+            box-shadow: 0 16px 34px rgba(87, 43, 26, 0.08);
         }
         .store-header-main__inner {
             min-height: 10.4rem;
@@ -116,9 +156,9 @@
             display: flex;
             align-items: stretch;
             overflow: hidden;
-            border: 3px solid rgba(80, 40, 24, 0.92);
+            border: 1px solid var(--store-line);
             border-radius: 999px;
-            background: var(--store-soft);
+            background: var(--store-surface);
         }
         .store-search-shell select,
         .store-search-shell input {
@@ -130,7 +170,7 @@
         .store-search-shell select {
             width: 15rem;
             padding: 0 1.6rem;
-            border-right: 1px solid rgba(208, 144, 80, 0.4);
+            border-right: 1px solid var(--store-line);
         }
         .store-search-shell input {
             flex: 1;
@@ -139,9 +179,12 @@
         .store-search-shell button {
             min-width: 14rem;
             border: 0;
-            background: var(--store-dark);
-            color: var(--store-surface);
+            background: var(--store-warm-deep);
+            color: #FFFFFF;
             font-weight: 700;
+        }
+        .store-search-shell button:hover {
+            background: var(--store-button-hover);
         }
         .store-support-box {
             display: flex;
@@ -156,7 +199,7 @@
             width: 4.8rem;
             height: 4.8rem;
             border-radius: 50%;
-            background: rgba(248, 232, 208, 0.72);
+            background: var(--store-soft);
             font-size: 2rem;
         }
         .store-support-box__label {
@@ -183,9 +226,10 @@
             width: 4.8rem;
             height: 4.8rem;
             border-radius: 50%;
-            background: rgba(248, 232, 208, 0.72);
-            color: var(--store-dark);
+            background: var(--store-soft);
+            color: var(--store-muted);
             font-size: 2rem;
+            border: 1px solid var(--store-line);
         }
         .store-header-user {
             width: auto;
@@ -211,15 +255,17 @@
             padding: 0 0.5rem;
             border-radius: 999px;
             background: var(--store-warm-deep);
-            color: var(--store-surface);
+            color: #FFFFFF;
             font-size: 1.1rem;
             font-weight: 700;
             line-height: 2rem;
             text-align: center;
         }
         .store-header-nav {
-            background: var(--store-dark);
-            color: var(--store-surface);
+            background: var(--store-surface);
+            color: var(--store-muted);
+            border-top: 1px solid rgba(87, 43, 26, 0.08);
+            border-bottom: 1px solid rgba(87, 43, 26, 0.08);
         }
         .store-header-nav__inner {
             min-height: 5.8rem;
@@ -227,19 +273,19 @@
         }
         .store-primary-nav a,
         .store-primary-nav button {
-            color: var(--store-surface);
+            color: var(--store-muted);
             font-size: 1.4rem;
             font-weight: 700;
             letter-spacing: 0.02em;
         }
         .store-primary-nav .is-active {
-            color: var(--store-warm);
+            color: var(--store-warm-deep);
         }
         .store-header-nav__meta {
             display: flex;
             align-items: center;
             gap: 1.4rem;
-            color: rgba(248, 232, 208, 0.9);
+            color: rgba(87, 43, 26, 0.72);
             font-size: 1.25rem;
         }
         .store-mobile-tools {
@@ -262,8 +308,8 @@
             min-width: 5.2rem;
             border: 0;
             border-left: 1px solid var(--store-line);
-            background: var(--store-dark);
-            color: var(--store-surface);
+            background: var(--store-warm-deep);
+            color: #FFFFFF;
         }
         .store-mobile-nav {
             display: flex;
@@ -280,15 +326,289 @@
             font-weight: 700;
         }
         .store-mobile-nav .is-active {
-            background: var(--store-warm);
+            background: var(--store-warm-deep);
+            color: #FFFFFF;
         }
         .store-content-flash {
             margin-top: 1.6rem;
         }
+        .btn,
+        button,
+        input,
+        select,
+        textarea {
+            font-family: "Inter", sans-serif;
+        }
+        .btn-primary,
+        .btn-dark,
+        .btn-cart,
+        .btn-rounded.btn-primary {
+            background: #D05F32;
+            border-color: #D05F32;
+            color: #FFFFFF;
+        }
+        .btn-primary:hover,
+        .btn-dark:hover,
+        .btn-cart:hover,
+        .btn-rounded.btn-primary:hover {
+            background: #AB4D29;
+            border-color: #AB4D29;
+            color: #FFFFFF;
+        }
+        .btn-outline,
+        .btn-default {
+            border-color: var(--store-line);
+            color: #572B1A;
+            background: #FFFFFF;
+        }
+        .btn-outline:hover,
+        .btn-default:hover {
+            border-color: #D05F32;
+            color: #D05F32;
+            background: #FBF1E1;
+        }
+        .page-header,
+        .breadcrumb-nav {
+            background: #FBF1E1;
+        }
+        .page-title,
+        .title {
+            color: #572B1A;
+            font-family: "Manrope", sans-serif;
+        }
+        .product-market-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 2rem;
+        }
+        .product-wrap--editorial .product {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid var(--store-line);
+            border-radius: 20px;
+            background: #FFFFFF;
+            box-shadow: none;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .product-wrap--editorial .product:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(87, 43, 26, 0.08);
+        }
+        .product-wrap--editorial .product-media {
+            margin: 0;
+            background: #FFFFFF;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            position: relative;
+        }
+        .product-wrap--editorial .product-media > a,
+        .product-wrap--editorial .product-media img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .product-wrap--editorial .product-media img {
+            object-fit: cover;
+        }
+        .product-wrap--editorial .product-label-group {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 2;
+        }
+        .product-wrap--editorial .product-card__top-actions {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 2;
+        }
+        .product-wrap--editorial .product-details {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding: 1.2rem 0 0;
+            background: #FFFFFF;
+        }
+        .product-wrap--editorial .product-cat a {
+            color: #572B1A;
+            font-size: 1.15rem;
+            letter-spacing: 0.04em;
+        }
+        .product-wrap--editorial .product-name {
+            font-family: "Manrope", sans-serif;
+            margin: 0;
+            font-size: 1.6rem;
+            line-height: 1.35;
+        }
+        .product-wrap--editorial .product-name a {
+            color: #3A241C;
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+        }
+        .product-wrap--editorial .product-pa-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: auto;
+        }
+        .product-wrap--editorial .product-price-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .product-wrap--editorial .product-price {
+            color: #D05F32;
+            font-family: "Manrope", sans-serif;
+            font-weight: 800;
+            font-size: 1.7rem;
+            line-height: 1;
+        }
+        .product-wrap--editorial .old-price {
+            color: rgba(58, 36, 28, 0.55);
+            font-size: 1.25rem;
+            text-decoration: line-through;
+        }
+        .product-wrap--editorial .product-card__meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            color: #3A241C;
+            font-size: 1.2rem;
+        }
+        .product-wrap--editorial .product-card__meta span {
+            position: relative;
+        }
+        .product-wrap--editorial .product-card__meta span + span::before {
+            content: "";
+            display: inline-block;
+            width: 0.4rem;
+            height: 0.4rem;
+            margin-right: 0.8rem;
+            border-radius: 50%;
+            background: #D05F32;
+            vertical-align: middle;
+        }
+        .product-wrap--editorial .btn-product-icon,
+        .product-wrap--editorial .product-action-horizontal .btn-product-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4.2rem;
+            height: 4.2rem;
+            border-radius: 50%;
+            background: #D05F32;
+            color: #FFFFFF;
+            border-color: #D05F32;
+        }
+        .product-wrap--editorial .product-card__cart-form {
+            flex: 0 0 auto;
+        }
+        .product-wrap--editorial .btn-product-icon:hover,
+        .product-wrap--editorial .product-action-horizontal .btn-product-icon:hover {
+            background: #AB4D29;
+            border-color: #AB4D29;
+            color: #FFFFFF;
+        }
+        .product-label-group .product-label,
+        .product-label {
+            border-radius: 999px;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+        .product-label.label-discount,
+        .product-label--sale {
+            background: #D05F32;
+        }
+        .product-label.label-new,
+        .product-label--new {
+            background: #EBA468;
+        }
+        .product-label.label-featured,
+        .product-label--featured {
+            background: #572B1A;
+        }
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 2rem;
+        }
+        .wishlist-card {
+            position: relative;
+        }
+        .wishlist-card__remove {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.8rem;
+            height: 3.8rem;
+            border: 1px solid var(--store-line);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.94);
+            color: #572B1A;
+        }
+        .wishlist-title {
+            margin-bottom: 2rem;
+            font-family: "Manrope", sans-serif;
+            color: #572B1A;
+        }
+        .wishlist-empty {
+            padding: 3rem;
+            border: 1px solid var(--store-line);
+            border-radius: 24px;
+            background: #FFFFFF;
+            text-align: center;
+        }
+        @media (max-width: 1399px) {
+            .product-market-grid,
+            .wishlist-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 991px) {
+            .product-market-grid,
+            .wishlist-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 767px) {
+            .product-market-grid,
+            .wishlist-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1.6rem;
+            }
+            .product-wrap--editorial .product-name {
+                font-size: 1.45rem;
+            }
+        }
+        @media (max-width: 479px) {
+            .product-market-grid,
+            .wishlist-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.2rem;
+            }
+            .product-wrap--editorial .product-details {
+                padding-top: 1rem;
+            }
+        }
         .store-footer {
             padding: 6rem 0 0;
-            background: var(--store-surface);
-            border-top: 1px solid var(--store-line);
+            background: var(--store-dark);
+            border-top: 0;
+            color: var(--store-soft);
         }
         .store-footer__main {
             display: grid;
@@ -299,14 +619,15 @@
         .store-footer__card,
         .store-footer__links {
             padding: 2.6rem;
-            border: 1px solid var(--store-line);
+            border: 1px solid rgba(251, 241, 225, 0.14);
             border-radius: var(--store-radius);
-            background: var(--store-surface);
+            background: rgba(251, 241, 225, 0.05);
         }
         .store-footer__title {
             margin-bottom: 1.6rem;
             font-size: 1.7rem;
             font-weight: 700;
+            color: var(--store-soft);
         }
         .store-footer__links ul {
             margin: 0;
@@ -321,17 +642,17 @@
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 1.2rem;
             padding: 2.4rem 0;
-            border-top: 1px solid var(--store-line);
-            border-bottom: 1px solid var(--store-line);
+            border-top: 1px solid rgba(251, 241, 225, 0.12);
+            border-bottom: 1px solid rgba(251, 241, 225, 0.12);
         }
         .store-footer__meta-item {
-            color: var(--store-muted);
+            color: rgba(251, 241, 225, 0.76);
             font-size: 1.3rem;
         }
         .store-footer__meta-item strong {
             display: block;
             margin-bottom: 0.6rem;
-            color: var(--store-ink);
+            color: var(--store-soft);
             font-size: 1.35rem;
         }
         .store-footer__bottom {
@@ -340,8 +661,22 @@
             justify-content: space-between;
             gap: 1.6rem;
             padding: 2rem 0 3rem;
-            color: var(--store-muted);
+            color: rgba(251, 241, 225, 0.76);
             font-size: 1.3rem;
+        }
+        .store-footer a,
+        .store-footer .widget-about-call,
+        .store-footer .widget-about-desc,
+        .store-footer .copyright {
+            color: var(--store-soft);
+        }
+        .store-footer a:hover {
+            color: var(--store-warm);
+        }
+        .store-footer .social-icon {
+            border-color: rgba(251, 241, 225, 0.2);
+            background: rgba(251, 241, 225, 0.08);
+            color: var(--store-soft);
         }
         .store-footer__bottom-links {
             display: flex;
@@ -364,6 +699,9 @@
             .store-topbar__links,
             .store-topbar__meta,
             .store-header-nav {
+                display: none;
+            }
+            .store-topbar__nav {
                 display: none;
             }
             .store-header-main__inner {
@@ -399,25 +737,25 @@
             <div class="container">
                 <div class="store-topbar__inner">
                     <div class="store-topbar__message">Bienvenido a La Tienda de Mi Abue. Compra con una experiencia clara, cálida y confiable.</div>
-                    <nav class="store-topbar__links ml-auto" aria-label="Accesos rápidos">
-                        <a href="{{ route('store.home') }}">Inicio</a>
-                        <a href="{{ route('store.shop') }}">Catalogo</a>
-                        <a href="{{ route('store.stores.index') }}">Emprendedores</a>
-                        <a href="{{ route('store.wishlist.index') }}">Favoritos</a>
-                        <a href="{{ route('store.cart.index') }}">Carrito</a>
-                        <a href="{{ route('store.checkout.index') }}">Finalizar Compra</a>
-                        <a href="{{ route('admin.login') }}">Backoffice</a>
-                    </nav>
-                    <div class="store-topbar__meta">
-                        @if($currentStoreUser)
-                            <span>Hola, {{ $currentStoreUser->first_name ?: $currentStoreUser->name }}</span>
-                            <form method="POST" action="{{ route('store.logout') }}">
-                                @csrf
-                                <button type="submit" class="store-topbar__meta-button">Salir</button>
-                            </form>
-                        @else
-                            <a href="{{ route('store.login') }}">Ingresar</a>
-                        @endif
+                    <div class="store-topbar__nav">
+                        <nav class="store-topbar__links" aria-label="Accesos rápidos">
+                            <a href="{{ route('store.home') }}">Inicio</a>
+                            <a href="{{ route('store.shop') }}">Catalogo</a>
+                            <a href="{{ route('store.stores.index') }}">Emprendedores</a>
+                            <a href="{{ route('store.entrepreneur') }}">Quiero ser emprendedor</a>
+                            <a href="{{ route('admin.login') }}">Backoffice emprendedores</a>
+                        </nav>
+                        <div class="store-topbar__meta">
+                            @if($currentStoreUser)
+                                <span>Hola, {{ $currentStoreUser->first_name ?: $currentStoreUser->name }}</span>
+                                <form method="POST" action="{{ route('store.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="store-topbar__meta-button">Salir</button>
+                                </form>
+                            @else
+                                <a href="{{ route('store.login') }}">Acceso clientes</a>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -452,9 +790,9 @@
                     </div>
 
                     <div class="store-header-actions">
-                        <a href="{{ $currentStoreUser ? route('store.home') : route('store.login') }}" class="store-header-action store-header-user" aria-label="{{ $currentStoreUser ? 'Cliente autenticado' : 'Ingresar' }}">
+                        <a href="{{ $currentStoreUser ? route('store.home') : route('store.login') }}" class="store-header-action store-header-user" aria-label="{{ $currentStoreUser ? 'Cliente autenticado' : 'Acceso clientes' }}">
                             <i class="w-icon-user"></i>
-                            <span class="store-header-user__name">{{ $currentStoreUser ? ($currentStoreUser->first_name ?: 'Mi cuenta') : 'Ingresar' }}</span>
+                            <span class="store-header-user__name">{{ $currentStoreUser ? ($currentStoreUser->first_name ?: 'Mi cuenta') : 'Clientes' }}</span>
                         </a>
                         <a href="{{ route('store.wishlist.index') }}" class="store-header-action" aria-label="Favoritos">
                             <i class="w-icon-heart"></i>
@@ -483,11 +821,12 @@
                     <a href="{{ route('store.home') }}" class="{{ request()->routeIs('store.home') ? 'is-active' : '' }}">Inicio</a>
                     <a href="{{ route('store.shop') }}" class="{{ request()->routeIs('store.shop') ? 'is-active' : '' }}">Catalogo</a>
                     <a href="{{ route('store.stores.index') }}" class="{{ request()->routeIs('store.stores.*', 'store.store.show') ? 'is-active' : '' }}">Emprendedores</a>
+                    <a href="{{ route('store.entrepreneur') }}" class="{{ request()->routeIs('store.entrepreneur') ? 'is-active' : '' }}">Quiero ser emprendedor</a>
                     <a href="{{ route('store.wishlist.index') }}" class="{{ request()->routeIs('store.wishlist.*') ? 'is-active' : '' }}">Favoritos</a>
                     <a href="{{ route('store.cart.index') }}" class="{{ request()->routeIs('store.cart.*') ? 'is-active' : '' }}">Carrito</a>
                     <a href="{{ route('store.checkout.index') }}" class="{{ request()->routeIs('store.checkout.*') ? 'is-active' : '' }}">Finalizar Compra</a>
-                    <a href="{{ route('store.login') }}" class="{{ request()->routeIs('store.login', 'store.register') ? 'is-active' : '' }}">Ingresar</a>
-                    <a href="{{ route('admin.login') }}">Admin</a>
+                    <a href="{{ route('store.login') }}" class="{{ request()->routeIs('store.login', 'store.register') ? 'is-active' : '' }}">Clientes</a>
+                    <a href="{{ route('admin.login') }}">Backoffice</a>
                 </nav>
             </div>
         </div>
@@ -499,6 +838,7 @@
                         <a href="{{ route('store.home') }}" class="{{ request()->routeIs('store.home') ? 'is-active' : '' }}">Inicio</a>
                         <a href="{{ route('store.shop') }}" class="{{ request()->routeIs('store.shop', 'store.product.*') ? 'is-active' : '' }}">Catalogo</a>
                         <a href="{{ route('store.stores.index') }}" class="{{ request()->routeIs('store.stores.*', 'store.store.show') ? 'is-active' : '' }}">Emprendedores</a>
+                        <a href="{{ route('store.entrepreneur') }}" class="{{ request()->routeIs('store.entrepreneur') ? 'is-active' : '' }}">Quiero ser emprendedor</a>
                         <a href="{{ route('store.wishlist.index') }}" class="{{ request()->routeIs('store.wishlist.*') ? 'is-active' : '' }}">Favoritos</a>
                         <a href="{{ route('store.cart.index') }}" class="{{ request()->routeIs('store.cart.*') ? 'is-active' : '' }}">Carrito</a>
                         <a href="{{ route('store.checkout.index') }}" class="{{ request()->routeIs('store.checkout.*') ? 'is-active' : '' }}">Finalizar Compra</a>
@@ -526,10 +866,12 @@
                     ['label' => 'Inicio', 'url' => route('store.home')],
                     ['label' => 'Tienda', 'url' => route('store.shop')],
                     ['label' => 'Tiendas', 'url' => route('store.stores.index')],
+                    ['label' => 'Quiero ser emprendedor', 'url' => route('store.entrepreneur')],
                     ['label' => 'Favoritos', 'url' => route('store.wishlist.index')],
                     ['label' => 'Carrito', 'url' => route('store.cart.index')],
                     ['label' => 'Checkout', 'url' => route('store.checkout.index')],
-                    ['label' => 'Backoffice', 'url' => route('admin.login')],
+                    ['label' => 'Backoffice emprendedores', 'url' => route('admin.login')],
+                    ['label' => 'Quiero ser emprendedor', 'url' => route('store.entrepreneur')],
                 ],
             ],
             [
@@ -538,7 +880,7 @@
                     ['label' => 'Mis favoritos', 'url' => route('store.wishlist.index')],
                     ['label' => 'Ver carrito', 'url' => route('store.cart.index')],
                     ['label' => 'Finalizar compra', 'url' => route('store.checkout.index')],
-                    ['label' => $currentStoreUser ? 'Mi cuenta activa' : 'Ingresar', 'url' => route('store.login')],
+                    ['label' => $currentStoreUser ? 'Mi cuenta activa' : 'Acceso clientes', 'url' => route('store.login')],
                     ['label' => 'Crear cuenta', 'url' => route('store.register')],
                     ['label' => 'Seguir comprando', 'url' => route('store.shop')],
                     ['label' => 'Llamar soporte', 'url' => 'tel:0000000000'],
@@ -594,7 +936,8 @@
                     ['label' => 'Destacados', 'url' => route('store.shop')],
                     ['label' => 'Compra segura', 'url' => route('store.checkout.index')],
                     ['label' => 'Regalos y favoritos', 'url' => route('store.wishlist.index')],
-                    ['label' => 'Portal administrativo', 'url' => route('admin.login')],
+                    ['label' => 'Backoffice emprendedores', 'url' => route('admin.login')],
+                    ['label' => 'Quiero ser emprendedor', 'url' => route('store.entrepreneur')],
                 ],
             ],
         ];
@@ -644,7 +987,8 @@
                     <a href="{{ route('store.shop') }}">Catálogo</a>
                     <a href="{{ route('store.wishlist.index') }}">Favoritos</a>
                     <a href="{{ route('store.checkout.index') }}">Pago seguro</a>
-                    <a href="{{ route('admin.login') }}">Administrador</a>
+                    <a href="{{ route('store.entrepreneur') }}">Quiero ser emprendedor</a>
+                    <a href="{{ route('admin.login') }}">Backoffice emprendedores</a>
                 </div>
             </div>
         </div>

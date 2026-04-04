@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagar pedido {{ $localOrder->number }} con ePayco</title>
+    <title>{{ $paymentContext['flow'] === 'entrepreneur_plan' ? 'Pagar plan emprendedor' : 'Pagar pedido '.$localOrder->number }} con ePayco</title>
     @include('partials.favicons')
     <style>
         body {
@@ -94,13 +94,13 @@
 <body>
     <div class="page">
         <div class="card">
-            <h1>Estamos preparando tu pago</h1>
-            <p>Tu pedido <strong>{{ $localOrder->number }}</strong> ya fue registrado como pendiente. Vamos a abrir el checkout de ePayco para que completes el pago.</p>
+            <h1>{{ $paymentContext['title'] }}</h1>
+            <p>{!! str_replace($paymentContext['name'], '<strong>'.$paymentContext['name'].'</strong>', e($paymentContext['intro'])) !!}</p>
 
             <div class="summary">
-                <div class="summary-row"><span>Pedido</span><strong>{{ $localOrder->number }}</strong></div>
-                <div class="summary-row"><span>Cliente</span><strong>{{ $localOrder->customer?->full_name ?? $localOrder->customer?->email }}</strong></div>
-                <div class="summary-row"><span>Total</span><strong>${{ number_format($order['amount'], 0, ',', '.') }} {{ $order['currency'] }}</strong></div>
+                <div class="summary-row"><span>{{ $paymentContext['reference_label'] }}</span><strong>{{ $localOrder->number }}</strong></div>
+                <div class="summary-row"><span>{{ $paymentContext['customer_label'] }}</span><strong>{{ $paymentContext['customer_value'] }}</strong></div>
+                <div class="summary-row"><span>{{ $paymentContext['total_label'] }}</span><strong>${{ number_format($order['amount'], 0, ',', '.') }} {{ $order['currency'] }}</strong></div>
             </div>
 
             <button type="button" id="open-epayco" class="fallback-btn">Continuar con ePayco</button>
@@ -132,7 +132,7 @@
                 </script>
             </div>
 
-            <p class="help">Si el checkout no se abre automáticamente, usa el botón de arriba. Si prefieres volver, puedes cerrar esta página y tu pedido seguirá en estado pendiente.</p>
+            <p class="help">Si el checkout no se abre automáticamente, usa el botón de arriba. Si prefieres volver, puedes cerrar esta página y el registro quedará en estado pendiente hasta que retomes el pago.</p>
         </div>
     </div>
 

@@ -3,13 +3,14 @@
 <style>
     .shopingo-home {
         padding: 2.4rem 0 6rem;
+        background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 100%);
     }
     .shopingo-home .container {
         position: relative;
     }
     .shopingo-hero {
         display: grid;
-        grid-template-columns: 1.25fr 3fr 1.1fr;
+        grid-template-columns: minmax(0, 2.4fr) minmax(28rem, 1fr);
         gap: 2rem;
         align-items: stretch;
         margin-bottom: 2.8rem;
@@ -18,88 +19,148 @@
     .shopingo-banner,
     .shopingo-mini-banner,
     .shopingo-info-card,
-    .shopingo-promo-card,
     .shopingo-category-card,
     .shopingo-product-shell {
-        border: 1px solid #D09050;
+        border: 1px solid #E7D4C3;
         border-radius: 22px;
-        background: #F8F0E0;
-        box-shadow: 0 14px 30px rgba(208, 104, 64, 0.14);
+        background: #FFFFFF;
+        box-shadow: 0 14px 30px rgba(87, 43, 26, 0.08);
     }
-    .shopingo-sidebar {
-        padding: 2.4rem 2rem;
+    .shopingo-info-grid,
+    .shopingo-category-section,
+    .shopingo-featured-section {
+        padding: 2.6rem;
+        border-radius: 3rem;
+        background: #FBF1E1;
     }
-    .shopingo-sidebar__title,
     .shopingo-section__title {
         margin: 0 0 1.4rem;
         font-size: 1.8rem;
         font-weight: 700;
+        font-family: "Manrope", sans-serif;
         letter-spacing: 0.03em;
         text-transform: uppercase;
-    }
-    .shopingo-sidebar__list {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-    .shopingo-sidebar__list li + li {
-        border-top: 1px solid #D09050;
-    }
-    .shopingo-sidebar__list a {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1.2rem 0;
-        color: #502818;
-        font-weight: 600;
-    }
-    .shopingo-sidebar__list a:hover {
-        color: #D06840;
+        color: #572B1A;
     }
     .shopingo-banner {
         position: relative;
         overflow: hidden;
         min-height: 44rem;
+        background: #FFFFFF;
+    }
+    .shopingo-banner .swiper {
+        height: 100%;
+        min-height: 44rem;
+    }
+    .shopingo-banner__slide {
+        position: relative;
+        min-height: 44rem;
+        overflow: hidden;
+    }
+    .shopingo-banner__slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
         background:
-            linear-gradient(120deg, rgba(248, 184, 120, 0.92) 0%, rgba(248, 240, 224, 0.82) 48%, rgba(208, 104, 64, 0.24) 100%),
-            url('{{ asset('wolmart/assets/images/demos/demo1/sliders/slide-1.jpg') }}') center right / cover no-repeat;
+            linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.88) 34%, rgba(251, 241, 225, 0.38) 58%, rgba(87, 43, 26, 0.18) 100%);
+        z-index: 1;
+    }
+    .shopingo-banner__image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
     .shopingo-banner__content {
         position: absolute;
+        z-index: 2;
         inset: 0 auto 0 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        max-width: 52%;
-        padding: 4rem;
+        gap: 1.2rem;
+        max-width: min(48%, 46rem);
+        padding: 3.6rem 4rem;
     }
     .shopingo-banner__eyebrow {
         margin-bottom: 1rem;
-        color: #603018;
+        color: #572B1A;
         font-size: 1.35rem;
         font-weight: 700;
         letter-spacing: 0.16em;
         text-transform: uppercase;
     }
     .shopingo-banner__title {
-        margin: 0 0 1.4rem;
-        font-family: "DM Serif Display", serif;
-        font-size: clamp(3.4rem, 4vw, 5.6rem);
-        line-height: 0.98;
-        color: #502818;
+        margin: 0;
+        font-family: "Manrope", sans-serif;
+        font-size: clamp(3.2rem, 3.6vw, 4.8rem);
+        line-height: 1;
+        color: #572B1A;
+        max-width: 14ch;
+        text-wrap: balance;
     }
     .shopingo-banner__text {
-        margin: 0 0 2.2rem;
+        margin: 0;
         max-width: 38rem;
-        color: #603018;
-        font-size: 1.6rem;
-        line-height: 1.7;
+        color: #3A241C;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.8rem;
+        line-height: 1.55;
     }
     .shopingo-banner__actions {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
+    }
+    .shopingo-banner__nav {
+        position: absolute;
+        right: 2.4rem;
+        bottom: 2.4rem;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .shopingo-banner__arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4.8rem;
+        height: 4.8rem;
+        border: 1px solid rgba(231, 212, 195, 0.95);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        color: #572B1A;
+        cursor: pointer;
+        transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .shopingo-banner__arrow:hover {
+        background: #D05F32;
+        border-color: #D05F32;
+        color: #FFFFFF;
+    }
+    .shopingo-banner__pagination {
+        position: absolute;
+        left: 4rem !important;
+        bottom: 2.8rem !important;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+    .shopingo-banner__pagination .swiper-pagination-bullet {
+        width: 1rem;
+        height: 1rem;
+        margin: 0 !important;
+        background: rgba(87, 43, 26, 0.22);
+        opacity: 1;
+    }
+    .shopingo-banner__pagination .swiper-pagination-bullet-active {
+        width: 3.2rem;
+        border-radius: 999px;
+        background: #D05F32;
     }
     .shopingo-btn {
         display: inline-flex;
@@ -112,13 +173,17 @@
         font-weight: 700;
     }
     .shopingo-btn--dark {
-        background: #502818;
-        color: #F8F0E0;
+        background: #D05F32;
+        color: #FFFFFF;
+    }
+    .shopingo-btn--dark:hover {
+        background: #AB4D29;
+        color: #FFFFFF;
     }
     .shopingo-btn--light {
-        border: 1px solid #D09050;
-        background: rgba(248, 240, 224, 0.82);
-        color: #502818;
+        border: 1px solid #E7D4C3;
+        background: #FFFFFF;
+        color: #572B1A;
     }
     .shopingo-hero__aside {
         display: grid;
@@ -142,20 +207,20 @@
         z-index: -1;
     }
     .shopingo-mini-banner--rose {
-        background: linear-gradient(135deg, #F8B878 0%, #F8F0E0 100%);
+        background: linear-gradient(135deg, #FBF1E1 0%, #FFFFFF 100%);
     }
     .shopingo-mini-banner--rose::before {
-        background: #D06840;
+        background: #D05F32;
     }
     .shopingo-mini-banner--blue {
-        background: linear-gradient(135deg, #F8E8D0 0%, #F8F0E0 100%);
+        background: linear-gradient(135deg, #FFFFFF 0%, #FBF1E1 100%);
     }
     .shopingo-mini-banner--blue::before {
-        background: #D09050;
+        background: #EBA468;
     }
     .shopingo-mini-banner__kicker {
         margin-bottom: 0.8rem;
-        color: #603018;
+        color: #572B1A;
         font-size: 1.2rem;
         font-weight: 700;
         letter-spacing: 0.14em;
@@ -166,15 +231,15 @@
         font-size: 2.5rem;
         line-height: 1.05;
         font-weight: 700;
-        color: #502818;
+        color: #572B1A;
+        font-family: "Manrope", sans-serif;
     }
     .shopingo-mini-banner__text {
         margin: 0 0 1.4rem;
         max-width: 22rem;
-        color: #603018;
+        color: #3A241C;
     }
     .shopingo-info-grid,
-    .shopingo-promo-grid,
     .shopingo-category-grid,
     .shopingo-product-grid {
         display: grid;
@@ -197,8 +262,8 @@
         width: 5.4rem;
         height: 5.4rem;
         border-radius: 50%;
-        background: #F8B878;
-        color: #502818;
+        background: #FBF1E1;
+        color: #D05F32;
         font-size: 2.2rem;
     }
     .shopingo-info-card__title {
@@ -208,54 +273,7 @@
     }
     .shopingo-info-card__text {
         margin: 0;
-        color: #603018;
-        font-size: 1.3rem;
-    }
-    .shopingo-promo-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin-bottom: 3.2rem;
-    }
-    .shopingo-promo-card {
-        display: grid;
-        grid-template-columns: 1fr 1.1fr;
-        align-items: center;
-        overflow: hidden;
-        min-height: 21rem;
-    }
-    .shopingo-promo-card--blue {
-        background: linear-gradient(135deg, #F8E8D0 0%, #F8F0E0 100%);
-    }
-    .shopingo-promo-card--rose {
-        background: linear-gradient(135deg, #F8B878 0%, #F8F0E0 100%);
-    }
-    .shopingo-promo-card--amber {
-        background: linear-gradient(135deg, #D09050 0%, #F8F0E0 100%);
-    }
-    .shopingo-promo-card__media img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .shopingo-promo-card__body {
-        padding: 2rem 2rem 2rem 0;
-    }
-    .shopingo-promo-card__label {
-        margin-bottom: 0.6rem;
-        color: #603018;
-        font-size: 1.1rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-    }
-    .shopingo-promo-card__title {
-        margin: 0 0 0.8rem;
-        font-size: 2.2rem;
-        font-weight: 700;
-        line-height: 1.05;
-    }
-    .shopingo-promo-card__text {
-        margin: 0 0 1.2rem;
-        color: #603018;
+        color: #3A241C;
         font-size: 1.3rem;
     }
     .shopingo-section {
@@ -270,7 +288,7 @@
     .shopingo-section__line {
         flex: 1;
         height: 1px;
-        background: #D09050;
+        background: #D05F32;
     }
     .shopingo-category-grid {
         grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -294,28 +312,25 @@
     }
     .shopingo-category-card__meta {
         margin: 0;
-        color: #603018;
+        color: #3A241C;
         font-size: 1.2rem;
     }
     .shopingo-product-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
     .shopingo-product-shell {
-        padding: 1.4rem;
+        padding: 0;
     }
     .shopingo-product-shell .product-wrap {
         margin-bottom: 0;
     }
     .shopingo-product-shell .product {
-        border: 0;
+        border: 1px solid #E7D4C3;
         box-shadow: none;
     }
     @media (max-width: 1199px) {
         .shopingo-hero {
             grid-template-columns: 1fr;
-        }
-        .shopingo-sidebar {
-            order: 2;
         }
         .shopingo-hero__aside {
             grid-template-columns: 1fr 1fr;
@@ -326,13 +341,12 @@
     }
     @media (max-width: 991px) {
         .shopingo-info-grid,
-        .shopingo-promo-grid,
         .shopingo-product-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         .shopingo-banner__content {
             max-width: 100%;
-            padding-right: 20rem;
+            padding-right: 18rem;
         }
     }
     @media (max-width: 767px) {
@@ -341,26 +355,37 @@
         }
         .shopingo-banner {
             min-height: 34rem;
-            background-position: center;
+        }
+        .shopingo-banner .swiper,
+        .shopingo-banner__slide {
+            min-height: 34rem;
+        }
+        .shopingo-banner__slide::before {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.82) 44%, rgba(251, 241, 225, 0.66) 100%);
         }
         .shopingo-banner__content {
-            position: static;
+            position: relative;
             max-width: 100%;
-            padding: 2.4rem;
-            background: linear-gradient(180deg, rgba(248,240,224,0.92), rgba(248,232,208,0.82));
+            gap: 1rem;
+            padding: 2.4rem 2.4rem 7rem;
+        }
+        .shopingo-banner__title {
+            max-width: 100%;
+            font-size: clamp(2.8rem, 9vw, 4rem);
+        }
+        .shopingo-banner__nav {
+            right: 1.6rem;
+            bottom: 1.4rem;
+        }
+        .shopingo-banner__pagination {
+            left: 2.4rem !important;
+            bottom: 2rem !important;
         }
         .shopingo-hero__aside,
         .shopingo-info-grid,
-        .shopingo-promo-grid,
         .shopingo-category-grid,
         .shopingo-product-grid {
             grid-template-columns: 1fr;
-        }
-        .shopingo-promo-card {
-            grid-template-columns: 1fr;
-        }
-        .shopingo-promo-card__body {
-            padding: 2rem;
         }
     }
 </style>
@@ -376,7 +401,29 @@
         'accesorios' => 'wolmart/assets/images/demos/demo1/categories/2-4.jpg',
         'default' => 'wolmart/assets/images/demos/demo1/categories/2-5.jpg',
     ];
-    $promoPalettes = ['blue', 'rose', 'amber'];
+    $heroSlides = [
+        [
+            'image' => 'wolmart/assets/images/demos/demo9/banner/1-1.jpg',
+            'eyebrow' => 'Campana de temporada',
+            'title' => 'Renueva tu carrito con selecciones que convierten mejor',
+            'text' => 'Descubre campañas visuales con productos listos para destacar, comprar y regalar en una sola visita.',
+            'url' => route('store.shop'),
+        ],
+        [
+            'image' => 'wolmart/assets/images/demos/demo9/banner/2-1.jpg',
+            'eyebrow' => 'Promociones activas',
+            'title' => 'Ofertas cuidadas para impulsar compras mas rapidas',
+            'text' => 'Aprovecha lanzamientos, descuentos y colecciones curadas con una presentación más aspiracional.',
+            'url' => route('store.shop'),
+        ],
+        [
+            'image' => 'wolmart/assets/images/vendor/element/banner/3.jpg',
+            'eyebrow' => 'Compra inspirada',
+            'title' => 'Campanas visuales para mover favoritos hacia la venta',
+            'text' => 'Conecta inspiración y acción con banners que llevan directo al catálogo y al checkout.',
+            'url' => route('store.shop'),
+        ],
+    ];
     $infoItems = [
         ['icon' => 'w-icon-truck', 'title' => 'Envíos y devoluciones', 'text' => 'Procesos más claros para comprar con tranquilidad.'],
         ['icon' => 'w-icon-money', 'title' => 'Pago seguro', 'text' => 'Checkout respaldado por ePayco y seguimiento del pedido.'],
@@ -386,28 +433,32 @@
 <main class="main shopingo-home">
     <div class="container">
         <section class="shopingo-hero">
-            <aside class="shopingo-panel shopingo-sidebar">
-                <h2 class="shopingo-sidebar__title">Categorías</h2>
-                <ul class="shopingo-sidebar__list">
-                    @foreach($categories as $category)
-                        <li>
-                            <a href="{{ route('store.shop', ['category' => $category->slug]) }}">
-                                <span>{{ $category->name }}</span>
-                                <span>{{ $category->products_count }}</span>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </aside>
-
             <div class="shopingo-banner">
-                <div class="shopingo-banner__content">
-                    <div class="shopingo-banner__eyebrow">Nueva temporada</div>
-                    <h1 class="shopingo-banner__title">Compra con el orden visual del archivo de referencia</h1>
-                    <p class="shopingo-banner__text">Reorganizamos la home con una composición de marketplace más comercial: navegación visible, categorías rápidas, hero dominante y bloques promocionales, sin tocar la lógica del proyecto.</p>
-                    <div class="shopingo-banner__actions">
-                        <a href="{{ route('store.shop') }}" class="shopingo-btn shopingo-btn--dark">Comprar ahora</a>
-                        <a href="{{ route('store.stores.index') }}" class="shopingo-btn shopingo-btn--light">Ver tiendas</a>
+                <div class="swiper shopingo-banner-slider">
+                    <div class="swiper-wrapper">
+                        @foreach($heroSlides as $slide)
+                            <article class="swiper-slide shopingo-banner__slide">
+                                <img src="{{ asset($slide['image']) }}" alt="{{ $slide['title'] }}" class="shopingo-banner__image">
+                                <div class="shopingo-banner__content">
+                                    <div class="shopingo-banner__eyebrow">{{ $slide['eyebrow'] }}</div>
+                                    <h1 class="shopingo-banner__title">{{ $slide['title'] }}</h1>
+                                    <p class="shopingo-banner__text">{{ $slide['text'] }}</p>
+                                    <div class="shopingo-banner__actions">
+                                        <a href="{{ $slide['url'] }}" class="shopingo-btn shopingo-btn--dark">Comprar</a>
+                                        <a href="{{ route('store.stores.index') }}" class="shopingo-btn shopingo-btn--light">Ver tiendas</a>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                    <div class="shopingo-banner__pagination"></div>
+                    <div class="shopingo-banner__nav">
+                        <button type="button" class="shopingo-banner__arrow shopingo-banner__arrow--prev" aria-label="Campaña anterior">
+                            <i class="w-icon-angle-left"></i>
+                        </button>
+                        <button type="button" class="shopingo-banner__arrow shopingo-banner__arrow--next" aria-label="Siguiente campaña">
+                            <i class="w-icon-angle-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -435,33 +486,6 @@
                     <div>
                         <h3 class="shopingo-info-card__title">{{ $item['title'] }}</h3>
                         <p class="shopingo-info-card__text">{{ $item['text'] }}</p>
-                    </div>
-                </article>
-            @endforeach
-        </section>
-
-        <section class="shopingo-promo-grid">
-            @foreach($categories as $category)
-                @php
-                    $categorySlug = $category->slug ?: \Illuminate\Support\Str::slug($category->name);
-                    $categoryImagePath = $category->image;
-
-                    if (! $categoryImagePath || ! file_exists(public_path($categoryImagePath))) {
-                        $categoryImagePath = $fallbackCategoryImages[$categorySlug] ?? $fallbackCategoryImages['default'];
-                    }
-
-                    $palette = $promoPalettes[$loop->index % count($promoPalettes)];
-                @endphp
-                @break($loop->index >= 2)
-                <article class="shopingo-promo-card shopingo-promo-card--{{ $palette }}">
-                    <div class="shopingo-promo-card__media">
-                        <img src="{{ asset($categoryImagePath) }}" alt="{{ $category->name }}">
-                    </div>
-                    <div class="shopingo-promo-card__body">
-                        <div class="shopingo-promo-card__label">Categoría</div>
-                        <h3 class="shopingo-promo-card__title">{{ $category->name }}</h3>
-                        <p class="shopingo-promo-card__text">Desde {{ $category->products_count }} productos publicados en el catálogo.</p>
-                        <a href="{{ route('store.shop', ['category' => $category->slug]) }}" class="shopingo-btn shopingo-btn--light">Ver categoría</a>
                     </div>
                 </article>
             @endforeach
@@ -500,7 +524,7 @@
                 <h2 class="shopingo-section__title">Productos destacados</h2>
                 <div class="shopingo-section__line"></div>
             </div>
-            <div class="shopingo-product-grid">
+            <div class="shopingo-product-grid product-market-grid">
                 @foreach($featuredProducts as $product)
                     <div class="shopingo-product-shell">
                         @include('store.partials.product-card', ['product' => $product])
@@ -515,7 +539,7 @@
                 <h2 class="shopingo-section__title">Últimos productos</h2>
                 <div class="shopingo-section__line"></div>
             </div>
-            <div class="shopingo-product-grid">
+            <div class="shopingo-product-grid product-market-grid">
                 @foreach($latestProducts as $product)
                     <div class="shopingo-product-shell">
                         @include('store.partials.product-card', ['product' => $product])
@@ -526,3 +550,31 @@
     </div>
 </main>
 @endsection
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var bannerSlider = document.querySelector('.shopingo-banner-slider');
+
+        if (!bannerSlider || typeof Swiper === 'undefined') {
+            return;
+        }
+
+        new Swiper(bannerSlider, {
+            loop: true,
+            speed: 700,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: '.shopingo-banner__pagination',
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.shopingo-banner__arrow--next',
+                prevEl: '.shopingo-banner__arrow--prev'
+            }
+        });
+    });
+</script>
+@endpush

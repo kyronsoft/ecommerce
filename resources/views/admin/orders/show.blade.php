@@ -95,10 +95,6 @@
                     <span class="admin-kv-value">${{ number_format($order->subtotal, 0, ',', '.') }}</span>
                 </div>
                 <div class="admin-kv-item">
-                    <span class="admin-kv-label">Impuestos</span>
-                    <span class="admin-kv-value">${{ number_format($order->tax, 0, ',', '.') }}</span>
-                </div>
-                <div class="admin-kv-item">
                     <span class="admin-kv-label">Envio</span>
                     <span class="admin-kv-value">${{ number_format($order->shipping, 0, ',', '.') }}</span>
                 </div>
