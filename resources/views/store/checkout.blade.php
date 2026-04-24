@@ -5,6 +5,55 @@
     $selectedDepartment = old('department');
     $selectedCity = old('city');
 @endphp
+@push('styles')
+<style>
+    @media (max-width: 991px) {
+        .checkout .sticky-sidebar {
+            position: static !important;
+        }
+    }
+    @media (max-width: 767px) {
+        .checkout .page-content {
+            padding-top: 2rem !important;
+            padding-bottom: 4rem !important;
+            margin-bottom: 0 !important;
+        }
+        .checkout .step-by {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+        }
+        .checkout .cart-summary-card,
+        .checkout .checkout-order-summary {
+            padding: 1.6rem !important;
+            border-radius: 2rem;
+        }
+        .checkout .checkout-order-table {
+            display: block;
+            overflow-x: auto;
+        }
+        .checkout .checkout-order-table thead th,
+        .checkout .checkout-order-table tbody td,
+        .checkout .checkout-order-table tbody th {
+            white-space: nowrap;
+        }
+        .checkout .checkout-order-product {
+            min-width: 22rem;
+        }
+    }
+    @media (max-width: 479px) {
+        .checkout .cart-summary-card {
+            padding: 1.2rem !important;
+        }
+        .checkout .checkout-order-product {
+            min-width: 18rem;
+        }
+        .checkout .checkout-order-thumb img {
+            width: 5.6rem;
+            height: 5.6rem;
+        }
+    }
+</style>
+@endpush
 
 <main class="main checkout">
     <div class="page-content pt-7 pb-10 mb-10">
@@ -157,7 +206,7 @@
                                                 <td class="product-name">
                                                     <div class="checkout-order-product">
                                                         <figure class="checkout-order-thumb">
-                                                            <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" width="72" height="72">
+                                                            <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" width="72" height="72">
                                                         </figure>
                                                         <div class="checkout-order-product-copy">
                                                             <span class="checkout-order-product-name">{{ $item['name'] }}</span>
@@ -171,10 +220,6 @@
                                         <tr class="checkout-order-meta">
                                             <td><b>Subtotal</b></td>
                                             <td><b>${{ number_format($subtotal, 0, ',', '.') }}</b></td>
-                                        </tr>
-                                        <tr class="checkout-order-meta">
-                                            <td><b>Impuestos</b></td>
-                                            <td><b>${{ number_format($tax, 0, ',', '.') }}</b></td>
                                         </tr>
                                         <tr class="checkout-order-meta">
                                             <td><b>Envío</b></td>

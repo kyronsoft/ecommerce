@@ -13,6 +13,7 @@
     $customerEmail = $gatewayData['x_customer_email'] ?? $order?->customer?->email;
     $rawAmount = $gatewayData['x_amount'] ?? $transaction?->amount ?? $order?->total;
     $displayAmount = $rawAmount !== null ? '$'.number_format((float) $rawAmount, 0, ',', '.').' '.($gatewayData['x_currency_code'] ?? $transaction?->currency ?? 'COP') : 'Sin dato';
+    $isEntrepreneurPlan = ($paymentContext['flow'] ?? null) === 'entrepreneur_plan';
 @endphp
 
 <main class="main">
@@ -42,7 +43,7 @@
 
                         <div class="epayco-response-list">
                             <div class="epayco-response-row">
-                                <span>Pedido</span>
+                                <span>{{ $isEntrepreneurPlan ? 'Solicitud' : 'Pedido' }}</span>
                                 <strong>{{ $order?->number ?? $transaction?->order_ref ?? 'Sin asociar' }}</strong>
                             </div>
                             <div class="epayco-response-row">
@@ -94,17 +95,17 @@
 
                 @if(in_array($transaction?->status, ['approved', 'rejected'], true) && $customerEmail)
                     <div class="epayco-response-alert">
-                        Estamos procesando el correo de confirmacion para <strong>{{ $customerEmail }}</strong> con el resumen de esta transaccion y el detalle del pedido.
+                        Estamos procesando el correo de confirmacion para <strong>{{ $customerEmail }}</strong> con el resumen de esta transaccion y el detalle de {{ $isEntrepreneurPlan ? 'tu solicitud' : 'tu pedido' }}.
                     </div>
                 @endif
 
                 <div class="epayco-response-actions">
                     @if($transaction?->status === 'approved')
-                        <a href="{{ route('store.shop') }}" class="btn btn-primary">Seguir comprando</a>
-                        <a href="{{ route('store.home') }}" class="btn btn-outline">Volver al inicio</a>
+                        <a href="{{ $paymentContext['primary_approved_url'] ?? route('store.shop') }}" class="btn btn-primary">{{ $paymentContext['primary_approved_label'] ?? 'Seguir comprando' }}</a>
+                        <a href="{{ $paymentContext['secondary_url'] ?? route('store.home') }}" class="btn btn-outline">{{ $paymentContext['secondary_label'] ?? 'Volver al inicio' }}</a>
                     @else
-                        <a href="{{ route('store.checkout.index') }}" class="btn btn-primary">Intentar nuevamente</a>
-                        <a href="{{ route('store.cart.index') }}" class="btn btn-outline">Volver al carrito</a>
+                        <a href="{{ $paymentContext['retry_url'] ?? route('store.checkout.index') }}" class="btn btn-primary">Intentar nuevamente</a>
+                        <a href="{{ $isEntrepreneurPlan ? route('store.entrepreneur') : route('store.cart.index') }}" class="btn btn-outline">{{ $isEntrepreneurPlan ? 'Volver a planes' : 'Volver al carrito' }}</a>
                     @endif
                 </div>
 

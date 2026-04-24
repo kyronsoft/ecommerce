@@ -7,8 +7,17 @@
 @php
     $imageInput = old('image', $product->image);
     $imageUrl = filled($imageInput)
-        ? (\Illuminate\Support\Str::startsWith($imageInput, ['http://', 'https://']) ? $imageInput : asset($imageInput))
+        ? (\Illuminate\Support\Str::startsWith($imageInput, ['http://', 'https://'])
+            ? $imageInput
+            : (($product->exists && \Illuminate\Support\Str::startsWith($imageInput, 'storage/'))
+                ? route('admin.products.media', [$product, 'image'])
+                : asset($imageInput)))
         : null;
+    $galleryItems = collect(old('gallery_existing', $product->gallery ?? []))
+        ->map(fn ($item) => trim((string) $item))
+        ->filter()
+        ->values();
+    $isCreate = ! $product->exists;
 @endphp
 
 @section('page_actions')
@@ -40,13 +49,6 @@
                         <input id="name" type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}" required>
                     </div>
                     <div class="admin-field">
-                        <label for="sku">SKU</label>
-                        <input id="sku" type="text" name="sku" class="form-control" value="{{ old('sku', $product->sku) }}" required>
-                    </div>
-                </div>
-
-                <div class="admin-form-grid">
-                    <div class="admin-field">
                         <label for="store_id">Tienda</label>
                         <select id="store_id" name="store_id" class="form-control">
                             <option value="">Sin asignar</option>
@@ -56,6 +58,24 @@
                                 </option>
                             @endforeach
                         </select>
+                    </div>
+                </div>
+
+                <div class="admin-form-grid">
+                    <div class="admin-field">
+                        <label for="sku">SKU</label>
+                        <input
+                            id="sku"
+                            type="text"
+                            name="sku"
+                            class="form-control"
+                            value="{{ old('sku', $product->sku) }}"
+                            @if($isCreate) readonly @endif
+                            required
+                        >
+                        @if($isCreate)
+                            <small>Se genera automaticamente segun la tienda seleccionada y su consecutivo disponible.</small>
+                        @endif
                     </div>
                     <div class="admin-field">
                         <label for="category_id">Categoria</label>
@@ -78,11 +98,30 @@
                 <div class="admin-form-grid">
                     <div class="admin-field">
                         <label for="price">Precio</label>
-                        <input id="price" type="number" name="price" class="form-control" min="0" step="0.01" value="{{ old('price', $product->price) }}" required>
+                        <input id="price" type="hidden" name="price" value="{{ (int) old('price', $product->price) }}">
+                        <input
+                            id="price_display"
+                            type="text"
+                            class="form-control js-money-display"
+                            inputmode="numeric"
+                            data-target="price"
+                            value="{{ number_format((float) old('price', $product->price), 0, ',', '.') }}"
+                            required
+                        >
+                        <small>Se visualiza en pesos colombianos sin centavos.</small>
                     </div>
                     <div class="admin-field">
                         <label for="compare_price">Precio comparativo</label>
-                        <input id="compare_price" type="number" name="compare_price" class="form-control" min="0" step="0.01" value="{{ old('compare_price', $product->compare_price) }}">
+                        <input id="compare_price" type="hidden" name="compare_price" value="{{ filled(old('compare_price', $product->compare_price)) ? (int) old('compare_price', $product->compare_price) : '' }}">
+                        <input
+                            id="compare_price_display"
+                            type="text"
+                            class="form-control js-money-display"
+                            inputmode="numeric"
+                            data-target="compare_price"
+                            value="{{ filled(old('compare_price', $product->compare_price)) ? number_format((float) old('compare_price', $product->compare_price), 0, ',', '.') : '' }}"
+                        >
+                        <small>Usa este valor como precio de referencia o precio anterior.</small>
                     </div>
                 </div>
 
@@ -103,8 +142,40 @@
 
                 <div class="admin-field">
                     <label for="gallery">Galeria</label>
-                    <input id="gallery" type="text" name="gallery" class="form-control" value="{{ old('gallery', is_array($product->gallery) ? implode(', ', $product->gallery) : '') }}">
-                    <small>Separa varias rutas o URLs con coma.</small>
+                    <input id="gallery" type="file" name="gallery_files[]" class="form-control @error('gallery_files') is-invalid @enderror @error('gallery_files.*') is-invalid @enderror" accept="image/png,image/jpeg,image/webp" multiple>
+                    <small>Sube una o varias imagenes alternas del producto. Puedes previsualizarlas antes de guardar.</small>
+                    @error('gallery_files')
+                        <small class="admin-field-error">{{ $message }}</small>
+                    @enderror
+                    @error('gallery_files.*')
+                        <small class="admin-field-error">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="admin-field">
+                    <label>Imagenes adicionales</label>
+                    <div class="admin-gallery-manager" id="gallery-existing-list">
+                        @forelse($galleryItems as $galleryImage)
+                            @php
+                                $galleryUrl = \Illuminate\Support\Str::startsWith($galleryImage, ['http://', 'https://'])
+                                    ? $galleryImage
+                                    : (($product->exists && \Illuminate\Support\Str::startsWith($galleryImage, 'storage/'))
+                                        ? route('admin.products.media', [$product, 'gallery', $loop->index])
+                                        : asset($galleryImage));
+                            @endphp
+                            <div class="admin-gallery-card" data-existing-gallery-item>
+                                <input type="hidden" name="gallery_existing[]" value="{{ $galleryImage }}">
+                                <img src="{{ $galleryUrl }}" alt="{{ old('name', $product->name ?: 'Producto') }}" class="admin-gallery-thumb">
+                                <button type="button" class="admin-gallery-remove" data-remove-gallery-item>Quitar</button>
+                            </div>
+                        @empty
+                            <div class="admin-empty" id="gallery-empty-state">
+                                Aun no se han agregado imagenes alternas.
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <div class="admin-gallery-manager admin-gallery-manager--pending" id="gallery-preview-list"></div>
                 </div>
 
                 <div class="admin-field">
@@ -178,3 +249,116 @@
         </div>
     </form>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isCreate = @json($isCreate);
+            const storeSkuMeta = @json($storeSkuMeta ?? []);
+            const nameInput = document.getElementById('name');
+            const skuInput = document.getElementById('sku');
+            const storeSelect = document.getElementById('store_id');
+            const galleryInput = document.getElementById('gallery');
+            const existingList = document.getElementById('gallery-existing-list');
+            const previewList = document.getElementById('gallery-preview-list');
+            const emptyState = document.getElementById('gallery-empty-state');
+            const moneyInputs = document.querySelectorAll('.js-money-display');
+
+            function formatMoneyDigits(value) {
+                if (!value) {
+                    return '';
+                }
+
+                return new Intl.NumberFormat('es-CO', {
+                    maximumFractionDigits: 0,
+                }).format(Number(value));
+            }
+
+            function syncMoneyInput(input) {
+                const target = document.getElementById(input.dataset.target);
+
+                if (!target) {
+                    return;
+                }
+
+                const digits = input.value.replace(/\D+/g, '');
+                target.value = digits;
+                input.value = formatMoneyDigits(digits);
+            }
+
+            function syncSku() {
+                if (!isCreate) {
+                    return;
+                }
+
+                const selectedStoreId = storeSelect.value;
+                const productName = nameInput.value.trim();
+                const skuMeta = storeSkuMeta[selectedStoreId];
+
+                if (!selectedStoreId || !productName || !skuMeta?.next) {
+                    skuInput.value = '';
+                    return;
+                }
+
+                skuInput.value = skuMeta.next;
+            }
+
+            function syncEmptyState() {
+                const hasExisting = existingList.querySelector('[data-existing-gallery-item]');
+                if (!emptyState) {
+                    return;
+                }
+
+                emptyState.style.display = hasExisting ? 'none' : '';
+            }
+
+            existingList.addEventListener('click', (event) => {
+                const removeButton = event.target.closest('[data-remove-gallery-item]');
+
+                if (!removeButton) {
+                    return;
+                }
+
+                const item = removeButton.closest('[data-existing-gallery-item]');
+                item?.remove();
+                syncEmptyState();
+            });
+
+            galleryInput.addEventListener('change', () => {
+                previewList.innerHTML = '';
+
+                Array.from(galleryInput.files || []).forEach((file) => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-gallery-card';
+
+                    const image = document.createElement('img');
+                    image.className = 'admin-gallery-thumb';
+                    image.alt = file.name;
+                    image.src = URL.createObjectURL(file);
+
+                    const caption = document.createElement('span');
+                    caption.className = 'admin-gallery-caption';
+                    caption.textContent = file.name;
+
+                    card.appendChild(image);
+                    card.appendChild(caption);
+                    previewList.appendChild(card);
+                });
+            });
+
+            moneyInputs.forEach((input) => {
+                input.addEventListener('input', () => syncMoneyInput(input));
+                input.addEventListener('blur', () => syncMoneyInput(input));
+                syncMoneyInput(input);
+            });
+
+            if (isCreate) {
+                nameInput.addEventListener('input', syncSku);
+                storeSelect.addEventListener('change', syncSku);
+                syncSku();
+            }
+
+            syncEmptyState();
+        });
+    </script>
+@endpush

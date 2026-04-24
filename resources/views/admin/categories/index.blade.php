@@ -5,7 +5,9 @@
 ])
 
 @section('page_actions')
-    <a href="{{ route('admin.categories.create') }}" class="admin-btn admin-btn--primary">Nueva categoria</a>
+    @if($currentAdminIsSuperAdmin ?? false)
+        <a href="{{ route('admin.categories.create') }}" class="admin-btn admin-btn--primary">Nueva categoria</a>
+    @endif
 @endsection
 
 @section('content')
@@ -66,12 +68,14 @@
                             <td>
                                 <div class="admin-actions">
                                     <a href="{{ route('admin.categories.show', $category) }}" class="admin-link">Ver</a>
-                                    <a href="{{ route('admin.categories.edit', $category) }}" class="admin-link">Editar</a>
-                                    <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('¿Eliminar esta categoria?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="admin-link" style="border: 0; background: transparent; padding: 0;">Eliminar</button>
-                                    </form>
+                                    @if($currentAdminIsSuperAdmin ?? false)
+                                        <a href="{{ route('admin.categories.edit', $category) }}" class="admin-link">Editar</a>
+                                        <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('¿Eliminar esta categoria?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="admin-link" style="border: 0; background: transparent; padding: 0;">Eliminar</button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

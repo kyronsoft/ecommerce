@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso Backoffice | La Tienda de Mi Abue</title>
+    <title>Backoffice Emprendedores | La Tienda de Mi Abue</title>
     @include('partials.favicons')
     <script>
-        WebFontConfig = { google: { families: ['Quicksand:400,500,600,700', 'DM Serif Display:400'] } };
+        WebFontConfig = { google: { families: ['Inter:400,500,600,700', 'Manrope:500,600,700,800'] } };
         (function (d) {
             var wf = d.createElement('script'), s = d.scripts[0];
             wf.src = '{{ asset('wolmart/assets/js/webfont.js') }}';
@@ -14,16 +14,17 @@
             s.parentNode.insertBefore(wf, s);
         })(document);
     </script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('wolmart/assets/vendor/fontawesome-free/css/all.min.css') }}">
     <style>
         :root {
-            --brand-primary: #7b4a37;
-            --brand-primary-strong: #5f3628;
-            --brand-accent: #d97957;
-            --brand-bg: #f6ede6;
-            --brand-card: rgba(255, 255, 255, 0.92);
-            --brand-border: rgba(123, 74, 55, 0.16);
-            --brand-text: #50392f;
-            --brand-muted: #8b7064;
+            --auth-bg: #FFFFFF;
+            --auth-soft: #FBF1E1;
+            --auth-border: #E7D4C3;
+            --auth-text: #3A241C;
+            --auth-heading: #572B1A;
+            --auth-primary: #D05F32;
+            --auth-primary-hover: #AB4D29;
+            --auth-muted: #7B665C;
         }
         * { box-sizing: border-box; }
         body {
@@ -31,109 +32,87 @@
             min-height: 100vh;
             display: grid;
             place-items: center;
-            padding: 2rem;
-            font-family: 'Quicksand', sans-serif;
-            color: var(--brand-text);
+            padding: 2.4rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--auth-text);
             background:
-                radial-gradient(circle at top left, rgba(217, 121, 87, 0.18), transparent 32%),
-                radial-gradient(circle at bottom right, rgba(123, 74, 55, 0.16), transparent 35%),
-                linear-gradient(180deg, #fffaf7 0%, var(--brand-bg) 100%);
+                radial-gradient(circle at top left, rgba(235, 164, 104, 0.12), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(208, 95, 50, 0.08), transparent 26%),
+                linear-gradient(180deg, #fffdfa 0%, var(--auth-soft) 100%);
         }
-        .login-shell {
-            width: min(100%, 1020px);
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .auth-shell {
+            width: min(100%, 43rem);
+            padding: .8rem;
+            border: 1px solid rgba(231, 212, 195, 0.95);
+            border-radius: 2.4rem;
+            background: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 26px 60px rgba(87, 43, 26, 0.10);
+        }
+        .auth-card {
+            background: #FFFFFF;
+            border: 1px solid var(--auth-border);
+            border-radius: 1.8rem;
+            padding: 2.1rem 2rem 2.2rem;
+        }
+        .auth-tabs {
             display: grid;
-            grid-template-columns: 1.1fr .9fr;
-            border-radius: 32px;
-            overflow: hidden;
-            background: var(--brand-card);
-            border: 1px solid var(--brand-border);
-            box-shadow: 0 35px 70px rgba(123, 74, 55, 0.14);
-            backdrop-filter: blur(12px);
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 1.6rem;
+            border-bottom: 1px solid var(--auth-border);
         }
-        .login-hero {
-            padding: 4.4rem;
-            background: linear-gradient(160deg, rgba(123, 74, 55, 0.96), rgba(217, 121, 87, 0.90));
-            color: #fff;
-        }
-        .login-hero .brand {
+        .auth-tab {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 1.2rem 1.6rem;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.10);
-        }
-        .login-hero img {
-            width: 14rem;
-            max-width: 100%;
-        }
-        .login-hero h1 {
-            margin: 2.4rem 0 1rem;
-            font-family: 'DM Serif Display', serif;
-            font-size: clamp(3rem, 4vw, 5rem);
-            line-height: 1.02;
-        }
-        .login-hero p {
-            margin: 0;
-            max-width: 42rem;
-            color: rgba(255, 255, 255, 0.86);
-            font-size: 1.6rem;
-            line-height: 1.7;
-        }
-        .login-panel {
-            padding: 4.4rem 3.6rem;
-            background: rgba(255, 255, 255, 0.94);
-        }
-        .login-panel small {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: var(--brand-muted);
+            padding: .75rem .75rem 1rem;
+            margin-bottom: -1px;
+            border-bottom: 3px solid transparent;
+            color: var(--auth-muted);
+            font-family: 'Manrope', sans-serif;
             font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: .12em;
+            font-weight: 800;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
         }
-        .login-panel h2 {
-            margin: 0 0 .8rem;
-            color: var(--brand-primary-strong);
-            font-family: 'DM Serif Display', serif;
-            font-size: 3.4rem;
+        .auth-tab.is-active {
+            color: var(--auth-primary);
+            border-bottom-color: var(--auth-primary);
         }
-        .login-panel p {
-            margin: 0 0 2.2rem;
-            color: var(--brand-muted);
-            font-size: 1.45rem;
-            line-height: 1.7;
+        .auth-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.2rem;
         }
-        .field {
-            margin-bottom: 1.4rem;
+        .auth-logo .brand-logo-shell {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: .5rem .8rem;
+            border-radius: 1.2rem;
+            background: var(--auth-soft);
         }
-        .field label {
-            display: block;
-            margin-bottom: .7rem;
-            color: var(--brand-primary-strong);
-            font-size: 1.35rem;
-            font-weight: 700;
+        .auth-logo .brand-logo-image {
+            width: min(100%, 7rem);
+            max-height: 3rem;
+            object-fit: contain;
         }
-        .field input {
-            width: 100%;
-            min-height: 5rem;
-            padding: 1rem 1.4rem;
-            border: 1px solid var(--brand-border);
-            border-radius: 16px;
-            outline: none;
-            color: var(--brand-text);
-            font-size: 1.45rem;
-        }
-        .field input:focus {
-            border-color: rgba(123, 74, 55, 0.4);
-            box-shadow: 0 0 0 4px rgba(123, 74, 55, 0.08);
+        .auth-copy {
+            margin: 0 0 1.6rem;
+            text-align: center;
+            color: var(--auth-muted);
+            font-size: 1rem;
+            line-height: 1.55;
         }
         .feedback {
-            margin-bottom: 1.6rem;
-            padding: 1.2rem 1.4rem;
-            border-radius: 16px;
-            font-size: 1.35rem;
+            margin-bottom: 1.2rem;
+            padding: .85rem 1rem;
+            border-radius: 1rem;
+            font-size: .95rem;
             font-weight: 600;
         }
         .feedback--success {
@@ -143,58 +122,153 @@
         }
         .feedback--error {
             color: #a94848;
-            background: rgba(169, 72, 72, 0.09);
+            background: rgba(169, 72, 72, 0.10);
             border: 1px solid rgba(169, 72, 72, 0.16);
         }
-        .submit {
+        .field + .field {
+            margin-top: 1.2rem;
+        }
+        .field label {
+            display: block;
+            margin-bottom: .55rem;
+            color: var(--auth-heading);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .field input {
             width: 100%;
-            min-height: 5rem;
+            min-height: 3.9rem;
+            padding: .85rem 1rem;
+            border: 1px solid var(--auth-border);
+            border-radius: 1.2rem;
+            background: #FFFFFF;
+            color: var(--auth-text);
+            font-size: 1.05rem;
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .field input:focus {
+            border-color: rgba(208, 95, 50, 0.45);
+            box-shadow: 0 0 0 4px rgba(235, 164, 104, 0.14);
+        }
+        .auth-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin: 1.2rem 0 1.6rem;
+            color: var(--auth-muted);
+            font-size: .95rem;
+        }
+        .auth-remember {
+            display: inline-flex;
+            align-items: center;
+            gap: .8rem;
+        }
+        .auth-remember input {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0;
+        }
+        .auth-meta__link {
+            color: var(--auth-primary);
+            font-weight: 700;
+        }
+        .auth-submit {
+            width: 100%;
+            min-height: 4rem;
             border: 0;
             border-radius: 999px;
-            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
+            background: var(--auth-primary);
+            color: #FFFFFF;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
             cursor: pointer;
         }
-        .login-hint {
+        .auth-submit:hover {
+            background: var(--auth-primary-hover);
+        }
+        .auth-footer {
             margin-top: 1.6rem;
-            color: var(--brand-muted);
-            font-size: 1.3rem;
+            text-align: center;
+            color: var(--auth-muted);
+            font-size: .95rem;
         }
-        .login-links {
-            margin-top: 2rem;
+        .auth-social {
+            display: flex;
+            justify-content: center;
+            gap: .8rem;
+            margin-top: 1.1rem;
         }
-        .login-links a {
-            color: var(--brand-accent);
+        .auth-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.3rem;
+            height: 3.3rem;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            font-size: 1.25rem;
+        }
+        .auth-social .facebook { color: #3b5998; }
+        .auth-social .twitter { color: #1da1f2; }
+        .auth-social .google { color: #db4437; }
+        .auth-links {
+            margin-top: 1.3rem;
+            text-align: center;
+            color: var(--auth-muted);
+            font-size: .95rem;
+        }
+        .auth-links a {
+            color: var(--auth-primary);
             font-weight: 700;
-            text-decoration: none;
         }
-        @media (max-width: 900px) {
-            .login-shell {
+        @media (max-width: 640px) {
+            body {
+                padding: 1.2rem;
+            }
+            .auth-card {
+                padding: 1.8rem 1.4rem 2rem;
+            }
+            .auth-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        @media (max-width: 430px) {
+            .auth-tabs {
                 grid-template-columns: 1fr;
             }
-            .login-hero,
-            .login-panel {
-                padding: 3rem 2.2rem;
+            .auth-tab {
+                padding: .8rem;
+            }
+            .auth-links {
+                display: grid;
+                gap: .6rem;
+            }
+            .auth-links span {
+                display: none;
+            }
+            .auth-social {
+                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-shell">
-        <section class="login-hero">
-            <div class="brand">
+    <div class="auth-shell">
+        <section class="auth-card">
+            <div class="auth-tabs">
+                <a href="{{ route('admin.login') }}" class="auth-tab is-active">Ingresar</a>
+                <a href="{{ route('store.login') }}" class="auth-tab">Clientes</a>
+            </div>
+
+            <div class="auth-logo">
                 @include('partials.brand-logo', ['variant' => 'footer'])
             </div>
-            <h1>Acceso al backoffice</h1>
-            <p>Ingresa con tu usuario administrador para gestionar catalogo, pedidos, clientes y la operacion diaria del ecommerce.</p>
-        </section>
 
-        <section class="login-panel">
-            <small>Ingreso seguro</small>
-            <h2>Administrador</h2>
-            <p>Usa el correo y la contraseña del usuario administrador para entrar al panel.</p>
+            <p class="auth-copy">Ingresa con tu perfil habilitado para acceder al backoffice de emprendedores.</p>
 
             @if(session('status'))
                 <div class="feedback feedback--success">{{ session('status') }}</div>
@@ -207,24 +281,39 @@
             <form method="POST" action="{{ route('admin.login.store') }}">
                 @csrf
                 <div class="field">
-                    <label for="email">Correo</label>
+                    <label for="email">Correo electrónico *</label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
                 </div>
 
                 <div class="field">
-                    <label for="password">Contraseña</label>
+                    <label for="password">Contraseña *</label>
                     <input id="password" type="password" name="password" required>
                 </div>
 
-                <button type="submit" class="submit">Ingresar al backoffice</button>
+                <div class="auth-meta">
+                    <label class="auth-remember" for="remember">
+                        <input id="remember" type="checkbox" disabled>
+                        <span>Recordarme</span>
+                    </label>
+                    <span class="auth-meta__link">Backoffice emprendedores</span>
+                </div>
+
+                <button type="submit" class="auth-submit">Ingresar</button>
             </form>
 
-            <div class="login-hint">
-                Correo administrador inicial: <strong>{{ env('ADMIN_DEFAULT_EMAIL', 'jaruizr74@gmail.com') }}</strong>
+            <div class="auth-footer">
+                Acceso de emprendedores
+                <div class="auth-social">
+                    <a href="#" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="google" aria-label="Google"><i class="fab fa-google"></i></a>
+                </div>
             </div>
 
-            <div class="login-links">
+            <div class="auth-links">
                 <a href="{{ route('store.home') }}">Volver a la tienda</a>
+                <span> · </span>
+                <a href="{{ route('store.login') }}">Acceso clientes</a>
             </div>
         </section>
     </div>

@@ -51,4 +51,9 @@ class Store extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function saleCommissions(): HasMany
+    {
+        return $this->hasMany(SaleCommission::class);
+    }
 }

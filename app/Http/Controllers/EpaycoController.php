@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EntrepreneurWelcomeMail;
 use App\Mail\PaymentTransactionStatusMail;
 use App\Models\PaymentTransaction;
+use App\Models\Store;
+use App\Models\User;
 use App\Services\CartService;
 use App\Services\EpaycoService;
+use App\Services\SaleCommissionService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class EpaycoController extends Controller
 {
     public function __construct(
         private readonly EpaycoService $epayco,
         private readonly CartService $cart,
+        private readonly SaleCommissionService $saleCommissions,
     ) {
     }
 
@@ -29,23 +35,16 @@ class EpaycoController extends Controller
 
         $order = $transaction->order;
         abort_unless($order, 404);
+        $paymentContext = $this->resolvePaymentContext($transaction);
 
         $currency = strtoupper((string) $transaction->currency);
         $usesZeroDecimals = in_array($currency, ['COP'], true);
         $amountValue = $usesZeroDecimals ? round((float) $transaction->amount) : round((float) $transaction->amount, 2);
-        $taxValue = $usesZeroDecimals ? round((float) $order->tax) : round((float) $order->tax, 2);
-        $taxBaseValue = $usesZeroDecimals
-            ? round(max((float) $transaction->amount - (float) $order->tax, 0))
-            : round(max((float) $transaction->amount - (float) $order->tax, 0), 2);
         $amount = $usesZeroDecimals
             ? number_format($amountValue, 0, '.', '')
             : number_format($amountValue, 2, '.', '');
-        $tax = $usesZeroDecimals
-            ? number_format($taxValue, 0, '.', '')
-            : number_format($taxValue, 2, '.', '');
-        $taxBase = $usesZeroDecimals
-            ? number_format($taxBaseValue, 0, '.', '')
-            : number_format($taxBaseValue, 2, '.', '');
+        $tax = $usesZeroDecimals ? '0' : '0.00';
+        $taxBase = $amount;
 
         $minAmount = config('epayco.min_amount');
         $maxAmount = config('epayco.max_amount');
@@ -90,6 +89,7 @@ class EpaycoController extends Controller
             'order' => $orderData,
             'localOrder' => $order,
             'transaction' => $transaction,
+            'paymentContext' => $paymentContext,
             'responseUrl' => config('epayco.response_url') ?: route('epayco.response'),
             'confirmationUrl' => config('epayco.confirmation_url') ?: route('epayco.confirmation'),
             'rangeError' => $rangeError,
@@ -119,7 +119,51 @@ class EpaycoController extends Controller
             'statusView' => $statusView,
             'transaction' => $transaction,
             'order' => $transaction?->order,
+            'paymentContext' => $transaction ? $this->resolvePaymentContext($transaction) : null,
         ]);
+    }
+
+    protected function resolvePaymentContext(PaymentTransaction $transaction): array
+    {
+        $payload = $transaction->request_payload ?? [];
+        $flow = $payload['flow'] ?? 'store_order';
+
+        if ($flow === 'entrepreneur_plan') {
+            $plan = $payload['plan'] ?? [];
+            $entrepreneur = $payload['entrepreneur'] ?? [];
+
+            return [
+                'flow' => 'entrepreneur_plan',
+                'title' => 'Estamos preparando tu activacion emprendedora',
+                'intro' => 'Tu solicitud para el '.$plan['name'].' ya fue registrada como pendiente. Vamos a abrir el checkout de ePayco para completar el pago y activar el proceso comercial.',
+                'reference_label' => 'Solicitud',
+                'customer_label' => 'Emprendedor',
+                'customer_value' => trim((string) (($entrepreneur['first_name'] ?? '').' '.($entrepreneur['last_name'] ?? ''))) ?: ($transaction->order?->customer?->full_name ?? $transaction->order?->customer?->email),
+                'total_label' => 'Valor del plan',
+                'name' => $plan['name'] ?? 'Plan emprendedor',
+                'retry_url' => isset($plan['slug']) ? route('store.entrepreneur.apply', $plan['slug']) : route('store.entrepreneur'),
+                'primary_approved_url' => route('store.entrepreneur'),
+                'primary_approved_label' => 'Volver a planes',
+                'secondary_url' => route('store.home'),
+                'secondary_label' => 'Volver al inicio',
+            ];
+        }
+
+        return [
+            'flow' => 'store_order',
+            'title' => 'Estamos preparando tu pago',
+            'intro' => 'Tu pedido '.$transaction->order?->number.' ya fue registrado como pendiente. Vamos a abrir el checkout de ePayco para que completes el pago.',
+            'reference_label' => 'Pedido',
+            'customer_label' => 'Cliente',
+            'customer_value' => $transaction->order?->customer?->full_name ?? $transaction->order?->customer?->email,
+            'total_label' => 'Total',
+            'name' => $transaction->order?->number ?? $transaction->order_ref,
+            'retry_url' => route('store.checkout.index'),
+            'primary_approved_url' => route('store.shop'),
+            'primary_approved_label' => 'Seguir comprando',
+            'secondary_url' => route('store.home'),
+            'secondary_label' => 'Volver al inicio',
+        ];
     }
 
     public function confirmation(Request $request)
@@ -262,6 +306,10 @@ class EpaycoController extends Controller
         }
 
         $transaction = $transaction->fresh(['order.customer', 'order.items']);
+
+        if ($transaction?->order) {
+            $this->saleCommissions->syncForOrder($transaction->order);
+        }
 
         if ($transaction && in_array($status, ['approved', 'rejected'], true)) {
             $this->sendTransactionStatusEmailIfNeeded($transaction, $previousStatus);
@@ -457,7 +505,15 @@ class EpaycoController extends Controller
             }
 
             try {
-                Mail::to($customerEmail)->send(new PaymentTransactionStatusMail($freshTransaction));
+                if ($this->isEntrepreneurPlanApproval($freshTransaction)) {
+                    [$entrepreneurUser, $entrepreneurStore, $plainPassword] = $this->provisionEntrepreneurBackofficeAccess($freshTransaction);
+
+                    Mail::to($customerEmail)->send(
+                        new EntrepreneurWelcomeMail($freshTransaction, $entrepreneurUser, $entrepreneurStore, $plainPassword)
+                    );
+                } else {
+                    Mail::to($customerEmail)->send(new PaymentTransactionStatusMail($freshTransaction));
+                }
 
                 $freshTransaction->forceFill([
                     'customer_notification_status' => $freshTransaction->status,
@@ -470,6 +526,7 @@ class EpaycoController extends Controller
                     'status' => $freshTransaction->status,
                     'previous_status' => $previousStatus,
                     'customer_email' => $customerEmail,
+                    'flow' => $freshTransaction->request_payload['flow'] ?? 'store_order',
                 ]);
             } catch (\Throwable $exception) {
                 Log::error('Payment status email could not be sent.', [
@@ -482,6 +539,98 @@ class EpaycoController extends Controller
                 ]);
             }
         });
+    }
+
+    protected function isEntrepreneurPlanApproval(PaymentTransaction $transaction): bool
+    {
+        return ($transaction->request_payload['flow'] ?? null) === 'entrepreneur_plan'
+            && $transaction->status === 'approved';
+    }
+
+    protected function provisionEntrepreneurBackofficeAccess(PaymentTransaction $transaction): array
+    {
+        $payload = $transaction->request_payload ?? [];
+        $entrepreneur = $payload['entrepreneur'] ?? [];
+        $customer = $transaction->order?->customer;
+
+        $firstName = (string) ($entrepreneur['first_name'] ?? $customer?->first_name ?? 'Emprendedor');
+        $lastName = (string) ($entrepreneur['last_name'] ?? $customer?->last_name ?? '');
+        $email = (string) ($entrepreneur['email'] ?? $customer?->email ?? '');
+        $storeName = (string) ($entrepreneur['store_name'] ?? 'Mi tienda');
+        $fullName = trim($firstName.' '.$lastName);
+        $plainPassword = 'Emp'.random_int(1000, 9999).Str::upper(Str::random(4));
+
+        $user = User::query()->firstOrNew(['email' => $email]);
+        $user->fill([
+            'name' => $fullName !== '' ? $fullName : $storeName,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $email,
+            'phone' => $entrepreneur['phone'] ?? $customer?->phone,
+            'department' => $entrepreneur['department'] ?? $customer?->department,
+            'city' => $entrepreneur['city'] ?? $customer?->city,
+            'password' => $plainPassword,
+            'is_admin' => true,
+        ]);
+        $user->save();
+
+        $store = Store::query()->firstOrNew(['email' => $email]);
+        $store->fill([
+            'name' => $storeName,
+            'slug' => $this->generateUniqueStoreSlug($storeName, $store->exists ? $store->id : null),
+            'owner_name' => $fullName !== '' ? $fullName : $storeName,
+            'email' => $email,
+            'phone' => $entrepreneur['phone'] ?? $customer?->phone,
+            'location' => trim((string) (($entrepreneur['city'] ?? '').', '.($entrepreneur['department'] ?? '')), ', '),
+            'short_description' => Str::limit((string) ($entrepreneur['description'] ?? ''), 160, ''),
+            'description' => $entrepreneur['description'] ?? null,
+            'website' => $entrepreneur['website'] ?? null,
+            'instagram_url' => $this->normalizeInstagramUrl($entrepreneur['instagram'] ?? null),
+            'whatsapp' => $entrepreneur['phone'] ?? null,
+            'is_active' => true,
+        ]);
+        $store->save();
+
+        return [$user, $store, $plainPassword];
+    }
+
+    protected function generateUniqueStoreSlug(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base !== '' ? $base : 'tienda-emprendedora';
+        $candidate = $slug;
+        $counter = 2;
+
+        while (
+            Store::query()
+                ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
+                ->where('slug', $candidate)
+                ->exists()
+        ) {
+            $candidate = $slug.'-'.$counter;
+            $counter++;
+        }
+
+        return $candidate;
+    }
+
+    protected function normalizeInstagramUrl(?string $value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        if ($trimmed === '') {
+            return null;
+        }
+
+        if (Str::startsWith($trimmed, ['http://', 'https://'])) {
+            return $trimmed;
+        }
+
+        return 'https://instagram.com/'.ltrim($trimmed, '@');
     }
 
     protected function runAfterResponse(Closure $callback): void

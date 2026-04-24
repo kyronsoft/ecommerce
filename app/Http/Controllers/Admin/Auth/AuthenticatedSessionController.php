@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\UserPassword;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
@@ -29,9 +29,9 @@ class AuthenticatedSessionController extends Controller
             ->where('is_admin', true)
             ->first();
 
-        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+        if (! $user || ! UserPassword::verifyAndUpgrade($user, $credentials['password'])) {
             throw ValidationException::withMessages([
-                'email' => 'Las credenciales del administrador no son correctas.',
+                'email' => 'Las credenciales de acceso al backoffice no son correctas.',
             ]);
         }
 

@@ -5,9 +5,9 @@
     .stores-page {
         padding: 3rem 0 7rem;
         background:
-            radial-gradient(circle at top left, rgba(217, 121, 87, 0.14), transparent 28%),
-            radial-gradient(circle at top right, rgba(123, 74, 55, 0.12), transparent 26%),
-            linear-gradient(180deg, #fffaf6 0%, #f4ece5 100%);
+            radial-gradient(circle at top left, rgba(235, 164, 104, 0.10), transparent 28%),
+            radial-gradient(circle at top right, rgba(87, 43, 26, 0.08), transparent 26%),
+            linear-gradient(180deg, #ffffff 0%, #fbf1e1 100%);
     }
 
     .stores-hero {
@@ -16,10 +16,10 @@
         padding: 4.4rem;
         border-radius: 3.4rem;
         background:
-            linear-gradient(135deg, rgba(95, 54, 40, 0.96), rgba(217, 121, 87, 0.88)),
+            linear-gradient(135deg, rgba(87, 43, 26, 0.96), rgba(208, 95, 50, 0.82)),
             url('{{ asset('wolmart/assets/images/vendor/dokan/1.jpg') }}') center/cover no-repeat;
         color: #fff;
-        box-shadow: 0 3rem 7rem rgba(95, 54, 40, 0.16);
+        box-shadow: 0 3rem 7rem rgba(87, 43, 26, 0.12);
     }
 
     .stores-hero::before {
@@ -48,53 +48,6 @@
         text-transform: uppercase;
     }
 
-    .stores-hero__layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 34rem;
-        gap: 2rem;
-        align-items: end;
-    }
-
-    .stores-hero h1 {
-        margin: 1.8rem 0 1rem;
-        color: #fff;
-        font-family: 'DM Serif Display', serif;
-        font-size: clamp(3.6rem, 5vw, 6.4rem);
-        line-height: .98;
-        max-width: 70rem;
-    }
-
-    .stores-hero p {
-        max-width: 62rem;
-        margin: 0;
-        color: rgba(255, 255, 255, 0.86);
-        font-size: 1.65rem;
-        line-height: 1.85;
-    }
-
-    .stores-hero-callout {
-        padding: 2.2rem;
-        border-radius: 2.6rem;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(10px);
-    }
-
-    .stores-hero-callout strong {
-        display: block;
-        margin-bottom: .7rem;
-        color: #fff;
-        font-size: 2.8rem;
-        font-weight: 700;
-        line-height: 1;
-    }
-
-    .stores-hero-callout span {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 1.4rem;
-        line-height: 1.7;
-    }
-
     .stores-stats {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -103,11 +56,31 @@
     }
 
     .stores-stat {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
         padding: 1.8rem;
         border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 2rem;
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(10px);
+    }
+
+    .stores-stat__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 5rem;
+        height: 5rem;
+        flex: 0 0 5rem;
+        border-radius: 50%;
+        background: rgba(251, 241, 225, 0.18);
+        color: #FBF1E1;
+        font-size: 2rem;
+    }
+
+    .stores-stat__content {
+        min-width: 0;
     }
 
     .stores-stat strong {
@@ -132,22 +105,22 @@
         flex-wrap: wrap;
         margin: 2.6rem 0 1.6rem;
         padding: 2rem 2.2rem;
-        border: 1px solid rgba(123, 74, 55, 0.12);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         border-radius: 2.8rem;
-        background: rgba(255, 255, 255, 0.84);
-        box-shadow: 0 2rem 4rem rgba(95, 54, 40, 0.08);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 2rem 4rem rgba(87, 43, 26, 0.08);
     }
 
     .stores-toolbar h2 {
         margin: 0;
-        color: #5f3628;
-        font-family: 'DM Serif Display', serif;
+        color: #572B1A;
+        font-family: 'Manrope', sans-serif;
         font-size: 3rem;
     }
 
     .stores-toolbar p {
         margin: .6rem 0 0;
-        color: #8a7064;
+        color: #3A241C;
         font-size: 1.45rem;
     }
 
@@ -158,8 +131,8 @@
         margin-top: 1rem;
         padding: .8rem 1.2rem;
         border-radius: 999px;
-        background: #fff3ea;
-        color: #7b4a37;
+        background: #FBF1E1;
+        color: #572B1A;
         font-size: 1.25rem;
         font-weight: 700;
     }
@@ -173,10 +146,10 @@
 
     .stores-filter-panel,
     .stores-results-panel {
-        border: 1px solid rgba(123, 74, 55, 0.12);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         border-radius: 3rem;
-        background: rgba(255, 255, 255, 0.88);
-        box-shadow: 0 2.4rem 5rem rgba(95, 54, 40, 0.08);
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 2.4rem 5rem rgba(87, 43, 26, 0.08);
     }
 
     .stores-filter-panel {
@@ -191,14 +164,14 @@
 
     .stores-filter-panel h3 {
         margin: 0 0 1rem;
-        color: #5f3628;
-        font-family: 'DM Serif Display', serif;
+        color: #572B1A;
+        font-family: 'Manrope', sans-serif;
         font-size: 2.5rem;
     }
 
     .stores-filter-panel p {
         margin: 0 0 1.6rem;
-        color: #8a7064;
+        color: #3A241C;
         font-size: 1.4rem;
     }
 
@@ -209,7 +182,7 @@
     .stores-filter-group label {
         display: block;
         margin-bottom: .7rem;
-        color: #5f3628;
+        color: #572B1A;
         font-size: 1.35rem;
         font-weight: 700;
     }
@@ -218,7 +191,7 @@
     .stores-filter-group select {
         min-height: 4.8rem;
         border-radius: 1.7rem;
-        border: 1px solid rgba(123, 74, 55, 0.14);
+        border: 1px solid rgba(231, 212, 195, 0.95);
         background: #fff;
     }
 
@@ -234,8 +207,8 @@
         gap: .8rem;
         padding: .95rem 1rem;
         border-radius: 1.5rem;
-        background: #fff7f1;
-        color: #6f564b;
+        background: #FBF1E1;
+        color: #3A241C;
         font-size: 1.35rem;
         font-weight: 600;
     }
@@ -261,12 +234,12 @@
     }
 
     .stores-results-head strong {
-        color: #5f3628;
+        color: #572B1A;
         font-size: 1.5rem;
     }
 
     .stores-results-head span {
-        color: #8a7064;
+        color: #3A241C;
         font-size: 1.35rem;
     }
 
@@ -279,9 +252,9 @@
         position: relative;
         overflow: hidden;
         border-radius: 2.8rem;
-        border: 1px solid rgba(123, 74, 55, 0.10);
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 248, 244, 0.96));
-        box-shadow: 0 2rem 4.8rem rgba(95, 54, 40, 0.08);
+        border: 1px solid rgba(231, 212, 195, 0.95);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 241, 225, 0.72));
+        box-shadow: 0 2rem 4.8rem rgba(87, 43, 26, 0.08);
         transition: transform .18s ease, box-shadow .18s ease;
     }
 
@@ -352,7 +325,7 @@
         border-radius: 50%;
         overflow: hidden;
         border: 4px solid #fff;
-        box-shadow: 0 1.6rem 3rem rgba(95, 54, 40, 0.14);
+        box-shadow: 0 1.6rem 3rem rgba(87, 43, 26, 0.12);
         background: #fff;
         position: relative;
         z-index: 1;
@@ -366,14 +339,14 @@
 
     .store-card__title {
         margin: 0;
-        color: #5f3628;
-        font-family: 'DM Serif Display', serif;
+        color: #572B1A;
+        font-family: 'Manrope', sans-serif;
         font-size: 3rem;
         line-height: 1.04;
     }
 
     .store-card__title-link:hover {
-        color: #c46645;
+        color: #D05F32;
     }
 
     .store-card__meta {
@@ -389,15 +362,15 @@
         gap: .6rem;
         padding: .65rem 1rem;
         border-radius: 999px;
-        background: #f8ece4;
-        color: #7b4a37;
+        background: #FBF1E1;
+        color: #572B1A;
         font-size: 1.2rem;
         font-weight: 700;
     }
 
     .store-card__copy {
         margin: 0 0 1.4rem;
-        color: #755f55;
+        color: #3A241C;
         font-size: 1.5rem;
         line-height: 1.85;
     }
@@ -418,14 +391,14 @@
     }
 
     .store-card__tag {
-        background: rgba(217, 121, 87, 0.12);
-        color: #c46645;
+        background: rgba(208, 95, 50, 0.12);
+        color: #D05F32;
     }
 
     .store-card__stat {
-        background: #fff6f0;
-        color: #5f3628;
-        border: 1px solid rgba(123, 74, 55, 0.10);
+        background: #FFFFFF;
+        color: #572B1A;
+        border: 1px solid rgba(231, 212, 195, 0.95);
     }
 
     .store-card__aside {
@@ -442,39 +415,40 @@
         min-height: 4.9rem;
         padding: 1rem 1.8rem;
         border-radius: 999px;
-        background: linear-gradient(135deg, #7b4a37 0%, #d97957 100%);
+        background: #D05F32;
         color: #fff;
         font-size: 1.4rem;
         font-weight: 700;
         text-decoration: none;
-        box-shadow: 0 1.4rem 2.6rem rgba(123, 74, 55, 0.14);
+        box-shadow: 0 1.4rem 2.6rem rgba(208, 95, 50, 0.16);
     }
 
     .store-card__cta:hover {
+        background: #AB4D29;
         color: #fff;
     }
 
     .store-card__owner {
         padding: 1.4rem 1.6rem;
         border-radius: 2rem;
-        background: #fff7f1;
-        color: #8a7064;
+        background: #FBF1E1;
+        color: #3A241C;
         font-size: 1.3rem;
         line-height: 1.7;
     }
 
     .store-card__owner strong {
         display: block;
-        color: #5f3628;
+        color: #572B1A;
         font-size: 1.45rem;
     }
 
     .stores-empty {
         padding: 4rem 2.4rem;
-        border: 1px dashed rgba(123, 74, 55, 0.18);
+        border: 1px dashed rgba(231, 212, 195, 0.95);
         border-radius: 3rem;
-        background: rgba(255, 255, 255, 0.72);
-        color: #8a7064;
+        background: rgba(255, 255, 255, 0.9);
+        color: #3A241C;
         text-align: center;
     }
 
@@ -482,13 +456,7 @@
         margin-top: 1.8rem;
     }
 
-    @media (max-width: 1199px) {
-        .stores-hero__layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 991px) {
+    @media (max-width: 1279px) {
         .stores-layout {
             grid-template-columns: 1fr;
         }
@@ -496,7 +464,9 @@
         .stores-filter-panel {
             position: static;
         }
+    }
 
+    @media (max-width: 991px) {
         .stores-stats {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -534,6 +504,65 @@
             border-radius: 2rem;
         }
     }
+    @media (max-width: 479px) {
+        .stores-page {
+            padding-bottom: 4rem;
+        }
+
+        .stores-hero,
+        .stores-toolbar,
+        .stores-filter-panel,
+        .stores-results-panel,
+        .store-card {
+            border-radius: 2rem;
+        }
+
+        .stores-hero,
+        .stores-toolbar,
+        .stores-filter-panel,
+        .stores-results-panel {
+            padding-left: 1.4rem;
+            padding-right: 1.4rem;
+        }
+
+        .stores-toolbar h2 {
+            font-size: 2.3rem;
+        }
+
+        .store-card__body {
+            gap: 1.4rem;
+            padding: 1.4rem;
+        }
+
+        .store-card__header,
+        .store-card__banner {
+            height: 18rem;
+            min-height: 18rem;
+        }
+
+        .store-card__brand {
+            width: 7.2rem;
+            height: 7.2rem;
+            margin-top: -4.8rem;
+        }
+
+        .store-card__title {
+            font-size: 2.2rem;
+        }
+
+        .store-card__aside {
+            width: 100%;
+        }
+
+        .store-card__cta {
+            width: 100%;
+        }
+        .stores-toolbar-meta {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+    }
 </style>
 
 <main class="main stores-page">
@@ -541,36 +570,34 @@
         <div class="container">
             <section class="stores-hero">
                 <span class="stores-hero__eyebrow">Marketplace / Tiendas registradas</span>
-                <div class="stores-hero__layout">
-                    <div>
-                        <h1>Encuentra la tienda perfecta para comprar hoy</h1>
-                        <p>
-                            Explora negocios y emprendimientos activos del marketplace, compara su propuesta y entra directo al catálogo propio de cada tienda con una navegación clara, rápida y visualmente impactante.
-                        </p>
-                    </div>
-
-                    <aside class="stores-hero-callout">
-                        <strong>{{ $storeStats['stores'] }}</strong>
-                        <span>tiendas activas listas para recibir visitas, búsquedas y compras dentro de la plataforma.</span>
-                    </aside>
-                </div>
-
                 <div class="stores-stats">
                     <article class="stores-stat">
-                        <strong>{{ $storeStats['stores'] }}</strong>
-                        <span>Tiendas visibles</span>
+                        <span class="stores-stat__icon"><i class="w-icon-store"></i></span>
+                        <div class="stores-stat__content">
+                            <strong>{{ $storeStats['stores'] }}</strong>
+                            <span>Tiendas visibles</span>
+                        </div>
                     </article>
                     <article class="stores-stat">
-                        <strong>{{ $storeStats['products'] }}</strong>
-                        <span>Productos activos</span>
+                        <span class="stores-stat__icon"><i class="w-icon-cart"></i></span>
+                        <div class="stores-stat__content">
+                            <strong>{{ $storeStats['products'] }}</strong>
+                            <span>Productos activos</span>
+                        </div>
                     </article>
                     <article class="stores-stat">
-                        <strong>{{ $storeStats['featured_products'] }}</strong>
-                        <span>Destacados</span>
+                        <span class="stores-stat__icon"><i class="w-icon-star-full"></i></span>
+                        <div class="stores-stat__content">
+                            <strong>{{ $storeStats['featured_products'] }}</strong>
+                            <span>Destacados</span>
+                        </div>
                     </article>
                     <article class="stores-stat">
-                        <strong>{{ $storeStats['categories'] }}</strong>
-                        <span>Categorías</span>
+                        <span class="stores-stat__icon"><i class="w-icon-category"></i></span>
+                        <div class="stores-stat__content">
+                            <strong>{{ $storeStats['categories'] }}</strong>
+                            <span>Categorías</span>
+                        </div>
                     </article>
                 </div>
             </section>

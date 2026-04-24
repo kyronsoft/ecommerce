@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\EnsureAdminAuthenticated::class,
             'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
+            'store.auth' => \App\Http\Middleware\EnsureStoreAuthenticated::class,
+            'store.guest' => \App\Http\Middleware\RedirectIfStoreAuthenticated::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

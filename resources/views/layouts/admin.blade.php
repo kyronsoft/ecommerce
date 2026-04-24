@@ -1,13 +1,13 @@
 @php
     $pageTitle = $pageTitle ?? $breadcrumb ?? 'Dashboard';
-    $pageDescription = $pageDescription ?? 'Gestiona catalogo, clientes, pedidos y operacion diaria del ecommerce desde un solo lugar.';
+    $pageDescription = $pageDescription ?? 'Gestiona catalogo, clientes, pedidos y operación diaria del ecommerce desde el backoffice de emprendedores.';
 @endphp
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>{{ $title ?? $pageTitle.' | Backoffice | La Tienda de Mi Abue' }}</title>
+    <title>{{ $title ?? $pageTitle.' | Backoffice Emprendedores | La Tienda de Mi Abue' }}</title>
     @include('partials.favicons')
     <script>
         WebFontConfig = { google: { families: ['Quicksand:400,500,600,700', 'DM Serif Display:400'] } };
@@ -381,6 +381,50 @@
             font-size: 1.35rem;
         }
 
+        .admin-stat-card--enhanced {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .admin-stat-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1.2rem;
+        }
+
+        .admin-stat-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 4.8rem;
+            height: 4.8rem;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(123, 74, 55, 0.12), rgba(217, 121, 87, 0.18));
+            color: var(--admin-accent);
+            font-size: 1.9rem;
+        }
+
+        .admin-stat-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .admin-stat-trend--up {
+            color: #19a974;
+        }
+
+        .admin-stat-trend--down {
+            color: #d9534f;
+        }
+
+        .admin-stat-trend--neutral {
+            color: var(--admin-muted);
+        }
+
         .admin-panel {
             padding: 2rem;
         }
@@ -431,6 +475,67 @@
         .admin-toolbar-copy p {
             margin: .5rem 0 0;
             color: var(--admin-muted);
+        }
+
+        .admin-filter-panel {
+            padding: 1.6rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 20px;
+            background: #fffaf7;
+        }
+
+        .admin-filter-accordion {
+            border: 1px solid var(--admin-border);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.92);
+            overflow: hidden;
+        }
+
+        .admin-filter-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.2rem;
+            padding: 1.4rem 1.6rem;
+            cursor: pointer;
+            list-style: none;
+            background: #fff8f3;
+        }
+
+        .admin-filter-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .admin-filter-summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: var(--admin-accent);
+            transition: transform .18s ease;
+        }
+
+        .admin-filter-accordion[open] .admin-filter-summary::after {
+            transform: rotate(180deg);
+        }
+
+        .admin-filter-summary__title {
+            color: var(--admin-primary-strong);
+            font-size: 1.45rem;
+            font-weight: 800;
+        }
+
+        .admin-filter-summary__meta {
+            color: var(--admin-muted);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        .admin-filter-actions {
+            display: flex;
+            align-items: end;
+            gap: .8rem;
+            flex-wrap: wrap;
         }
 
         .admin-table-wrap {
@@ -526,6 +631,93 @@
 
         .admin-link:hover {
             color: var(--admin-primary-strong);
+        }
+
+        .admin-action-icons {
+            display: inline-flex;
+            align-items: center;
+            gap: .55rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-icon-action {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.6rem;
+            height: 3.6rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 999px;
+            background: #fffaf7;
+            color: var(--admin-accent);
+            font-size: 1.45rem;
+            text-decoration: none;
+            transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+        }
+
+        .admin-icon-action:hover,
+        .admin-icon-action:focus-visible {
+            color: var(--admin-primary-strong);
+            border-color: rgba(123, 74, 55, 0.28);
+            background: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px rgba(123, 74, 55, 0.10);
+            outline: none;
+        }
+
+        .admin-icon-action--danger {
+            color: var(--admin-danger);
+            background: #fff8f8;
+        }
+
+        .admin-icon-action--danger:hover,
+        .admin-icon-action--danger:focus-visible {
+            color: #8d2f2f;
+            border-color: rgba(169, 72, 72, 0.26);
+        }
+
+        .admin-icon-action::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + .9rem);
+            transform: translateX(-50%) translateY(.4rem);
+            padding: .55rem .8rem;
+            border-radius: 999px;
+            background: rgba(79, 55, 46, 0.96);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: .02em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .18s ease, transform .18s ease;
+            z-index: 20;
+        }
+
+        .admin-icon-action::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + .35rem);
+            width: .75rem;
+            height: .75rem;
+            background: rgba(79, 55, 46, 0.96);
+            transform: translateX(-50%) rotate(45deg);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .18s ease, transform .18s ease;
+            z-index: 19;
+        }
+
+        .admin-icon-action:hover::after,
+        .admin-icon-action:hover::before,
+        .admin-icon-action:focus-visible::after,
+        .admin-icon-action:focus-visible::before {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .admin-pagination {
@@ -669,6 +861,63 @@
             background: #fff;
         }
 
+        .admin-gallery-manager {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+            gap: 1rem;
+        }
+
+        .admin-gallery-manager--pending {
+            margin-top: 1rem;
+        }
+
+        .admin-gallery-card {
+            display: grid;
+            gap: .8rem;
+            padding: 1rem;
+            border: 1px solid var(--admin-border);
+            border-radius: 18px;
+            background: #fffdfb;
+        }
+
+        .admin-gallery-thumb {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid rgba(123, 74, 55, 0.10);
+            background: #fff;
+        }
+
+        .admin-gallery-caption {
+            display: block;
+            color: var(--admin-muted);
+            font-size: 1.15rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .admin-gallery-remove {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 3rem;
+            padding: .65rem 1rem;
+            border: 1px solid rgba(169, 72, 72, 0.22);
+            border-radius: 999px;
+            background: #fff7f7;
+            color: var(--admin-danger);
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: background .18s ease, color .18s ease, transform .18s ease;
+        }
+
+        .admin-gallery-remove:hover {
+            background: #fff0f0;
+            color: #8d2f2f;
+            transform: translateY(-1px);
+        }
+
         .admin-hero-media {
             display: flex;
             align-items: flex-start;
@@ -767,6 +1016,22 @@
                 padding: 1.8rem;
             }
 
+            .admin-topbar,
+            .admin-page-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-brand {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .admin-topbar-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
             .admin-form-grid,
             .admin-grid-3,
             .admin-grid-2 {
@@ -784,6 +1049,36 @@
                 align-items: flex-start;
             }
 
+            .admin-shell {
+                padding: 1rem;
+            }
+
+            .admin-topbar,
+            .admin-page-head,
+            .admin-sidebar-card,
+            .admin-panel,
+            .admin-stat-card {
+                border-radius: 20px;
+            }
+
+            .admin-page-head h1 {
+                font-size: clamp(2.2rem, 9vw, 3.2rem);
+            }
+
+            .admin-panel {
+                padding: 1.4rem;
+            }
+
+            .admin-table {
+                min-width: 60rem;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 1.1rem 1.2rem;
+                font-size: 1.3rem;
+            }
+
             .admin-page-actions,
             .admin-topbar-actions {
                 width: 100%;
@@ -791,8 +1086,23 @@
             }
 
             .admin-page-actions .admin-btn,
-            .admin-topbar-actions .admin-pill {
+            .admin-topbar-actions .admin-pill,
+            .admin-topbar-actions .admin-btn {
                 width: 100%;
+            }
+        }
+        @media (max-width: 479px) {
+            .admin-brand {
+                flex-direction: column;
+            }
+
+            .admin-brand-copy strong {
+                font-size: 1.7rem;
+            }
+
+            .admin-filter-summary {
+                align-items: flex-start;
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -804,23 +1114,31 @@
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'fas fa-chart-pie'],
         ['label' => 'Categorias', 'route' => 'admin.categories.index', 'icon' => 'fas fa-tags'],
         ['label' => 'Productos', 'route' => 'admin.products.index', 'icon' => 'fas fa-box-open'],
-        ['label' => 'Tiendas', 'route' => 'admin.stores.index', 'icon' => 'fas fa-store'],
+        ['label' => ($currentAdminIsSuperAdmin ?? false) ? 'Tiendas' : 'Mi tienda', 'route' => 'admin.stores.index', 'icon' => 'fas fa-store'],
         ['label' => 'Pedidos', 'route' => 'admin.orders.index', 'icon' => 'fas fa-shopping-bag'],
+        ['label' => 'Comision por venta', 'route' => 'admin.sale-commissions.index', 'icon' => 'fas fa-percent'],
         ['label' => 'Clientes', 'route' => 'admin.customers.index', 'icon' => 'fas fa-users'],
     ];
+
+    if ($currentAdminIsSuperAdmin ?? false) {
+        $navigation[] = ['label' => 'Suscripciones', 'route' => 'admin.entrepreneur-subscriptions.index', 'icon' => 'fas fa-file-signature'];
+    }
 @endphp
 <div class="admin-shell">
     <header class="admin-topbar">
         <a href="{{ route('admin.dashboard') }}" class="admin-brand">
             @include('partials.brand-logo', ['variant' => 'header'])
             <span class="admin-brand-copy">
-                <strong>Backoffice</strong>
+                <strong>Backoffice emprendedores</strong>
                 <span>La Tienda de Mi Abue</span>
-                <small>Operacion, catalogo y seguimiento diario</small>
+                <small>Operación, catálogo y seguimiento diario</small>
             </span>
         </a>
         <div class="admin-topbar-actions">
             <span class="admin-pill">{{ $currentAdminUser->email ?? session('admin_user_email') }}</span>
+            @if($currentAdminStore ?? null)
+                <span class="admin-pill">{{ $currentAdminStore->name }}</span>
+            @endif
             <a href="{{ route('store.home') }}" class="admin-pill">Ver tienda</a>
             <a href="{{ route('admin.products.create') }}" class="admin-pill admin-pill--primary">Nuevo producto</a>
             <form method="POST" action="{{ route('admin.logout') }}" class="admin-pill-form">
@@ -851,7 +1169,7 @@
         <main class="admin-main">
             <section class="admin-page-head">
                 <div>
-                    <span class="admin-eyebrow">Backoffice / {{ $breadcrumb ?? 'Dashboard' }}</span>
+                    <span class="admin-eyebrow">Backoffice emprendedores / {{ $breadcrumb ?? 'Dashboard' }}</span>
                     <h1>{{ $pageTitle }}</h1>
                     <p>{{ $pageDescription }}</p>
                 </div>

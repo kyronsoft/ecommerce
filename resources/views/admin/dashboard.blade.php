@@ -17,7 +17,9 @@
 
 @section('page_actions')
     <a href="{{ route('admin.orders.create') }}" class="admin-btn">Crear pedido</a>
-    <a href="{{ route('admin.stores.create') }}" class="admin-btn">Crear tienda</a>
+    @if($currentAdminIsSuperAdmin ?? false)
+        <a href="{{ route('admin.stores.create') }}" class="admin-btn">Crear tienda</a>
+    @endif
     <a href="{{ route('admin.products.create') }}" class="admin-btn admin-btn--primary">Cargar producto</a>
 @endsection
 
@@ -161,8 +163,10 @@
                     </div>
                 </div>
                 <div class="admin-actions">
-                    <a href="{{ route('admin.categories.create') }}" class="admin-btn">Nueva categoria</a>
-                    <a href="{{ route('admin.stores.create') }}" class="admin-btn">Nueva tienda</a>
+                    @if($currentAdminIsSuperAdmin ?? false)
+                        <a href="{{ route('admin.categories.create') }}" class="admin-btn">Nueva categoria</a>
+                        <a href="{{ route('admin.stores.create') }}" class="admin-btn">Nueva tienda</a>
+                    @endif
                     <a href="{{ route('admin.products.create') }}" class="admin-btn">Nuevo producto</a>
                     <a href="{{ route('admin.customers.create') }}" class="admin-btn">Nuevo cliente</a>
                     <a href="{{ route('admin.orders.create') }}" class="admin-btn admin-btn--primary">Nuevo pedido</a>

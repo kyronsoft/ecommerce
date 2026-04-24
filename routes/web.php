@@ -3,22 +3,32 @@
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EntrepreneurSubscriptionController;
+use App\Http\Controllers\Admin\SaleCommissionController as AdminSaleCommissionController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\StoreController as AdminStoreController;
 use App\Http\Controllers\EpaycoController;
+use App\Http\Controllers\Store\Auth\AuthenticatedSessionController as StoreAuthenticatedSessionController;
+use App\Http\Controllers\Store\Auth\RegisteredUserController;
 use App\Http\Controllers\Store\CartController;
 use App\Http\Controllers\Store\CheckoutController;
+use App\Http\Controllers\Store\EntrepreneurController;
 use App\Http\Controllers\Store\HomeController;
 use App\Http\Controllers\Store\ProductController;
 use App\Http\Controllers\Store\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('store.home');
+Route::get('/quiero-ser-emprendedor', [HomeController::class, 'entrepreneur'])->name('store.entrepreneur');
+Route::get('/quiero-ser-emprendedor/{plan}', [EntrepreneurController::class, 'show'])->name('store.entrepreneur.apply');
+Route::post('/quiero-ser-emprendedor/{plan}', [EntrepreneurController::class, 'store'])->name('store.entrepreneur.apply.store');
 Route::get('/shop', [HomeController::class, 'shop'])->name('store.shop');
 Route::get('/stores', [HomeController::class, 'stores'])->name('store.stores.index');
+Route::get('/stores/{store:slug}/media/{field}', [HomeController::class, 'media'])->name('store.store.media');
 Route::get('/stores/{store:slug}', [HomeController::class, 'storeShow'])->name('store.store.show');
+Route::get('/product/{product:slug}/media/{field?}/{index?}', [ProductController::class, 'media'])->name('store.product.media');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('store.product.show');
 
 Route::prefix('wishlist')->name('store.wishlist.')->group(function () {
@@ -37,6 +47,17 @@ Route::prefix('cart')->name('store.cart.')->group(function () {
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('store.checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('store.checkout.store');
 
+Route::middleware('store.guest')->group(function () {
+    Route::get('/ingresar', [StoreAuthenticatedSessionController::class, 'create'])->name('store.login');
+    Route::post('/ingresar', [StoreAuthenticatedSessionController::class, 'store'])->name('store.login.store');
+    Route::get('/registro', [RegisteredUserController::class, 'create'])->name('store.register');
+    Route::post('/registro', [RegisteredUserController::class, 'store'])->name('store.register.store');
+});
+
+Route::middleware('store.auth')->group(function () {
+    Route::post('/salir', [StoreAuthenticatedSessionController::class, 'destroy'])->name('store.logout');
+});
+
 Route::get('/payments/epayco/checkout', [EpaycoController::class, 'checkout'])->name('epayco.checkout');
 Route::match(['get', 'post'], '/payments/epayco/response', [EpaycoController::class, 'response'])->name('epayco.response');
 Route::match(['get', 'post'], '/payments/epayco/confirmation', [EpaycoController::class, 'confirmation'])->name('epayco.confirmation');
@@ -50,6 +71,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('admin.auth')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/entrepreneur-subscriptions', [EntrepreneurSubscriptionController::class, 'index'])->name('entrepreneur-subscriptions.index');
+        Route::get('/sale-commissions', [AdminSaleCommissionController::class, 'index'])->name('sale-commissions.index');
+        Route::get('/stores/{store}/media/{field}', [AdminStoreController::class, 'media'])->name('stores.media');
+        Route::get('/products/{product}/media/{field}/{index?}', [AdminProductController::class, 'media'])->name('products.media');
         Route::resource('categories', AdminCategoryController::class);
         Route::resource('products', AdminProductController::class);
         Route::resource('stores', AdminStoreController::class);

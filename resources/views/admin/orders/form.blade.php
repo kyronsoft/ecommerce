@@ -45,7 +45,7 @@
                 <div class="admin-section-head">
                     <div>
                         <h2>Cabecera del pedido</h2>
-                        <p>Selecciona cliente, estado, metodo de pago y costos adicionales.</p>
+                        <p>Selecciona cliente, estado, metodo de pago y costos del pedido.</p>
                     </div>
                 </div>
 
@@ -82,16 +82,9 @@
                     </div>
                 </div>
 
-                <div class="admin-form-grid">
-                    <div class="admin-field">
-                        <label for="shipping">Costo de envio</label>
-                        <input id="shipping" type="number" name="shipping" class="form-control js-order-summary-input" min="0" step="0.01" value="{{ old('shipping', $order->shipping ?? 0) }}">
-                    </div>
-
-                    <div class="admin-field">
-                        <label for="tax">Impuestos</label>
-                        <input id="tax" type="number" name="tax" class="form-control js-order-summary-input" min="0" step="0.01" value="{{ old('tax', $order->tax ?? 0) }}">
-                    </div>
+                <div class="admin-field">
+                    <label for="shipping">Costo de envio</label>
+                    <input id="shipping" type="number" name="shipping" class="form-control js-order-summary-input" min="0" step="0.01" value="{{ old('shipping', $order->shipping ?? 0) }}">
                 </div>
 
                 <div class="admin-field">
@@ -119,10 +112,6 @@
                         <div class="admin-kv-item">
                             <span class="admin-kv-label">Subtotal productos</span>
                             <span class="admin-kv-value" id="order-subtotal-display">$0</span>
-                        </div>
-                        <div class="admin-kv-item">
-                            <span class="admin-kv-label">Impuestos</span>
-                            <span class="admin-kv-value" id="order-tax-display">$0</span>
                         </div>
                         <div class="admin-kv-item">
                             <span class="admin-kv-label">Envio</span>
@@ -223,7 +212,6 @@
             const customerSelect = document.getElementById('customer_id');
             const shippingAddress = document.getElementById('shipping_address');
             const shippingInput = document.getElementById('shipping');
-            const taxInput = document.getElementById('tax');
 
             function money(value) {
                 return new Intl.NumberFormat('es-CO', {
@@ -309,12 +297,10 @@
                 });
 
                 const shipping = Number(shippingInput.value || 0);
-                const tax = Number(taxInput.value || 0);
-                const total = subtotal + shipping + tax;
+                const total = subtotal + shipping;
 
                 document.getElementById('order-subtotal-display').textContent = money(subtotal);
                 document.getElementById('order-shipping-display').textContent = money(shipping);
-                document.getElementById('order-tax-display').textContent = money(tax);
                 document.getElementById('order-total-display').textContent = money(total);
             }
 

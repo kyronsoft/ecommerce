@@ -7,10 +7,12 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store as MarketplaceStore;
 use App\Services\CartService;
+use App\Support\EntrepreneurPlans;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class HomeController extends Controller
 {
@@ -28,6 +30,14 @@ class HomeController extends Controller
         ]);
     }
 
+    public function entrepreneur(): View
+    {
+        return view('store.entrepreneur', [
+            'plans' => EntrepreneurPlans::all(),
+            'featureGroups' => EntrepreneurPlans::featureGroups(),
+        ]);
+    }
+
     public function shop(Request $request): View
     {
         $products = Product::query()
@@ -41,7 +51,10 @@ class HomeController extends Controller
 
         return view('store.shop', [
             'products' => $products,
-            'categories' => Category::query()->orderBy('name')->get(),
+            'categories' => Category::query()
+                ->withCount(['products' => fn ($query) => $query->where('is_active', true)])
+                ->orderBy('name')
+                ->get(),
             'cartCount' => $this->cart->count(),
         ]);
     }
@@ -148,6 +161,17 @@ class HomeController extends Controller
         ]);
     }
 
+    public function media(MarketplaceStore $store, string $field): BinaryFileResponse
+    {
+        abort_unless(in_array($field, ['logo', 'banner'], true), 404);
+
+        $path = $this->normalizeStoreMediaPath((string) $store->{$field});
+
+        abort_if(blank($path) || ! Storage::disk('public')->exists($path), 404);
+
+        return response()->file(Storage::disk('public')->path($path));
+    }
+
     private function toStoreCardData(MarketplaceStore $store): array
     {
         $productsCount = $store->products_count ?? $store->products()->where('is_active', true)->count();
@@ -182,8 +206,8 @@ class HomeController extends Controller
             'location' => $store->location ?: 'Ubicación pendiente',
             'short_description' => $store->short_description,
             'description' => $store->description,
-            'banner' => $this->resolveStoreMedia($store->banner, 'wolmart/assets/images/vendor/dokan/1.jpg'),
-            'logo' => $this->resolveStoreMedia($store->logo, 'wolmart/assets/images/la-tienda-de-mi-abue-logo.png'),
+            'banner' => $this->resolveStoreMedia($store, 'banner', 'wolmart/assets/images/vendor/dokan/1.jpg'),
+            'logo' => $this->resolveStoreMedia($store, 'logo', 'wolmart/assets/images/la-tienda-de-mi-abue-logo.png'),
             'label' => $store->is_featured ? 'Destacada' : 'Registrada',
             'products_count' => $productsCount,
             'featured_products_count' => $featuredProductsCount,
@@ -204,8 +228,10 @@ class HomeController extends Controller
         ];
     }
 
-    private function resolveStoreMedia(?string $path, string $fallback): string
+    private function resolveStoreMedia(MarketplaceStore $store, string $field, string $fallback): string
     {
+        $path = (string) $store->{$field};
+
         if (blank($path)) {
             return asset($fallback);
         }
@@ -214,20 +240,31 @@ class HomeController extends Controller
             return $path;
         }
 
-        $normalizedPath = ltrim($path, '/');
+        $normalizedPath = $this->normalizeStoreMediaPath($path);
+
+        if (Storage::disk('public')->exists($normalizedPath)) {
+            return route('store.store.media', [$store->slug, $field]);
+        }
+
+        return asset(ltrim($path, '/'));
+    }
+
+    private function normalizeStoreMediaPath(?string $path): ?string
+    {
+        if (blank($path) || Str::startsWith((string) $path, ['http://', 'https://'])) {
+            return null;
+        }
+
+        $normalizedPath = ltrim((string) $path, '/');
 
         if (Str::startsWith($normalizedPath, 'public/')) {
             $normalizedPath = Str::after($normalizedPath, 'public/');
         }
 
         if (Str::startsWith($normalizedPath, 'storage/')) {
-            return asset($normalizedPath);
+            $normalizedPath = Str::after($normalizedPath, 'storage/');
         }
 
-        if (Storage::disk('public')->exists($normalizedPath)) {
-            return Storage::url($normalizedPath);
-        }
-
-        return asset($normalizedPath);
+        return $normalizedPath;
     }
 }

@@ -12,7 +12,22 @@ class CartService
 
     public function items(): Collection
     {
-        return collect(Session::get(self::KEY, []));
+        $products = Product::query()
+            ->whereIn('id', collect(Session::get(self::KEY, []))->pluck('product_id')->filter()->all())
+            ->get()
+            ->keyBy('id');
+
+        return collect(Session::get(self::KEY, []))
+            ->map(function (array $item) use ($products) {
+                $product = $products->get((int) ($item['product_id'] ?? 0));
+
+                if ($product !== null) {
+                    $item['image'] = $product->image_url;
+                    $item['slug'] = $product->slug;
+                }
+
+                return $item;
+            });
     }
 
     public function add(Product $product, int $quantity = 1): void
@@ -29,7 +44,7 @@ class CartService
                 'product_id' => $product->id,
                 'slug' => $product->slug,
                 'name' => $product->name,
-                'image' => $product->image,
+                'image' => $product->image_url,
                 'sku' => $product->sku,
                 'quantity' => $quantity,
                 'unit_price' => (float) $product->price,
@@ -93,7 +108,7 @@ class CartService
 
     public function tax(): float
     {
-        return round($this->subtotal() * 0.19, 2);
+        return 0.0;
     }
 
     public function shipping(): float

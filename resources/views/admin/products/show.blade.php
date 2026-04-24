@@ -6,7 +6,11 @@
 
 @php
     $imageUrl = filled($product->image)
-        ? (\Illuminate\Support\Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : asset($product->image))
+        ? (\Illuminate\Support\Str::startsWith($product->image, ['http://', 'https://'])
+            ? $product->image
+            : (\Illuminate\Support\Str::startsWith($product->image, 'storage/')
+                ? route('admin.products.media', [$product, 'image'])
+                : asset($product->image)))
         : null;
 @endphp
 
@@ -94,7 +98,11 @@
             <div class="admin-grid-4">
                 @foreach($product->gallery as $galleryImage)
                     @php
-                        $galleryUrl = \Illuminate\Support\Str::startsWith($galleryImage, ['http://', 'https://']) ? $galleryImage : asset($galleryImage);
+                        $galleryUrl = \Illuminate\Support\Str::startsWith($galleryImage, ['http://', 'https://'])
+                            ? $galleryImage
+                            : (\Illuminate\Support\Str::startsWith($galleryImage, 'storage/')
+                                ? route('admin.products.media', [$product, 'gallery', $loop->index])
+                                : asset($galleryImage));
                     @endphp
                     <img src="{{ $galleryUrl }}" alt="{{ $product->name }}" class="admin-image-preview">
                 @endforeach
