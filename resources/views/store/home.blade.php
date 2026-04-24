@@ -45,16 +45,16 @@
     .shopingo-banner {
         position: relative;
         overflow: hidden;
-        min-height: 44rem;
+        min-height: 52rem;
         background: #FFFFFF;
     }
     .shopingo-banner .swiper {
         height: 100%;
-        min-height: 44rem;
+        min-height: 52rem;
     }
     .shopingo-banner__slide {
         position: relative;
-        min-height: 44rem;
+        min-height: 52rem;
         overflow: hidden;
     }
     .shopingo-banner__slide::before {
@@ -81,8 +81,8 @@
         flex-direction: column;
         justify-content: center;
         gap: 1.2rem;
-        max-width: min(48%, 46rem);
-        padding: 3.6rem 4rem;
+        max-width: min(65%, 52rem);
+        padding: 2.6rem 4rem;
     }
     .shopingo-banner__eyebrow {
         margin-bottom: 1rem;
@@ -96,9 +96,8 @@
         margin: 0;
         font-family: "Manrope", sans-serif;
         font-size: clamp(3.2rem, 3.6vw, 4.8rem);
-        line-height: 1;
+        line-height: 1.05;
         color: #572B1A;
-        max-width: 14ch;
         text-wrap: balance;
     }
     .shopingo-banner__text {
@@ -328,7 +327,7 @@
         border: 1px solid #E7D4C3;
         box-shadow: none;
     }
-    @media (max-width: 1199px) {
+    @media (max-width: 1279px) {
         .shopingo-hero {
             grid-template-columns: 1fr;
         }
@@ -352,6 +351,12 @@
     @media (max-width: 767px) {
         .shopingo-home {
             padding-top: 1.6rem;
+        }
+        .shopingo-info-grid,
+        .shopingo-category-section,
+        .shopingo-featured-section {
+            padding: 1.6rem;
+            border-radius: 2.2rem;
         }
         .shopingo-banner {
             min-height: 34rem;
@@ -386,6 +391,44 @@
         .shopingo-category-grid,
         .shopingo-product-grid {
             grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 479px) {
+        .shopingo-home {
+            padding-bottom: 4rem;
+        }
+        .shopingo-section__head {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: .8rem;
+        }
+        .shopingo-section__line {
+            width: 100%;
+        }
+        .shopingo-banner__content {
+            padding: 1.8rem 1.6rem 7rem;
+        }
+        .shopingo-banner__actions,
+        .shopingo-btn {
+            width: 100%;
+        }
+        .shopingo-hero__aside {
+            grid-template-columns: 1fr;
+        }
+        .shopingo-info-card {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .shopingo-category-card__image {
+            height: 13rem;
+        }
+        .shopingo-banner__nav {
+            right: 1.2rem;
+            gap: .6rem;
+        }
+        .shopingo-banner__arrow {
+            width: 4rem;
+            height: 4rem;
         }
     }
 </style>

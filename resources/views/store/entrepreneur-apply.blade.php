@@ -216,6 +216,26 @@
             grid-template-columns: 1fr;
         }
     }
+    @media (max-width: 479px) {
+        .entrepreneur-apply-card,
+        .entrepreneur-plan-summary,
+        .entrepreneur-terms-box,
+        .entrepreneur-acceptance {
+            border-radius: 2rem;
+        }
+        .entrepreneur-plan-summary__price,
+        .entrepreneur-submit {
+            width: 100%;
+        }
+        .entrepreneur-apply-card h1 {
+            font-size: 2.8rem;
+        }
+        .entrepreneur-apply-card p,
+        .entrepreneur-plan-summary li,
+        .entrepreneur-terms-list li {
+            font-size: 1.35rem;
+        }
+    }
 </style>
 @endpush
 

@@ -347,12 +347,20 @@
         background: #D05F32;
         color: #FFFFFF;
     }
-    @media (max-width: 1199px) {
-        .shop-categories-grid {
+    @media (max-width: 1279px) {
+        .shop-hero {
+            grid-template-columns: 1fr;
+        }
+        .shop-hero__stats {
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
         .shop-page-layout {
             grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 1199px) {
+        .shop-categories-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
     @media (max-width: 991px) {
@@ -380,6 +388,48 @@
         }
         .shop-hero__content {
             padding: 2.4rem;
+        }
+    }
+    @media (max-width: 479px) {
+        .shop-categories-page {
+            padding-bottom: 4rem;
+        }
+        .shop-crumbs,
+        .shop-hero__banner,
+        .shop-hero__stats,
+        .shop-categories-grid__card,
+        .shop-layout-panel,
+        .shop-results-head,
+        .shop-empty {
+            border-radius: 20px;
+        }
+        .shop-crumbs {
+            padding: 1.4rem;
+        }
+        .shop-crumbs__title,
+        .shop-results-head__title {
+            font-size: 1.8rem;
+        }
+        .shop-hero__content,
+        .shop-layout-panel {
+            padding: 1.6rem;
+        }
+        .shop-hero__actions,
+        .shop-chip-btn {
+            width: 100%;
+        }
+        .shop-categories-grid__body {
+            padding: 1.4rem;
+        }
+        .shop-results-head__pills {
+            justify-content: flex-start;
+        }
+        .shop-hero__stats {
+            grid-template-columns: 1fr;
+        }
+        .shop-pagination-wrap .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
         }
     }
 </style>

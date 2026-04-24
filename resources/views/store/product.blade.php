@@ -3,8 +3,8 @@
 @section('content')
 @php
     $isWishlisted = in_array($product->id, $wishlistProductIds ?? [], true);
-    $galleryImages = collect([$product->image])
-        ->merge(collect($product->gallery ?? []))
+    $galleryImages = collect([$product->image_url])
+        ->merge(collect($product->gallery_urls ?? []))
         ->filter()
         ->unique()
         ->values();
@@ -328,7 +328,7 @@
     .vendor-product-section {
         margin-top: 4rem;
     }
-    @media (max-width: 1199px) {
+    @media (max-width: 1279px) {
         .product-detail-shell {
             grid-template-columns: 7.2rem minmax(0, 1fr);
         }
@@ -337,6 +337,9 @@
         }
     }
     @media (max-width: 767px) {
+        .product-detail-page {
+            padding: 2rem 0 4rem;
+        }
         .product-detail-shell {
             grid-template-columns: 1fr;
         }
@@ -356,6 +359,36 @@
         }
         .product-detail-option {
             grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 479px) {
+        .product-detail-media-card,
+        .product-detail-summary,
+        .product-detail-description {
+            border-radius: 2rem;
+        }
+        .product-detail-media-card,
+        .product-detail-summary,
+        .product-detail-description {
+            padding-left: 1.4rem;
+            padding-right: 1.4rem;
+        }
+        .product-detail-title {
+            font-size: 2.4rem;
+        }
+        .product-detail-short {
+            font-size: 1.7rem;
+        }
+        .product-detail-actions > * {
+            width: 100%;
+        }
+        .product-detail-wishlist-btn {
+            width: 100%;
+        }
+        .product-detail-main-badge,
+        .product-detail-highlight,
+        .product-detail-discount {
+            font-size: 1.1rem;
         }
     }
 </style>
@@ -380,10 +413,10 @@
                         type="button"
                         class="product-detail-thumb {{ $loop->first ? 'is-active' : '' }}"
                         data-product-thumb
-                        data-image="{{ asset($image) }}"
+                        data-image="{{ $image }}"
                         aria-label="Ver imagen {{ $loop->iteration }} de {{ $product->name }}"
                     >
-                        <img src="{{ asset($image) }}" alt="{{ $product->name }}">
+                        <img src="{{ $image }}" alt="{{ $product->name }}">
                     </button>
                 @endforeach
             </aside>
@@ -393,7 +426,7 @@
                     @if($product->is_featured)
                         <span class="product-detail-main-badge">Top recomendado</span>
                     @endif
-                    <img src="{{ asset($primaryImage) }}" alt="{{ $product->name }}" id="product-detail-main-image">
+                    <img src="{{ $primaryImage }}" alt="{{ $product->name }}" id="product-detail-main-image">
                 </figure>
             </div>
 
@@ -433,7 +466,7 @@
 
                 <div class="product-detail-purchase">
                     <div class="product-detail-option">
-                        <img src="{{ asset($primaryImage) }}" alt="{{ $product->name }}">
+                        <img src="{{ $primaryImage }}" alt="{{ $product->name }}">
                         <div>
                             <p class="product-detail-option-label">Selección actual</p>
                             <p class="product-detail-option-value">{{ $product->name }}</p>

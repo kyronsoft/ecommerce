@@ -278,7 +278,7 @@
         margin-top: .2rem;
         color: #D05F32;
     }
-    @media (max-width: 991px) {
+    @media (max-width: 1279px) {
         .entrepreneur-shell {
             padding: 1.8rem;
             border-radius: 2.6rem;
@@ -286,6 +286,8 @@
         .entrepreneur-hero {
             grid-template-columns: 1fr;
         }
+    }
+    @media (max-width: 991px) {
         .entrepreneur-grid,
         .entrepreneur-actions {
             min-width: 82rem;
@@ -311,6 +313,27 @@
         }
         .entrepreneur-mobile-plans {
             display: block;
+        }
+    }
+    @media (max-width: 479px) {
+        .entrepreneur-shell,
+        .entrepreneur-mobile-card,
+        .entrepreneur-footer {
+            border-radius: 2rem;
+        }
+        .entrepreneur-hero h1 {
+            font-size: 2.7rem;
+        }
+        .entrepreneur-hero p,
+        .entrepreneur-hero__aside p,
+        .entrepreneur-mobile-card li,
+        .entrepreneur-footer__text p {
+            font-size: 1.35rem;
+        }
+        .entrepreneur-mobile-card__price,
+        .entrepreneur-btn {
+            width: 100%;
+            min-width: 0;
         }
     }
 </style>

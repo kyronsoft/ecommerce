@@ -6,7 +6,7 @@
     <div class="product">
         <figure class="product-media">
             <a href="{{ route('store.product.show', $product) }}">
-                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" width="320" height="320">
+                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" width="320" height="320">
             </a>
             @if($product->is_featured)
                 <div class="product-label-group">

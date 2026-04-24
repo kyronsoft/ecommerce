@@ -12,4 +12,8 @@ return [
     'validation_url' => env('EPAYCO_VALIDATION_URL', 'https://secure.epayco.co/validation/v1/reference/'),
     'min_amount' => env('EPAYCO_MIN_AMOUNT'),
     'max_amount' => env('EPAYCO_MAX_AMOUNT'),
+    'sales_fee' => [
+        'aggregator_percentage_rate' => env('EPAYCO_AGGREGATOR_PERCENTAGE_RATE', 2.68),
+        'aggregator_fixed_fee' => env('EPAYCO_AGGREGATOR_FIXED_FEE', 900),
+    ],
 ];

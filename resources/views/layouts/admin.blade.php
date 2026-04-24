@@ -1016,6 +1016,22 @@
                 padding: 1.8rem;
             }
 
+            .admin-topbar,
+            .admin-page-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-brand {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .admin-topbar-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
             .admin-form-grid,
             .admin-grid-3,
             .admin-grid-2 {
@@ -1033,6 +1049,36 @@
                 align-items: flex-start;
             }
 
+            .admin-shell {
+                padding: 1rem;
+            }
+
+            .admin-topbar,
+            .admin-page-head,
+            .admin-sidebar-card,
+            .admin-panel,
+            .admin-stat-card {
+                border-radius: 20px;
+            }
+
+            .admin-page-head h1 {
+                font-size: clamp(2.2rem, 9vw, 3.2rem);
+            }
+
+            .admin-panel {
+                padding: 1.4rem;
+            }
+
+            .admin-table {
+                min-width: 60rem;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 1.1rem 1.2rem;
+                font-size: 1.3rem;
+            }
+
             .admin-page-actions,
             .admin-topbar-actions {
                 width: 100%;
@@ -1040,8 +1086,23 @@
             }
 
             .admin-page-actions .admin-btn,
-            .admin-topbar-actions .admin-pill {
+            .admin-topbar-actions .admin-pill,
+            .admin-topbar-actions .admin-btn {
                 width: 100%;
+            }
+        }
+        @media (max-width: 479px) {
+            .admin-brand {
+                flex-direction: column;
+            }
+
+            .admin-brand-copy strong {
+                font-size: 1.7rem;
+            }
+
+            .admin-filter-summary {
+                align-items: flex-start;
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -1055,6 +1116,7 @@
         ['label' => 'Productos', 'route' => 'admin.products.index', 'icon' => 'fas fa-box-open'],
         ['label' => ($currentAdminIsSuperAdmin ?? false) ? 'Tiendas' : 'Mi tienda', 'route' => 'admin.stores.index', 'icon' => 'fas fa-store'],
         ['label' => 'Pedidos', 'route' => 'admin.orders.index', 'icon' => 'fas fa-shopping-bag'],
+        ['label' => 'Comision por venta', 'route' => 'admin.sale-commissions.index', 'icon' => 'fas fa-percent'],
         ['label' => 'Clientes', 'route' => 'admin.customers.index', 'icon' => 'fas fa-users'],
     ];
 

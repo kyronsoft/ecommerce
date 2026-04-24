@@ -236,6 +236,24 @@
                 align-items: flex-start;
             }
         }
+        @media (max-width: 430px) {
+            .auth-tabs {
+                grid-template-columns: 1fr;
+            }
+            .auth-tab {
+                padding: .8rem;
+            }
+            .auth-links {
+                display: grid;
+                gap: .6rem;
+            }
+            .auth-links span {
+                display: none;
+            }
+            .auth-social {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>

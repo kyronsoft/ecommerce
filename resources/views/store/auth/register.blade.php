@@ -271,6 +271,31 @@
                 padding: 3.2rem 0 4.4rem;
             }
         }
+        @media (max-width: 430px) {
+            .auth-container {
+                padding: 0 1rem;
+            }
+            .auth-card {
+                border-radius: 22px;
+            }
+            .auth-card__body {
+                padding: 1.4rem;
+            }
+            .auth-card__frame {
+                padding: 1.4rem 1.2rem;
+                border-radius: 18px;
+            }
+            .auth-header h1 {
+                font-size: 2.4rem;
+            }
+            .auth-header p {
+                font-size: 1.55rem;
+            }
+            .auth-separator span {
+                font-size: 1rem;
+                letter-spacing: .08em;
+            }
+        }
     </style>
 </head>
 <body>

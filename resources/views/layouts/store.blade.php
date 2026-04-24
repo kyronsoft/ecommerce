@@ -39,8 +39,7 @@
             font-family: "Inter", sans-serif;
         }
         h1, h2, h3, h4, h5, h6,
-        .store-footer__title,
-        .store-support-box__value {
+        .store-footer__title {
             font-family: "Manrope", sans-serif;
         }
         blockquote,
@@ -80,9 +79,9 @@
             background: rgba(255, 255, 255, 0.72);
             box-shadow: 0 12px 24px rgba(87, 43, 26, 0.08);
             color: var(--store-muted);
-            font-size: 1.7rem;
-            font-weight: 600;
-            line-height: 1.45;
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.3;
         }
         .store-topbar__nav {
             display: flex;
@@ -185,34 +184,6 @@
         }
         .store-search-shell button:hover {
             background: var(--store-button-hover);
-        }
-        .store-support-box {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-            color: var(--store-dark);
-        }
-        .store-support-box__icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 4.8rem;
-            height: 4.8rem;
-            border-radius: 50%;
-            background: var(--store-soft);
-            font-size: 2rem;
-        }
-        .store-support-box__label {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-        .store-support-box__value {
-            margin: 0.2rem 0 0;
-            font-size: 1.8rem;
-            font-weight: 700;
         }
         .store-header-actions {
             margin-left: auto;
@@ -685,14 +656,44 @@
             flex-wrap: wrap;
         }
         @media (max-width: 1199px) {
-            .store-support-box {
-                display: none;
-            }
             .store-footer__main {
                 grid-template-columns: 1fr 1fr;
             }
             .store-footer__meta {
                 grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 991px) {
+            .store-topbar__inner,
+            .store-header-main__inner {
+                flex-wrap: wrap;
+            }
+            .store-topbar__message {
+                flex-basis: 100%;
+                width: 100%;
+                border-radius: 2rem;
+            }
+            .store-header-main__inner {
+                align-items: center;
+                justify-content: space-between;
+            }
+            .store-brand-link {
+                min-width: 0;
+                flex: 0 1 auto;
+            }
+            .store-search-shell {
+                order: 3;
+                flex: 1 1 100%;
+                width: 100%;
+            }
+            .store-header-actions {
+                margin-left: 0;
+                flex: 1 1 auto;
+                justify-content: flex-end;
+            }
+            .store-primary-nav {
+                overflow-x: auto;
+                padding-bottom: .4rem;
             }
         }
         @media (max-width: 767px) {
@@ -713,9 +714,37 @@
             .store-search-shell {
                 order: 4;
                 flex: 1 1 100%;
+                width: 100%;
+                border-radius: 2rem;
+                flex-wrap: wrap;
             }
             .store-search-shell select {
                 display: none;
+            }
+            .store-search-shell input,
+            .store-search-shell button {
+                min-height: 4.8rem;
+            }
+            .store-search-shell button {
+                width: 100%;
+                min-width: 0;
+                border-top: 1px solid var(--store-line);
+            }
+            .store-header-main__inner {
+                gap: 1rem;
+                align-items: center;
+            }
+            .store-header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .store-header-user {
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+            .store-header-action:not(.store-header-user) {
+                width: 4.4rem;
+                height: 4.4rem;
             }
             .store-footer__main,
             .store-footer__meta,
@@ -723,8 +752,35 @@
                 grid-template-columns: 1fr;
                 display: grid;
             }
+            .store-footer__card,
+            .store-footer__links {
+                padding: 2rem;
+            }
             .store-footer__bottom-links {
                 gap: 1rem;
+            }
+        }
+        @media (max-width: 479px) {
+            .store-topbar__message {
+                padding: .9rem 1.1rem;
+                font-size: 1.35rem;
+            }
+            .store-header-user__name {
+                max-width: 8rem;
+            }
+            .product-market-grid,
+            .wishlist-grid {
+                grid-template-columns: 1fr;
+            }
+            .product-wrap--editorial .product-pa-wrapper {
+                align-items: stretch;
+            }
+            .product-wrap--editorial .product-card__cart-form {
+                width: 100%;
+            }
+            .product-wrap--editorial .product-card__cart-form .btn-product-icon {
+                width: 100%;
+                border-radius: 999px;
             }
         }
     </style>
@@ -736,7 +792,7 @@
         <div class="store-topbar">
             <div class="container">
                 <div class="store-topbar__inner">
-                    <div class="store-topbar__message">Bienvenido a La Tienda de Mi Abue. Compra con una experiencia clara, cálida y confiable.</div>
+                    <div class="store-topbar__message">Bienvenido a La Tienda de Mi Abue</div>
                     <div class="store-topbar__nav">
                         <nav class="store-topbar__links" aria-label="Accesos rápidos">
                             <a href="{{ route('store.home') }}">Inicio</a>
@@ -780,14 +836,6 @@
                         <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar productos, categorías o tiendas">
                         <button type="submit">Buscar</button>
                     </form>
-
-                    <div class="store-support-box">
-                        <span class="store-support-box__icon"><i class="w-icon-call"></i></span>
-                        <div>
-                            <p class="store-support-box__label">Soporte</p>
-                            <p class="store-support-box__value">000 000 0000</p>
-                        </div>
-                    </div>
 
                     <div class="store-header-actions">
                         <a href="{{ $currentStoreUser ? route('store.home') : route('store.login') }}" class="store-header-action store-header-user" aria-label="{{ $currentStoreUser ? 'Cliente autenticado' : 'Acceso clientes' }}">

@@ -456,13 +456,7 @@
         margin-top: 1.8rem;
     }
 
-    @media (max-width: 1199px) {
-        .stores-hero__layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 991px) {
+    @media (max-width: 1279px) {
         .stores-layout {
             grid-template-columns: 1fr;
         }
@@ -470,7 +464,9 @@
         .stores-filter-panel {
             position: static;
         }
+    }
 
+    @media (max-width: 991px) {
         .stores-stats {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -506,6 +502,65 @@
         .stores-results-panel,
         .stores-filter-panel {
             border-radius: 2rem;
+        }
+    }
+    @media (max-width: 479px) {
+        .stores-page {
+            padding-bottom: 4rem;
+        }
+
+        .stores-hero,
+        .stores-toolbar,
+        .stores-filter-panel,
+        .stores-results-panel,
+        .store-card {
+            border-radius: 2rem;
+        }
+
+        .stores-hero,
+        .stores-toolbar,
+        .stores-filter-panel,
+        .stores-results-panel {
+            padding-left: 1.4rem;
+            padding-right: 1.4rem;
+        }
+
+        .stores-toolbar h2 {
+            font-size: 2.3rem;
+        }
+
+        .store-card__body {
+            gap: 1.4rem;
+            padding: 1.4rem;
+        }
+
+        .store-card__header,
+        .store-card__banner {
+            height: 18rem;
+            min-height: 18rem;
+        }
+
+        .store-card__brand {
+            width: 7.2rem;
+            height: 7.2rem;
+            margin-top: -4.8rem;
+        }
+
+        .store-card__title {
+            font-size: 2.2rem;
+        }
+
+        .store-card__aside {
+            width: 100%;
+        }
+
+        .store-card__cta {
+            width: 100%;
+        }
+        .stores-toolbar-meta {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
         }
     }
 </style>

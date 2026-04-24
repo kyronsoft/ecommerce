@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Services\CartService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductController extends Controller
 {
@@ -24,5 +26,20 @@ class ProductController extends Controller
                 ->get(),
             'cartCount' => $this->cart->count(),
         ]);
+    }
+
+    public function media(Product $product, string $field = 'image', ?int $index = null): BinaryFileResponse
+    {
+        abort_unless(in_array($field, ['image', 'gallery'], true), 404);
+
+        $path = $field === 'gallery'
+            ? data_get($product->gallery ?? [], $index)
+            : $product->image;
+
+        $normalizedPath = Product::normalizeMediaPath($path);
+
+        abort_if(blank($normalizedPath) || ! Storage::disk('public')->exists($normalizedPath), 404);
+
+        return response()->file(Storage::disk('public')->path($normalizedPath));
     }
 }

@@ -268,7 +268,7 @@
         color: #8a7064;
     }
 
-    @media (max-width: 991px) {
+    @media (max-width: 1279px) {
         .vendor-store-layout {
             grid-template-columns: 1fr;
         }
@@ -286,6 +286,53 @@
         .vendor-store-hero__content {
             grid-template-columns: 1fr;
             margin-top: -3.6rem;
+        }
+    }
+    @media (max-width: 479px) {
+        .vendor-store-page {
+            padding-bottom: 4rem;
+        }
+
+        .vendor-store-sidebar,
+        .vendor-store-panel,
+        .vendor-store-hero,
+        .vendor-store-toolbar {
+            border-radius: 2rem;
+        }
+
+        .vendor-store-sidebar,
+        .vendor-store-products {
+            padding: 1.4rem;
+        }
+
+        .vendor-store-hero__media {
+            height: 18rem;
+        }
+
+        .vendor-store-hero__content {
+            padding: 0 1.4rem;
+        }
+
+        .vendor-store-hero__brand {
+            width: 7.2rem;
+            height: 7.2rem;
+        }
+
+        .vendor-store-hero__title {
+            font-size: 2.4rem;
+        }
+
+        .vendor-store-mini-product {
+            grid-template-columns: 1fr;
+        }
+
+        .vendor-store-mini-product img {
+            width: 100%;
+            height: 16rem;
+        }
+        .vendor-store-social a {
+            width: 3.8rem;
+            height: 3.8rem;
         }
     }
 </style>
@@ -336,7 +383,7 @@
                             @foreach($featuredProducts as $product)
                                 <article class="vendor-store-mini-product">
                                     <a href="{{ route('store.product.show', $product) }}">
-                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                                     </a>
                                     <div>
                                         <h4><a href="{{ route('store.product.show', $product) }}">{{ $product->name }}</a></h4>
@@ -353,7 +400,7 @@
                             @foreach($latestProducts as $product)
                                 <article class="vendor-store-mini-product">
                                     <a href="{{ route('store.product.show', $product) }}">
-                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+                                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                                     </a>
                                     <div>
                                         <h4><a href="{{ route('store.product.show', $product) }}">{{ $product->name }}</a></h4>

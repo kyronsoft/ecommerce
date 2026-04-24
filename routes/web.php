@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EntrepreneurSubscriptionController;
+use App\Http\Controllers\Admin\SaleCommissionController as AdminSaleCommissionController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -27,6 +28,7 @@ Route::get('/shop', [HomeController::class, 'shop'])->name('store.shop');
 Route::get('/stores', [HomeController::class, 'stores'])->name('store.stores.index');
 Route::get('/stores/{store:slug}/media/{field}', [HomeController::class, 'media'])->name('store.store.media');
 Route::get('/stores/{store:slug}', [HomeController::class, 'storeShow'])->name('store.store.show');
+Route::get('/product/{product:slug}/media/{field?}/{index?}', [ProductController::class, 'media'])->name('store.product.media');
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('store.product.show');
 
 Route::prefix('wishlist')->name('store.wishlist.')->group(function () {
@@ -70,6 +72,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/entrepreneur-subscriptions', [EntrepreneurSubscriptionController::class, 'index'])->name('entrepreneur-subscriptions.index');
+        Route::get('/sale-commissions', [AdminSaleCommissionController::class, 'index'])->name('sale-commissions.index');
         Route::get('/stores/{store}/media/{field}', [AdminStoreController::class, 'media'])->name('stores.media');
         Route::get('/products/{product}/media/{field}/{index?}', [AdminProductController::class, 'media'])->name('products.media');
         Route::resource('categories', AdminCategoryController::class);

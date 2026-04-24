@@ -1,4 +1,32 @@
 @extends('layouts.store')
+@push('styles')
+<style>
+    @media (max-width: 991px) {
+        .cart-page-shell .sticky-sidebar {
+            position: static !important;
+        }
+    }
+    @media (max-width: 767px) {
+        .cart-page-shell .cart-table-wrap {
+            overflow-x: auto;
+        }
+        .cart-page-shell .cart-table {
+            min-width: 68rem;
+        }
+        .cart-page-shell .cart-summary-card {
+            border-radius: 2rem;
+        }
+    }
+    @media (max-width: 479px) {
+        .cart-page-shell .cart-page-head {
+            margin-bottom: 1.4rem;
+        }
+        .cart-page-shell .cart-table {
+            min-width: 60rem;
+        }
+    }
+</style>
+@endpush
 @section('content')
 <main class="main cart cart-page-shell">
     <div class="page-content">
@@ -32,7 +60,7 @@
                                         <tr>
                                             <td class="product-thumbnail">
                                                 <div class="cart-product-thumb">
-                                                    <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" width="120" height="120">
+                                                    <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" width="120" height="120">
                                                 </div>
                                             </td>
                                             <td class="product-name">

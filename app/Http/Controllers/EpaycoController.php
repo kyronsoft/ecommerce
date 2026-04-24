@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Mail\EntrepreneurWelcomeMail;
 use App\Mail\PaymentTransactionStatusMail;
-use App\Models\Store;
 use App\Models\PaymentTransaction;
+use App\Models\Store;
 use App\Models\User;
 use App\Services\CartService;
 use App\Services\EpaycoService;
+use App\Services\SaleCommissionService;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class EpaycoController extends Controller
     public function __construct(
         private readonly EpaycoService $epayco,
         private readonly CartService $cart,
+        private readonly SaleCommissionService $saleCommissions,
     ) {
     }
 
@@ -304,6 +306,10 @@ class EpaycoController extends Controller
         }
 
         $transaction = $transaction->fresh(['order.customer', 'order.items']);
+
+        if ($transaction?->order) {
+            $this->saleCommissions->syncForOrder($transaction->order);
+        }
 
         if ($transaction && in_array($status, ['approved', 'rejected'], true)) {
             $this->sendTransactionStatusEmailIfNeeded($transaction, $previousStatus);

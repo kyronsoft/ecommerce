@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\SaleCommission;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,6 +67,11 @@ class AdminPanelScope
         return $isSuperAdmin || ! $store
             ? $query
             : $query->whereHas('orders.items.product', fn (Builder $products) => $products->where('store_id', $store->id));
+    }
+
+    public static function scopeSaleCommissions(Builder $query, ?Store $store, bool $isSuperAdmin): Builder
+    {
+        return $isSuperAdmin || ! $store ? $query : $query->where('store_id', $store->id);
     }
 
     public static function ensureStoreAccess(Store $targetStore, ?Store $currentStore, bool $isSuperAdmin): void
