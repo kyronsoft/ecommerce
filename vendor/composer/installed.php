@@ -3,7 +3,7 @@
         'name' => 'example/ecommerce-wolmart-laravel12',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0aff19c6d4e13918783a1c364c4007ff8e77f4fd',
+        'reference' => '95468c0bfc3564b7d162b6b61c752808ff4de25e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -85,7 +85,7 @@
         'example/ecommerce-wolmart-laravel12' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0aff19c6d4e13918783a1c364c4007ff8e77f4fd',
+            'reference' => '95468c0bfc3564b7d162b6b61c752808ff4de25e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

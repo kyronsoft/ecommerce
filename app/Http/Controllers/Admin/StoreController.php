@@ -180,7 +180,7 @@ class StoreController extends Controller
             );
         } catch (\RuntimeException $exception) {
             throw ValidationException::withMessages([
-                'logo' => 'No pudimos procesar el logo. Intenta con una imagen JPG, PNG o WEBP válida.',
+                'logo' => $exception->getMessage(),
             ]);
         }
 
@@ -193,7 +193,7 @@ class StoreController extends Controller
             );
         } catch (\RuntimeException $exception) {
             throw ValidationException::withMessages([
-                'banner' => 'No pudimos procesar el banner. Intenta con una imagen JPG, PNG o WEBP válida.',
+                'banner' => $exception->getMessage(),
             ]);
         }
 

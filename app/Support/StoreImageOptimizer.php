@@ -9,6 +9,14 @@ class StoreImageOptimizer
 {
     public static function optimizeToWebp(UploadedFile $file, string $field): string
     {
+        if (! extension_loaded('gd')) {
+            throw new RuntimeException('La extensión PHP GD no está instalada en el servidor.');
+        }
+
+        if (! function_exists('imagewebp')) {
+            throw new RuntimeException('El servidor no tiene soporte para imágenes WEBP en la librería GD.');
+        }
+
         if (! $file->isValid()) {
             throw new RuntimeException('La imagen no se pudo cargar correctamente.');
         }
@@ -17,7 +25,7 @@ class StoreImageOptimizer
         $image = @imagecreatefromstring($contents);
 
         if (! $image) {
-            throw new RuntimeException('No fue posible procesar la imagen seleccionada.');
+            throw new RuntimeException('No fue posible procesar la imagen seleccionada. El formato podría no ser compatible.');
         }
 
         imagepalettetotruecolor($image);
