@@ -162,7 +162,7 @@ class EpaycoController extends Controller
             'primary_approved_url' => route('store.shop'),
             'primary_approved_label' => 'Seguir comprando',
             'secondary_url' => route('store.home'),
-            'secondary_label' => 'Volver al inicio',
+            'secondary_label' => 'Regresar a la tienda',
         ];
     }
 
@@ -438,30 +438,30 @@ class EpaycoController extends Controller
         return match ($status) {
             'approved' => [
                 'key' => 'approved',
-                'eyebrow' => 'Pago confirmado',
-                'title' => 'Tu pago fue aprobado',
-                'message' => 'La transacción quedó registrada correctamente. Ya puedes continuar con confianza y seguir comprando.',
+                'eyebrow' => '¡Pago exitoso!',
+                'title' => 'Tu pago ha sido aprobado',
+                'message' => '¡Excelente! La transacción se completó correctamente. Ya estamos preparando tu pedido y pronto recibirás noticias nuestras.',
                 'badge' => 'Aprobado',
             ],
             'rejected' => [
                 'key' => 'rejected',
-                'eyebrow' => 'Pago no aprobado',
-                'title' => 'No pudimos aprobar este pago',
-                'message' => 'ePayco reportó que la transacción no fue aprobada. Puedes revisar el motivo y volver a intentarlo con otro medio de pago.',
-                'badge' => 'Rechazado',
+                'eyebrow' => 'Pago no completado',
+                'title' => 'No pudimos procesar tu pago',
+                'message' => 'ePayco reportó que la transacción no fue exitosa o fue cancelada. No te preocupes, tu pedido sigue guardado para que lo intentes de nuevo.',
+                'badge' => 'No aprobado',
             ],
             'failed_validation' => [
                 'key' => 'warning',
-                'eyebrow' => 'Validación pendiente',
-                'title' => 'Recibimos la respuesta, pero necesita revisión',
-                'message' => 'La respuesta de ePayco llegó con datos que no coincidieron por completo con la orden local. El pedido no se marcó como pagado.',
+                'eyebrow' => 'Validación en curso',
+                'title' => 'Recibimos tu pago, pero necesita una revisión manual',
+                'message' => 'La respuesta de la pasarela tiene algunos detalles que debemos verificar internamente. Tu pedido se actualizará tan pronto confirmemos la información.',
                 'badge' => 'Por revisar',
             ],
             default => [
                 'key' => 'pending',
                 'eyebrow' => 'Pago en proceso',
-                'title' => 'Tu pago sigue pendiente',
-                'message' => 'ePayco todavía no reporta una aprobación final. Conservamos la orden en estado pendiente mientras llega la confirmación del webhook.',
+                'title' => 'Tu pago está siendo verificado',
+                'message' => 'Estamos esperando la confirmación final de ePayco. En cuanto tengamos el resultado definitivo, te lo notificaremos por correo electrónico.',
                 'badge' => 'Pendiente',
             ],
         };

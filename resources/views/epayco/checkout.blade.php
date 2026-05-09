@@ -85,6 +85,27 @@
         .fallback-btn:hover {
             background: #D06840;
         }
+        .btn-return {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 56px;
+            margin-top: 8px;
+            padding: 0 24px;
+            border: 1px solid #C86040;
+            border-radius: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #C86040;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-return:hover {
+            background: #F8E8D0;
+            color: #D06840;
+            border-color: #D06840;
+        }
         .epayco-script {
             display: inline-block;
             margin-top: 12px;
@@ -103,7 +124,10 @@
                 <div class="summary-row"><span>{{ $paymentContext['total_label'] }}</span><strong>${{ number_format($order['amount'], 0, ',', '.') }} {{ $order['currency'] }}</strong></div>
             </div>
 
-            <button type="button" id="open-epayco" class="fallback-btn">Continuar con ePayco</button>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <button type="button" id="open-epayco" class="fallback-btn">Continuar con ePayco</button>
+                <a href="{{ $paymentContext['secondary_url'] ?? route('store.home') }}" class="btn-return">{{ $paymentContext['secondary_label'] ?? 'Regresar a la tienda' }}</a>
+            </div>
 
             @if($rangeError)
                 <div class="warning">
