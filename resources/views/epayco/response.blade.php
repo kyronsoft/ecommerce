@@ -102,10 +102,10 @@
                 <div class="epayco-response-actions">
                     @if($transaction?->status === 'approved')
                         <a href="{{ $paymentContext['primary_approved_url'] ?? route('store.shop') }}" class="btn btn-primary">{{ $paymentContext['primary_approved_label'] ?? 'Seguir comprando' }}</a>
-                        <a href="{{ $paymentContext['secondary_url'] ?? route('store.home') }}" class="btn btn-outline">{{ $paymentContext['secondary_label'] ?? 'Volver al inicio' }}</a>
+                        <a href="{{ $paymentContext['secondary_url'] ?? route('store.home') }}" class="btn btn-outline">{{ $paymentContext['secondary_label'] ?? 'Regresar a la tienda' }}</a>
                     @else
                         <a href="{{ $paymentContext['retry_url'] ?? route('store.checkout.index') }}" class="btn btn-primary">Intentar nuevamente</a>
-                        <a href="{{ $isEntrepreneurPlan ? route('store.entrepreneur') : route('store.cart.index') }}" class="btn btn-outline">{{ $isEntrepreneurPlan ? 'Volver a planes' : 'Volver al carrito' }}</a>
+                        <a href="{{ $paymentContext['secondary_url'] ?? route('store.home') }}" class="btn btn-outline">{{ $paymentContext['secondary_label'] ?? 'Regresar a la tienda' }}</a>
                     @endif
                 </div>
 
