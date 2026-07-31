@@ -52,6 +52,7 @@ class SaleCommissionService
             $items,
             $saleTotal,
             $transaction,
+            $order,
             $epaycoPercentageRate,
             $marketplaceCommissionRate,
             $marketplaceCommissionVatRate,
