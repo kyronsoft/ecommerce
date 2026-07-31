@@ -4,6 +4,7 @@ return [
     'public_key' => env('EPAYCO_PUBLIC_KEY'),
     'private_key' => env('EPAYCO_PRIVATE_KEY'),
     'test' => filter_var(env('EPAYCO_TEST', true), FILTER_VALIDATE_BOOL),
+    'demo_mode' => filter_var(env('EPAYCO_DEMO_MODE', false), FILTER_VALIDATE_BOOL),
     'lang' => env('EPAYCO_LANG', 'ES'),
     'currency' => env('EPAYCO_CURRENCY', 'COP'),
     'country' => env('EPAYCO_COUNTRY', 'CO'),
