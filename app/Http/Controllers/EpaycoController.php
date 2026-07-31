@@ -85,7 +85,7 @@ class EpaycoController extends Controller
             'email' => $order->customer?->email ?? '',
         ];
 
-        return view('epayco.checkout', [
+        $viewData = [
             'order' => $orderData,
             'localOrder' => $order,
             'transaction' => $transaction,
@@ -93,7 +93,61 @@ class EpaycoController extends Controller
             'responseUrl' => config('epayco.response_url') ?: route('epayco.response'),
             'confirmationUrl' => config('epayco.confirmation_url') ?: route('epayco.confirmation'),
             'rangeError' => $rangeError,
-        ]);
+        ];
+
+        if (config('epayco.demo_mode') && $rangeError === null) {
+            return view('epayco.demo-checkout', $viewData);
+        }
+
+        return view('epayco.checkout', $viewData);
+    }
+
+    /**
+     * Simula la respuesta de la pasarela mientras ePayco aprueba el comercio.
+     * Genera un payload con la misma forma y firma que enviaría ePayco realmente,
+     * y lo procesa a través del mismo flujo de validación usado en producción
+     * (syncTransactionFromPayload), de modo que ningún pedido quede "pagado"
+     * sin pasar por las mismas comprobaciones de monto/moneda/firma.
+     */
+    public function demoProcess(Request $request)
+    {
+        abort_unless(config('epayco.demo_mode'), 404);
+
+        $transaction = PaymentTransaction::query()
+            ->where('order_ref', $request->string('order_ref'))
+            ->firstOrFail();
+
+        $approved = $request->string('decision')->toString() !== 'reject';
+
+        $merchantId = 'demo-'.config('epayco.public_key', 'merchant');
+        $refPayco = 'DEMO-'.Str::upper(Str::random(10));
+        $transactionId = (string) random_int(100000000, 999999999);
+        $currency = strtoupper((string) $transaction->currency);
+        $amount = number_format((float) $transaction->amount, 2, '.', '');
+
+        $signature = hash('sha256', implode('^', [
+            $merchantId, (string) config('epayco.private_key'), $refPayco, $transactionId, $amount, $currency,
+        ]));
+
+        $payload = [
+            'ref_payco' => $refPayco,
+            'x_ref_payco' => $refPayco,
+            'x_cust_id_cliente' => $merchantId,
+            'x_extra1' => $transaction->order_ref,
+            'x_id_factura' => $transaction->order_ref,
+            'x_amount' => $amount,
+            'x_currency_code' => $currency,
+            'x_cod_transaction_state' => $approved ? 1 : 2,
+            'x_transaction_id' => $transactionId,
+            'x_response' => $approved ? 'Aceptada' : 'Rechazada',
+            'x_response_reason_text' => $approved
+                ? 'Transacción aprobada (simulación demo)'
+                : 'Transacción rechazada (simulación demo)',
+            'x_transaction_date' => now()->toDateTimeString(),
+            'x_signature' => $signature,
+        ];
+
+        return redirect()->route('epayco.response', $payload);
     }
 
     public function response(Request $request): View

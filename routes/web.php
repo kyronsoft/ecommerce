@@ -59,6 +59,7 @@ Route::middleware('store.auth')->group(function () {
 });
 
 Route::get('/payments/epayco/checkout', [EpaycoController::class, 'checkout'])->name('epayco.checkout');
+Route::post('/payments/epayco/demo-process', [EpaycoController::class, 'demoProcess'])->name('epayco.demo.process');
 Route::match(['get', 'post'], '/payments/epayco/response', [EpaycoController::class, 'response'])->name('epayco.response');
 Route::match(['get', 'post'], '/payments/epayco/confirmation', [EpaycoController::class, 'confirmation'])->name('epayco.confirmation');
 
